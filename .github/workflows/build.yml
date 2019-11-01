@@ -1,0 +1,55 @@
+name: build
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+        registry-url: 'https://registry.npmjs.org'
+      
+    - name: Install
+      run: |
+        npm install yarn -g
+        npm install codecov -g
+        npm install typescript -g
+        yarn clean:all
+        yarn install:all
+
+    - name: Test
+      run: |
+        yarn test
+        codecov
+
+    - name: Build
+      run: |
+        yarn build:all
+
+    - name: Publish to direflow-cli to NPM
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+  
+    - name: Publish to direflow-project to NPM
+      run: |
+        cd packages/direflow-project
+        npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+  
+    - name: Publish to direflow-component to NPM
+      run: |
+        cd packages/direflow-component
+        npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+  

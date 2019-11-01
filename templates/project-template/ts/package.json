@@ -1,0 +1,38 @@
+{
+  "name": "%name-snake%",
+  "version": "1.0.0",
+  "description": "%description%",
+  "main": "index.tsx",
+  "scripts": {
+    "start": "direflow-project start",
+    "build": "direflow-project build",
+    "install:all": "direflow-project install-all",
+    "test:all": "direflow-project test-all",
+    "build:all": "direflow-project build-all",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/jest": "24.0.15",
+    "direflow-project": "1.0.2",
+    "typescript": "3.5.3",
+    "tslint": "5.18.0",
+    "tslint-config-airbnb": "5.11.1",
+    "tslint-config-silind": "1.0.21",
+    "jest": "24.8.0",
+    "ts-jest": "24.0.2"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "testMatch": [
+      "**/**/*.test.(ts|tsx)"
+    ]
+  }
+}

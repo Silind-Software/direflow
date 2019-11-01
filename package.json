@@ -1,0 +1,80 @@
+{
+  "name": "direflow-cli",
+  "version": "1.0.2",
+  "description": "Official CLI for Direflow",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "node_modules/typescript/bin/tsc",
+    "test": "jest --env=jest-environment-jsdom-fourteen",
+    "update-version": "node scripts/updateVersion.js",
+    "clean:all": "node ./scripts/cleanupAll.js",
+    "install:all": "node ./scripts/installAll.js",
+    "build:all": "node ./scripts/buildAll.js && yarn install:all --no-deps",
+    "build-link": "yarn clean:all && yarn install:all && yarn build:all"
+  },
+  "bin": {
+    "direflow": "bin/direflow"
+  },
+  "files": [
+    "bin/*",
+    "dist/*",
+    "templates/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Silind-Software/direflow.git"
+  },
+  "keywords": [
+    "cli",
+    "widget",
+    "web component",
+    "react",
+    "typescript"
+  ],
+  "author": "Silind Software",
+  "license": "MIT",
+  "homepage": "direflow.io",
+  "dependencies": {
+    "chalk": "2.4.2",
+    "commander": "3.0.1",
+    "deepmerge": "4.0.0",
+    "esm": "3.2.25",
+    "inquirer": "7.0.0",
+    "mkdirp": "0.5.1",
+    "ncp": "2.0.0",
+    "rimraf": "3.0.0",
+    "typescript": "^3.6.4"
+  },
+  "devDependencies": {
+    "@types/inquirer": "6.5.0",
+    "@types/jest": "24.0.15",
+    "@types/mkdirp": "0.5.2",
+    "@types/ncp": "2.0.1",
+    "@types/node": "12.7.4",
+    "@types/rimraf": "2.0.2",
+    "jest": "24.8.0",
+    "jest-environment-jsdom-fourteen": "^0.1.0",
+    "ts-jest": "24.0.2",
+    "tslint": "^5.20.0",
+    "tslint-config-airbnb": "^5.11.2",
+    "tslint-config-silind": "^1.0.21"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "tsx"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "testMatch": [
+      "**/**/*.test.(ts|tsx)"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/templates",
+      "<rootDir>/packages"
+    ],
+    "collectCoverage": true
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "rules": {
+    "max-line-length": { "options": [120], "severity": "warning" },
+    "no-lowlevel-commenting": { "severity": "warning" },
+    "discreet-ternary": { "severity": "warning" },
+    "curly": { "severity": "warning" },
+    "jsx-wrap-multiline": false,
+    "typedef": false
+  },
+  "linterOptions": {
+    "exclude": [
+      "config/**/*.js",
+      "node_modules/**/*.ts",
+      "coverage/lcov-report/*.js",
+      "webpack.config.js"
+    ]
+  },
+  "extends": ["tslint:recommended", "tslint-react", "tslint-config-airbnb", "tslint-config-silind"]
+}

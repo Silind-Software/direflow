@@ -1,0 +1,19 @@
+{
+  "rules": {
+    "max-line-length": { "options": [120], "severity": "warning" },
+    "no-lowlevel-commenting": { "severity": "warning" },
+    "curly": { "severity": "warning" },
+    "ter-arrow-parens": { 
+      "options": ["always"], 
+      "severity": "warning" 
+    },
+    "typedef": {
+      "options": [
+        "call-signature",
+        "parameter"
+      ],
+      "severity": "warning"
+    }
+  },
+  "extends": ["tslint-config-airbnb", "tslint-config-silind"]
+}
