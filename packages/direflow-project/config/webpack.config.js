@@ -2,7 +2,7 @@ const { ProvidePlugin } = require('webpack');
 
 module.exports = {
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', 'jsx', '.css'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.css'],
   },
 
   module: {

@@ -13,7 +13,7 @@ module.exports = merge(webpackConfig, customWebpackConfig, {
   entry: {
     'projectBundle': [
       resolve(__dirname, './registerDireflowComponents.js'),
-      resolve(__dirname, '../../../src/index.ts'),
+      resolve(__dirname, '../../../src/index'),
       ...componentRegistrations.map((component) => resolve(__dirname, `../../../${component.path}/${component.bundle}`))
     ]
   },

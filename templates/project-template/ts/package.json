@@ -2,7 +2,7 @@
   "name": "%name-snake%",
   "version": "1.0.0",
   "description": "%description%",
-  "main": "index.tsx",
+  "main": "src/index.ts",
   "scripts": {
     "start": "direflow-project start",
     "build": "direflow-project build",
@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/jest": "24.0.15",
-    "direflow-project": "1.0.4",
+    "direflow-project": "1.0.5",
     "typescript": "3.5.3",
     "tslint": "5.18.0",
     "tslint-config-airbnb": "5.11.1",

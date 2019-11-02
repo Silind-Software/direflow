@@ -11,7 +11,7 @@ module.exports = merge(webpackConfig, customWebpackConfig, {
       resolve(__dirname, './registerDireflowComponents.js'),
       resolve(__dirname, './welcome.js'),
       resolve(__dirname, './defaultHtml.js'),
-      resolve(__dirname, '../../../src/index.ts'),
+      resolve(__dirname, '../../../src/index'),
       ...componentRegistrations.map((component) => resolve(__dirname, `../../../${component.path}/${component.bundle}`)),
     ],
   },
@@ -32,5 +32,4 @@ module.exports = merge(webpackConfig, customWebpackConfig, {
       inject: 'head',
     }),
   ],
-
 });

@@ -17,7 +17,7 @@ export const registerComponent = (name: string) => {
 
   const fail = (callback: (errorMessage: string) => void) => {
     if (!component) {
-      callback(`The Direflow Component: '${name}' is not found in the registry.`);
+      callback(`The Direflow Component: '${name}' is not found in the Direflow Project.`);
     }
   };
 
