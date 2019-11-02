@@ -12,7 +12,7 @@
     "react-dom": "16.10.2",
     "react-scripts": "3.2.0",
     "style-it": "2.1.4",
-    "direflow-component": "1.0.2"
+    "direflow-component": "1.0.3"
   },
   "devDependencies": {
     "jest-environment-jsdom-fourteen": "0.1.0",
