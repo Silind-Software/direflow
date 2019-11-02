@@ -8,6 +8,7 @@ body {
   justify-content: center;
   align-items: center;
   background-color: #F6FAFA;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 body > * {
