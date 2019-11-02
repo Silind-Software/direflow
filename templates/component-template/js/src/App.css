@@ -10,7 +10,7 @@
   box-sizing: border-box;
   background-color: white;
   box-shadow: 0 4px 9px 0 #375c821c;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-family: 'PT Sans', sans-serif;
 }
 
 .header-title {
@@ -19,6 +19,7 @@
   font-size: 36px;
   color: #444;
   text-align: center;
+  font-family: 'Noto Sans JP', sans-serif;
 }
 
 .sub-title {

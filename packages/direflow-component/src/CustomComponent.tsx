@@ -4,7 +4,10 @@ import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import root from 'react-shadow';
+import WebFont from 'webfontloader';
 import { EventProvider } from './components/EventContext';
+
+const componentConfig = require('../../../direflow-config.js');
 
 let componentAttributes: any;
 let componentProperties: any;
@@ -48,6 +51,7 @@ class CustomComponent extends HTMLElement {
   }
 
   public connectedCallback() {
+    this.loadFonts();
     this.registerComponent();
     this.mountReactApp();
   }
@@ -97,6 +101,32 @@ class CustomComponent extends HTMLElement {
     const widget = global.direflowComponents && global.direflowComponents[elementName];
     if (widget && widget.callback) {
       widget.callback(this);
+    }
+  }
+
+  private loadFonts() {
+    if (!componentConfig) {
+      return;
+    }
+
+    if (!componentConfig.plugins || !componentConfig.plugins.length) {
+      return;
+    }
+
+    const fontLoaderPlugin = componentConfig.plugins.find((plugin: any) => {
+      if (plugin.name !== 'font-loader') {
+        return false;
+      }
+
+      if (!plugin.options) {
+        return false;
+      }
+
+      return true;
+    });
+
+    if (fontLoaderPlugin) {
+      WebFont.load(fontLoaderPlugin.options);
     }
   }
 }

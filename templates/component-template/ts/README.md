@@ -1,4 +1,4 @@
-This project was bootstrapped with [Direflow](https://direflow.io).
+This component was bootstrapped with [Direflow](https://direflow.io).
 
 # %name-title%
 > %description%
@@ -7,4 +7,4 @@ This project was bootstrapped with [Direflow](https://direflow.io).
 <%name-snake%></%name-snake%>
 ```
 
-Use this README to describe your component
+Use this README to describe your Direflow Component

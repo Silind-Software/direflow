@@ -3,6 +3,16 @@ module.exports = {
     title: "%name-snake%",
     description: "%description%",
     type: "%setup-type%",
-    installVersion: "%install-version%"
-  }
+    createVersion: "%install-version%"
+  },
+  plugins: [
+    {
+      name: 'font-loader',
+      options: {
+        google: {
+          families: ['PT Sans', 'Noto Sans JP']
+        }
+      }
+    }
+  ]
 }
