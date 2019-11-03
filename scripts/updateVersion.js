@@ -19,6 +19,10 @@ const componentPackageTs = require('../templates/component-template/ts/package.j
 if (version === 'link') {
   const currentDirectory = process.cwd();
 
+  rootPackage.version = `${rootPackage.version}-link`;
+  projectPackage.version = `${projectPackage.version}-link`;
+  componentPackage.version = `${componentPackage.version}-link`;
+
   projectPackageJs.dependencies['direflow-project'] = `${currentDirectory}/packages/direflow-project`;
   projectPackageTs.dependencies['direflow-project'] = `${currentDirectory}/packages/direflow-project`;
   componentPackageJs.dependencies['direflow-component'] = `${currentDirectory}/packages/direflow-component`;

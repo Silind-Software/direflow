@@ -1,8 +1,11 @@
 const EventHooksPlugin = require('event-hooks-webpack-plugin');
+const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
 const { PromiseTask } = require('event-hooks-webpack-plugin/lib/tasks');
 const rimraf = require('rimraf');
 const fs = require('fs');
 const { resolve } = require('path');
+
+const componentConfig = require('../../direflow-config');
 
 module.exports = function override(config, env) {
   const overridenConfig = {
@@ -16,7 +19,7 @@ module.exports = function override(config, env) {
   return overridenConfig;
 };
 
-const addWelcomeMessage = (config, env) => { 
+const addWelcomeMessage = (config, env) => {
   if (env === 'production') {
     return config;
   }
@@ -27,7 +30,7 @@ const addWelcomeMessage = (config, env) => {
   config.entry = entry;
 
   return config;
-}
+};
 
 const overrideModule = (module) => {
   const cssRuleIndex = module.rules[2].oneOf.findIndex((rule) => '.css'.match(rule.test));
@@ -79,6 +82,15 @@ const overridePlugins = (plugins, env) => {
     }),
   );
 
+  const customScripts = getCustomScripts();
+  if (customScripts) {
+    plugins.push(
+      new HtmlWebpackExternalsPlugin({
+        externals: customScripts,
+      }),
+    );
+  }
+
   return plugins;
 };
 
@@ -96,4 +108,20 @@ const copyBundleScript = async (env) => {
       rimraf.sync(`build/${file}`);
     }
   });
+};
+
+const getCustomScripts = () => {
+  if (!componentConfig) {
+    return;
+  }
+
+  if (!componentConfig.plugins || !componentConfig.plugins.length) {
+    return;
+  }
+
+  const scriptLoaderPlugin = componentConfig.plugins.find((plugin) => plugin.name === 'script-loader');
+
+  if (scriptLoaderPlugin && scriptLoaderPlugin.options.externals.length) {
+    return scriptLoaderPlugin.options.externals;
+  }
 };
