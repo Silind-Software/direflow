@@ -16,12 +16,15 @@ jobs:
       with:
         node-version: 12.x
         registry-url: 'https://registry.npmjs.org'
-      
-    - name: Install
+    
+    - name: Prepare
       run: |
         npm install yarn -g
         npm install codecov -g
         npm install typescript -g
+
+    - name: Install
+      run: |
         yarn clean:all
         yarn install:all
 

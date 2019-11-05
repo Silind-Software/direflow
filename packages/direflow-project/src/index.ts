@@ -1,2 +1,2 @@
-export { IDireflowComponent } from './modules/IDireflowComponent';
-export { registerComponent } from './modules/registerComponent';
+export { IDireflowComponent } from './webComponent/IDireflowComponent';
+export { registerComponent } from './webComponent/registerComponent';

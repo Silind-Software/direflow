@@ -1,6 +1,6 @@
 {
   "name": "direflow-project",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "Create Web Components using React",
   "main": "dist/index.js",
   "author": "Silind Software",
@@ -8,11 +8,10 @@
   "scripts": {
     "build": "node_modules/typescript/bin/tsc"
   },
-  "bin": "scripts/cli.js",
+  "bin": "dist/scripts/cli.js",
   "files": [
     "dist",
-    "config",
-    "scripts"
+    "config"
   ],
   "repository": {
     "type": "git",

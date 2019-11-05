@@ -1,8 +1,8 @@
-const fs = require('fs');
-const { exec } = require('child_process');
-const chalk = require('chalk');
+import fs from 'fs';
+import chalk from 'chalk';
+import { exec } from 'child_process';
 
-async function installAllComponents() {
+async function installAllComponents(): Promise<void> {
   if (!fs.existsSync('direflow-components')) {
     console.log(chalk.white('No direflow components found. Nothing to install...'));
     return;
@@ -15,7 +15,7 @@ async function installAllComponents() {
 
   const componentsDirectory = fs.readdirSync('direflow-components');
 
-  for (let directory of componentsDirectory) {
+  for (const directory of componentsDirectory) {
     if (fs.statSync(`direflow-components/${directory}`).isDirectory()) {
       try {
         const result = await triggerCommand(directory);
@@ -28,7 +28,7 @@ async function installAllComponents() {
   }
 }
 
-function triggerCommand(directory) {
+function triggerCommand(directory: string): Promise<string> {
   return new Promise((resolve, reject) => {
     console.log(chalk.white(`Install started: ${directory}`));
     exec(`cd direflow-components/${directory} && yarn install`, (err) => {
@@ -42,6 +42,4 @@ function triggerCommand(directory) {
   });
 }
 
-module.exports = {
-  installAllComponents
-}
+export { installAllComponents };

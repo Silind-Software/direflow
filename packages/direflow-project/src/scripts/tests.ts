@@ -1,8 +1,8 @@
-const fs = require('fs');
-const { execSync } = require('child_process');
-const chalk = require('chalk');
+import fs from 'fs';
+import chalk from 'chalk';
+import { execSync } from 'child_process';
 
-async function testAllComponents() {
+async function testAllComponents(): Promise<void> {
   if (!fs.existsSync('direflow-components')) {
     console.log(chalk.white('No direflow components found. Nothing to test...'));
     return;
@@ -10,7 +10,7 @@ async function testAllComponents() {
 
   const widgetsDirectory = fs.readdirSync('direflow-components');
 
-  for (let directory of widgetsDirectory) {
+  for (const directory of widgetsDirectory) {
     if (fs.statSync(`direflow-components/${directory}`).isDirectory()) {
       try {
         const result = await triggerCommand(directory);
@@ -23,7 +23,7 @@ async function testAllComponents() {
   }
 }
 
-function triggerCommand(directory) {
+function triggerCommand(directory: string): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
       execSync(`cd direflow-components/${directory} && yarn test --watchAll=false`);
@@ -35,6 +35,4 @@ function triggerCommand(directory) {
   });
 }
 
-module.exports = {
-  testAllComponents
-}
+export { testAllComponents };

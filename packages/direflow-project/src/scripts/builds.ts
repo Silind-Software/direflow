@@ -1,9 +1,9 @@
-const fs = require('fs');
-const { exec, execSync } = require('child_process');
-const { resolve } = require('path');
-const chalk = require('chalk');
+import fs from 'fs';
+import { resolve } from 'path';
+import chalk from 'chalk';
+import { exec, execSync } from 'child_process';
 
-async function buildAllComponents() {
+async function buildAllComponents(): Promise<void> {
   if (!fs.existsSync('direflow-components')) {
     console.log(chalk.white('No direflow components found. Nothing to build...'));
     return;
@@ -17,7 +17,7 @@ async function buildAllComponents() {
   const componentsDirectory = fs.readdirSync('direflow-components');
   clearWidgetRegistry();
 
-  for (let directory of componentsDirectory) {
+  for (const directory of componentsDirectory) {
     if (fs.statSync(`direflow-components/${directory}`).isDirectory()) {
       try {
         const result = await triggerCommand(directory);
@@ -30,36 +30,36 @@ async function buildAllComponents() {
   }
 }
 
-function triggerCommand(directory) {
+function triggerCommand(directory: string): Promise<string> {
   return new Promise((resolve, reject) => {
     if (!fs.existsSync(`direflow-components/${directory}/node_modules/`)) {
       console.log(chalk.blueBright(`${directory} has not been installed.`));
       console.log(chalk.white(`Install started: ${directory}`));
       execSync(`cd direflow-components/${directory} && yarn install`);
     }
-  
+
     console.log(chalk.white(`Build started: ${directory}`));
     exec(`cd direflow-components/${directory} && yarn build`, (err) => {
       if (err) {
         console.log(err);
         reject(`Build failed: ${directory}`);
       }
-  
+
       registerWidget(directory);
       resolve(`Build success: ${directory}`);
     });
   });
 }
 
-function registerWidget(directory) {
-  const componentRegistrations = require('../config/componentRegistrations.json');
+function registerWidget(directory: string): void {
+  const componentRegistrations = require('../../config/componentRegistrations.json');
   const fullPath = `direflow-components/${directory}/build`;
 
   const widget = {
     name: directory,
     path: fullPath,
-    bundle: 'componentBundle.js'
-  }
+    bundle: 'componentBundle.js',
+  };
 
   componentRegistrations.push(widget);
 
@@ -70,15 +70,16 @@ function registerWidget(directory) {
     }
   }`;
 
-  fs.appendFileSync(resolve(__dirname, '../config/registerDireflowComponents.js'), addedScript);
-  fs.writeFileSync(resolve(__dirname, '../config/componentRegistrations.json'), JSON.stringify(componentRegistrations, null, 2));
+  fs.appendFileSync(resolve(__dirname, '../../config/registerDireflowComponents.js'), addedScript);
+  fs.writeFileSync(
+    resolve(__dirname, '../../config/componentRegistrations.json'),
+    JSON.stringify(componentRegistrations, null, 2),
+  );
 }
 
-function clearWidgetRegistry() {
-  fs.writeFileSync(resolve(__dirname, '../config/registerDireflowComponents.js'), 'window.direflowComponents = {};');
-  fs.writeFileSync(resolve(__dirname, '../config/componentRegistrations.json'), JSON.stringify([]));
+function clearWidgetRegistry(): void {
+  fs.writeFileSync(resolve(__dirname, '../../config/registerDireflowComponents.js'), 'window.direflowComponents = {};');
+  fs.writeFileSync(resolve(__dirname, '../../config/componentRegistrations.json'), JSON.stringify([]));
 }
 
-module.exports = {
-  buildAllComponents
-}
+export { buildAllComponents };

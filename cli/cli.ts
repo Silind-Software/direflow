@@ -34,14 +34,6 @@ export const cli = () => {
 
   program.version(versionMessage, '-v, --version', 'Show the current version');
 
-  program
-    .command('*')
-    .action(() => {
-      console.log('');
-      console.log('Uknown command.');
-      program.help();
-    });
-
   if (!process.argv.slice(2).length) {
     console.log('');
     program.help();

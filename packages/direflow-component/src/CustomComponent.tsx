@@ -7,7 +7,14 @@ import root from 'react-shadow';
 import WebFont from 'webfontloader';
 import { EventProvider } from './components/EventContext';
 
-const componentConfig = require('../../../direflow-config.js');
+const getComponentConfig = () => {
+  try {
+    const componentConfig = require('../../../direflow-config.js');
+    return componentConfig;
+  } catch (err) {
+    console.warn('direflow-config.js cannot be found.');
+  }
+};
 
 let componentAttributes: any;
 let componentProperties: any;
@@ -36,7 +43,7 @@ export const setMode = (shadowOption: boolean) => {
 };
 
 class CustomComponent extends HTMLElement {
-  public static get observedAttributes() {
+  public static get observedAttributes(): string[] {
     return Object.keys(componentAttributes).map((k) => k.toLowerCase());
   }
 
@@ -50,13 +57,13 @@ class CustomComponent extends HTMLElement {
     return { ...attributes, ...componentProperties };
   }
 
-  public connectedCallback() {
+  public connectedCallback(): void {
     this.loadFonts();
     this.registerComponent();
     this.mountReactApp();
   }
 
-  public attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+  public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
     if (oldValue === newValue) {
       return;
     }
@@ -64,7 +71,7 @@ class CustomComponent extends HTMLElement {
     this.mountReactApp();
   }
 
-  public reactPropsChangedCallback(name: string, oldValue: any, newValue: any) {
+  public reactPropsChangedCallback(name: string, oldValue: any, newValue: any): void {
     if (oldValue === newValue) {
       return;
     }
@@ -74,11 +81,11 @@ class CustomComponent extends HTMLElement {
     this.mountReactApp();
   }
 
-  public disconnectedCallback() {
+  public disconnectedCallback(): void {
     ReactDOM.unmountComponentAtNode(this);
   }
 
-  private mountReactApp() {
+  private mountReactApp(): void {
     const application = (
       <EventProvider value={this.eventDispatcher}>
         {React.createElement(rootComponent, this.reactProps())}
@@ -96,15 +103,17 @@ class CustomComponent extends HTMLElement {
     this.dispatchEvent(event);
   };
 
-  private registerComponent() {
-    const global = (window as any);
+  private registerComponent(): void {
+    const global = window as any;
     const widget = global.direflowComponents && global.direflowComponents[elementName];
     if (widget && widget.callback) {
       widget.callback(this);
     }
   }
 
-  private loadFonts() {
+  private loadFonts(): void {
+    const componentConfig = getComponentConfig();
+
     if (!componentConfig) {
       return;
     }

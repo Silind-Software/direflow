@@ -5,9 +5,16 @@ const rimraf = require('rimraf');
 const fs = require('fs');
 const { resolve } = require('path');
 
-const componentConfig = require('../../direflow-config');
+const getComponentConfig = () => {
+  try {
+    const componentConfig = require('../../direflow-config');
+    return componentConfig;
+  } catch (err) {
+    console.warn('direflow-config.js cannot be found.');
+  }
+}
 
-module.exports = function override(config, env) {
+module.exports = function override(config: any, env: any): any {
   const overridenConfig = {
     ...addWelcomeMessage(config, env),
     module: overrideModule(config.module),
@@ -19,21 +26,21 @@ module.exports = function override(config, env) {
   return overridenConfig;
 };
 
-const addWelcomeMessage = (config, env) => {
+const addWelcomeMessage = (config: any, env: any) => {
   if (env === 'production') {
     return config;
   }
 
   const entry = [...config.entry];
-  entry.push(resolve(__dirname, './config/welcome.js'));
+  entry.push(resolve(__dirname, './dist/config/welcome.js'));
 
   config.entry = entry;
 
   return config;
 };
 
-const overrideModule = (module) => {
-  const cssRuleIndex = module.rules[2].oneOf.findIndex((rule) => '.css'.match(rule.test));
+const overrideModule = (module: any) => {
+  const cssRuleIndex = module.rules[2].oneOf.findIndex((rule: any) => '.css'.match(rule.test));
   if (cssRuleIndex !== -1) {
     module.rules[2].oneOf[cssRuleIndex].use[0] = {
       loader: 'to-string-loader',
@@ -51,7 +58,7 @@ const overrideModule = (module) => {
   return module;
 };
 
-const overrideOutput = (output) => {
+const overrideOutput = (output: any) => {
   const { checkFilename, ...newOutput } = output;
 
   return {
@@ -60,7 +67,7 @@ const overrideOutput = (output) => {
   };
 };
 
-const overrideOptimization = (optimization, env) => {
+const overrideOptimization = (optimization: any, env: any) => {
   const newOptions = optimization.minimizer[0].options;
 
   newOptions.sourceMap = env === 'development';
@@ -73,7 +80,7 @@ const overrideOptimization = (optimization, env) => {
   };
 };
 
-const overridePlugins = (plugins, env) => {
+const overridePlugins = (plugins: any, env: any) => {
   plugins[0].options.inject = 'head';
 
   plugins.push(
@@ -94,7 +101,7 @@ const overridePlugins = (plugins, env) => {
   return plugins;
 };
 
-const copyBundleScript = async (env) => {
+const copyBundleScript = async (env: any) => {
   if (env !== 'production') {
     return;
   }
@@ -103,7 +110,7 @@ const copyBundleScript = async (env) => {
     return;
   }
 
-  fs.readdirSync('build').forEach((file) => {
+  fs.readdirSync('build').forEach((file: string) => {
     if (file !== 'componentBundle.js') {
       rimraf.sync(`build/${file}`);
     }
@@ -111,6 +118,8 @@ const copyBundleScript = async (env) => {
 };
 
 const getCustomScripts = () => {
+  const componentConfig = getComponentConfig();
+
   if (!componentConfig) {
     return;
   }
@@ -119,7 +128,7 @@ const getCustomScripts = () => {
     return;
   }
 
-  const scriptLoaderPlugin = componentConfig.plugins.find((plugin) => plugin.name === 'script-loader');
+  const scriptLoaderPlugin = componentConfig.plugins.find((plugin: any) => plugin.name === 'script-loader');
 
   if (scriptLoaderPlugin && scriptLoaderPlugin.options.externals.length) {
     return scriptLoaderPlugin.options.externals;

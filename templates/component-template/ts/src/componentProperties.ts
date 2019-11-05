@@ -12,14 +12,6 @@ export interface IComponentProperties {
 }
 
 /**
- * Update this interface to reflect the attributes of the Web Component
- * NB: The type of an attribute must be primitive
- */
-export interface IComponentAttributes {
-  componentTitle: string;
-}
-
-/**
  * Update this object with the initial values of the properties
  */
 export const componentProperties: IComponentProperties = {
@@ -29,6 +21,14 @@ export const componentProperties: IComponentProperties = {
     'Build awesome React Web Component!',
   ],
 };
+
+/**
+ * Update this interface to reflect the attributes of the Web Component
+ * NB: The type of an attribute must be primitive
+ */
+export interface IComponentAttributes {
+  componentTitle: string;
+}
 
 /**
  * Update this object with the initial values of the attributes

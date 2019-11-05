@@ -19,14 +19,27 @@ const componentPackageTs = require('../templates/component-template/ts/package.j
 if (version === 'link') {
   const currentDirectory = process.cwd();
 
-  rootPackage.version = `${rootPackage.version}-link`;
-  projectPackage.version = `${projectPackage.version}-link`;
-  componentPackage.version = `${componentPackage.version}-link`;
+  if (!rootPackage.version.includes('-link')) {
+    rootPackage.version = `${rootPackage.version}-link`;
+  }
+
+  if (!projectPackage.version.includes('-link')) {
+    projectPackage.version = `${projectPackage.version}-link`;
+  }
+
+  if (!componentPackage.version.includes('-link')) {
+    componentPackage.version = `${componentPackage.version}-link`;
+  }
 
   projectPackageJs.dependencies['direflow-project'] = `${currentDirectory}/packages/direflow-project`;
   projectPackageTs.dependencies['direflow-project'] = `${currentDirectory}/packages/direflow-project`;
   componentPackageJs.dependencies['direflow-component'] = `${currentDirectory}/packages/direflow-component`;
   componentPackageTs.dependencies['direflow-component'] = `${currentDirectory}/packages/direflow-component`;
+
+  console.log('');
+  console.log('Version have been set to use LINK.');
+  console.log(`New version: ${rootPackage.version}`);
+  console.log('');
 } else {
 
   rootPackage.version = version;
@@ -37,6 +50,11 @@ if (version === 'link') {
   projectPackageTs.dependencies['direflow-project'] = version;
   componentPackageJs.dependencies['direflow-component'] = version;
   componentPackageTs.dependencies['direflow-component'] = version;
+
+  console.log('');
+  console.log('Version have updated.');
+  console.log(`New version: ${version}`);
+  console.log('');
 }
 
 fs.writeFileSync('package.json', JSON.stringify(rootPackage, null, 2), 'utf-8');

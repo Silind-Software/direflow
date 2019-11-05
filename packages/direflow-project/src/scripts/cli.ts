@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-const { spawn } = require('child_process');
-const chalk = require('chalk');
-const { buildAllComponents } = require('../scripts/builds');
-const { installAllComponents } = require('../scripts/installs');
-const { testAllComponents } = require('../scripts/tests');
-const { showDevServerMessage } = require('./messages');
+import chalk from 'chalk';
+import { spawn } from 'child_process';
+import { buildAllComponents } from './builds';
+import { installAllComponents } from './installs';
+import { testAllComponents } from './tests';
+import { showDevServerMessage } from './messages';
 
 if (process.argv[2] === 'start') {
   start();
@@ -27,7 +27,7 @@ if (process.argv[2] === 'test-all') {
   testAll();
 }
 
-async function start() {
+async function start(): Promise<void> {
   console.log('');
   console.log(chalk.whiteBright('All Direflow Components will be built and served with the Direflow Project...'));
   console.log(chalk.whiteBright('Development server will start after this process has finished.'));
@@ -47,7 +47,7 @@ async function start() {
   console.log(chalk.blueBright(`Starting Direflow Project at ${chalk.magenta('localhost:8000')}`));
   console.log('');
 
-  let showFinishMessage;
+  let showFinishMessage: NodeJS.Timeout | undefined;
   let messageIsShown = false;
 
   devServer.stdout.on('readable', () => {
@@ -70,7 +70,7 @@ async function start() {
   });
 }
 
-async function build() {
+async function build(): Promise<void> {
   await buildAll();
 
   const buildProcess = spawn('webpack', [
@@ -82,7 +82,7 @@ async function build() {
   console.log(chalk.blueBright('Creating production build ...'));
   console.log('');
 
-  let showFinishMessage;
+  let showFinishMessage: NodeJS.Timeout | undefined;
   let messageIsShown = false;
 
   buildProcess.stdout.on('readable', () => {
@@ -99,14 +99,14 @@ async function build() {
   });
 }
 
-async function installAll() {
+async function installAll(): Promise<void> {
   await installAllComponents();
 }
 
-async function buildAll() {
+async function buildAll(): Promise<void> {
   await buildAllComponents();
 }
 
-async function testAll() {
+async function testAll(): Promise<void> {
   await testAllComponents();
 }

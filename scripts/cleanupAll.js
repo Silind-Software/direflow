@@ -56,4 +56,32 @@ function cleanDeps(dir) {
       out && console.log(out);
     });
   }
+
+  if (fs.existsSync(`${dir}/dist`)) {
+    exec(`rm -rf ${dir}/dist`, (err, out) => {
+      if (err) {
+        console.log(`✗ ${dir}/dist FAILED to remove`);
+        console.log(err);
+        return;
+      }
+
+      console.log(`✓ ${dir}/dist is REMOVED`);
+      out && console.log(out);
+    });
+  }
+
+  if (dir === 'packages/direflow-component') {
+    if (fs.existsSync(`${dir}/config-overrides.js`)) {
+      exec(`rm ${dir}/config-overrides.js`, (err, out) => {
+        if (err) {
+          console.log(`✗ ${dir}/config-overrides.js FAILED to remove`);
+          console.log(err);
+          return;
+        }
+  
+        console.log(`✓ ${dir}/config-overrides.js is REMOVED`);
+        out && console.log(out);
+      });
+    }
+  }
 }

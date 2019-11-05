@@ -1,4 +1,4 @@
-import { toTitleFormat, toPascalCase, toSnakeCase, createDefaultName } from '../src/utils/utils';
+import { toTitleFormat, toPascalCase, toSnakeCase, createDefaultName } from '../cli/utils/utils';
 
 const nameSnake = 'super-cool-component';
 const nameCamelCase = 'superCoolComponent';
