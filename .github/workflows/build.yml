@@ -37,22 +37,22 @@ jobs:
       run: |
         yarn build:all
 
-    - name: Version patch
+    - name: Create version patch
       run: yarn update-version patch
 
-    - name: Publish to direflow-cli to NPM
+    - name: Publish direflow-cli to NPM
       run: npm publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
   
-    - name: Publish to direflow-project to NPM
+    - name: Publish direflow-project to NPM
       run: |
         cd packages/direflow-project
         npm publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
   
-    - name: Publish to direflow-component to NPM
+    - name: Publish direflow-component to NPM
       run: |
         cd packages/direflow-component
         npm publish
