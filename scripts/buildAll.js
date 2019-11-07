@@ -18,7 +18,7 @@ for (let directory of widgetsDirectory) {
 function build(dir) {
   console.log('Beginning to build:', dir);
 
-  exec(`cd ${dir} && tsc`, (err, out) => {
+  exec(`cd ${dir} && yarn build`, (err, out) => {
     if (err) {
       console.log(`✗ ${dir} could not build`);
       console.log(err);

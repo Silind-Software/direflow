@@ -3714,13 +3714,13 @@ tslint-config-airbnb@^5.11.2:
     tslint-microsoft-contrib "~5.2.1"
 
 tslint-config-silind@^1.0.21:
-  version "1.0.21"
-  resolved "https://registry.yarnpkg.com/tslint-config-silind/-/tslint-config-silind-1.0.21.tgz#c4dd1ff05c36c3e7a1e981509ecdf99e6b10e855"
-  integrity sha512-f05/SQhYx1RQMjyLoM2rkWsPtp6l5gGeGGQRx6qc4MkjObs3O/lYbmgfAKHEdoQ6KO0P3zwRiux5WR2J3r9mAg==
+  version "1.0.22"
+  resolved "https://registry.yarnpkg.com/tslint-config-silind/-/tslint-config-silind-1.0.22.tgz#bee0a66008335ed972b0e51d528bb0a9554a6820"
+  integrity sha512-5jyD+h4fvTbZYGbYpYV5JRWtPOZ3vwvOENRf6y1rf8rTkbcJDxRP2hjENm1qlZOjqqifLqZWSwAYZN2mD3GVWg==
   dependencies:
-    tslint "^5.18.0"
-    tsutils "^3.14.0"
-    typescript "^3.5.2"
+    tslint "^5.20.1"
+    tsutils "^3.17.1"
+    typescript "^3.7.2"
 
 tslint-consistent-codestyle@^1.14.1:
   version "1.16.0"
@@ -3747,7 +3747,7 @@ tslint-microsoft-contrib@~5.2.1:
   dependencies:
     tsutils "^2.27.2 <2.29.0"
 
-tslint@^5.18.0, tslint@^5.20.0:
+tslint@^5.20.0, tslint@^5.20.1:
   version "5.20.1"
   resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.20.1.tgz#e401e8aeda0152bc44dd07e614034f3f80c67b7d"
   integrity sha512-EcMxhzCFt8k+/UP5r8waCf/lzmeSyVlqxqMEDQE7rWYiQky8KpIBz1JAoYXfROHrPZ1XXd43q8yQnULOLiBRQg==
@@ -3780,7 +3780,7 @@ tsutils@^2.29.0:
   dependencies:
     tslib "^1.8.1"
 
-tsutils@^3.0.0, tsutils@^3.14.0, tsutils@^3.5.0:
+tsutils@^3.0.0, tsutils@^3.17.1, tsutils@^3.5.0:
   version "3.17.1"
   resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-3.17.1.tgz#ed719917f11ca0dee586272b2ac49e015a2dd759"
   integrity sha512-kzeQ5B8H3w60nFY2g8cJIuH7JDpsALXySGtwGJ0p2LSjLgay3NdIpqq5SoOBe46bKDW2iq25irHCr8wjomUS2g==
@@ -3811,7 +3811,7 @@ type-fest@^0.5.2:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.5.2.tgz#d6ef42a0356c6cd45f49485c3b6281fc148e48a2"
   integrity sha512-DWkS49EQKVX//Tbupb9TFa19c7+MK1XmzkrZUR8TAktmE/DizXoaoJV6TZ/tSIPXipqNiRI6CyAe7x69Jb6RSw==
 
-typescript@^3.5.2, typescript@^3.7.0:
+typescript@^3.7.0, typescript@^3.7.2:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.2.tgz#27e489b95fa5909445e9fef5ee48d81697ad18fb"
   integrity sha512-ml7V7JfiN2Xwvcer+XAf2csGO1bPBdRbFCkYBczNZggrBZ9c7G3riSUeJmqEU5uOtXNPMhE3n+R4FA/3YOAWOQ==

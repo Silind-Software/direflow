@@ -1,26 +1,50 @@
-# Direflow
+<div style="display: flex; justify-content: center;">
 
-![NPM Version](https://img.shields.io/npm/v/direflow-cli)
-[![Github License](https://img.shields.io/github/license/Silind-Software/direflow)](https://github.com/Silind-Software/direflow/blob/master/LICENSE)
-![Build Status](https://github.com/Silind-Software/direflow/workflows/build/badge.svg)
-![Code Coverage](https://img.shields.io/codecov/c/github/Silind-Software/direflow)
+  ![](https://silind-s3.s3.eu-west-2.amazonaws.com/direflow/gh-banner.png)
 
-> :warning: This setup is still under development.  
+</div>
 
-Direflow is an upgrade and enhancement of the project: [create-react-web-component](https://create-react-web-component.com/)
+<div style="display: flex; justify-content: flex-end; align-item: center">
+
+  ![NPM Version](https://img.shields.io/npm/v/direflow-cli)
+  [![Github License](https://img.shields.io/github/license/Silind-Software/direflow)](https://github.com/Silind-Software/direflow/blob/master/LICENSE)
+  ![Build Status](https://github.com/Silind-Software/direflow/workflows/build/badge.svg)
+  ![Code Coverage](https://img.shields.io/codecov/c/github/Silind-Software/direflow)
+
+</div>
+
+#### Direflow is an upgrade and enhancement of the project: [create-react-web-component](https://create-react-web-component.com/)
+
+### New features include
+✔ Full Webpack control  
+✔ Bundling multiple components together  
+✔ Data-sharing and interactions bewteen components  
+✔ Plugins for varies purposes: font-loading, external scripts, styled-components, and more ...
 
 ## Get started
 
-You can get started using direflow, but this project is still under development.
-You are adviced to instead use [create-react-web-component](https://create-react-web-component.com/).
-
-However, if you want to try out direflow, you can get started by installing the cli:
+Start by downloading the cli:
 ```console
 npm i -g direflow-cli
 ```
 
-Create a new Web Component using
+### Create a new Direflow Component
 ```console
 direflow create -c
 ```
 (this is the equivalent of `npx create-react-web-component`)
+
+### Create a new Direflow Project
+```console
+direflow create -p
+```
+
+Now cd into the project, and create the first Direflow Component  
+```consloe
+cd <project-name>
+direflow create -c
+```
+
+This will create a folder called `direflow-components`, which will contain all Direflow Components related to the project.
+
+### This is still new, and  more documentation will follow ...

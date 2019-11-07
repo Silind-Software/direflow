@@ -1,18 +1,10 @@
-const EventHooksPlugin = require('event-hooks-webpack-plugin');
-const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
-const { PromiseTask } = require('event-hooks-webpack-plugin/lib/tasks');
-const rimraf = require('rimraf');
-const fs = require('fs');
-const { resolve } = require('path');
-
-const getComponentConfig = () => {
-  try {
-    const componentConfig = require('../../direflow-config');
-    return componentConfig;
-  } catch (err) {
-    console.warn('direflow-config.js cannot be found.');
-  }
-}
+import EventHooksPlugin from 'event-hooks-webpack-plugin';
+import HtmlWebpackExternalsPlugin from 'html-webpack-externals-plugin';
+import FilterWarningsPlugin from 'webpack-filter-warnings-plugin';
+import rimraf from 'rimraf';
+import fs from 'fs';
+import { resolve } from 'path';
+import { PromiseTask } from 'event-hooks-webpack-plugin/lib/tasks';;
 
 module.exports = function override(config: any, env: any): any {
   const overridenConfig = {
@@ -89,6 +81,15 @@ const overridePlugins = (plugins: any, env: any) => {
     }),
   );
 
+  plugins.push(
+    new FilterWarningsPlugin({
+      exclude: [
+        /Module not found.*/,
+        /Critical dependency: the request of a dependency is an expression/,
+      ],
+    }),
+  );
+
   const customScripts = getCustomScripts();
   if (customScripts) {
     plugins.push(
@@ -118,17 +119,17 @@ const copyBundleScript = async (env: any) => {
 };
 
 const getCustomScripts = () => {
-  const componentConfig = getComponentConfig();
+  const config = require('./dist/utils/direflowConfigExtrator');
 
-  if (!componentConfig) {
+  if (!config) {
     return;
   }
 
-  if (!componentConfig.plugins || !componentConfig.plugins.length) {
+  if (!config.plugins || !config.plugins.length) {
     return;
   }
 
-  const scriptLoaderPlugin = componentConfig.plugins.find((plugin: any) => plugin.name === 'script-loader');
+  const scriptLoaderPlugin = config.plugins.find((plugin: any) => plugin.name === 'script-loader');
 
   if (scriptLoaderPlugin && scriptLoaderPlugin.options.externals.length) {
     return scriptLoaderPlugin.options.externals;

@@ -6,15 +6,8 @@ import ReactDOM from 'react-dom';
 import { createProxy } from 'react-shadow';
 import WebFont from 'webfontloader';
 import { EventProvider } from './components/EventContext';
-
-const getComponentConfig = () => {
-  try {
-    const componentConfig = require('../../../direflow-config.js');
-    return componentConfig;
-  } catch (err) {
-    console.warn('direflow-config.js cannot be found.');
-  }
-};
+import { injectIntoFirstChild, stripStyleFromHead } from './services/DomControllers';
+import { getDireflowPlugin } from './utils/direflowConfigExtrator';
 
 let componentAttributes: any;
 let componentProperties: any;
@@ -43,6 +36,8 @@ export const setMode = (shadowOption: boolean) => {
 };
 
 class CustomComponent extends HTMLElement {
+  private _application: JSX.Element | undefined;
+
   public static get observedAttributes(): string[] {
     return Object.keys(componentAttributes).map((k) => k.toLowerCase());
   }
@@ -86,11 +81,7 @@ class CustomComponent extends HTMLElement {
   }
 
   private mountReactApp(): void {
-    const application = (
-      <EventProvider value={this.eventDispatcher}>
-        {React.createElement(rootComponent, this.reactProps())}
-      </EventProvider>
-    );
+    const application = this.application();
 
     if (shadow !== undefined && !shadow) {
       ReactDOM.render(application, this);
@@ -98,6 +89,37 @@ class CustomComponent extends HTMLElement {
       const root = createProxy({ span: undefined });
       ReactDOM.render(<root.span>{application}</root.span>, this);
     }
+  }
+
+  private application(): JSX.Element {
+    if (this._application) {
+      return this._application;
+    }
+
+    const baseApplication = (
+      <EventProvider value={this.eventDispatcher}>
+        {React.createElement(rootComponent, this.reactProps())}
+      </EventProvider>
+    );
+
+    if (getDireflowPlugin('styled-components')) {
+      setTimeout(() => {
+        try {
+          const scSecrets = require('styled-components'). __DO_NOT_USE_OR_YOU_WILL_BE_HAUNTED_BY_SPOOKY_GHOSTS;
+          const { StyleSheet } = scSecrets;
+          const styles = StyleSheet.instance.tags[0].css();
+
+          const styleElement = document.createElement('style');
+          styleElement.type = 'text/css';
+          styleElement.innerHTML = styles;
+
+          injectIntoFirstChild(this, styleElement);
+          stripStyleFromHead();
+        } catch (err) {}
+      });
+    }
+
+    return baseApplication;
   }
 
   private eventDispatcher = (event: Event) => {
@@ -113,29 +135,9 @@ class CustomComponent extends HTMLElement {
   }
 
   private loadFonts(): void {
-    const componentConfig = getComponentConfig();
+    const fontLoaderPlugin = getDireflowPlugin('font-loader');
 
-    if (!componentConfig) {
-      return;
-    }
-
-    if (!componentConfig.plugins || !componentConfig.plugins.length) {
-      return;
-    }
-
-    const fontLoaderPlugin = componentConfig.plugins.find((plugin: any) => {
-      if (plugin.name !== 'font-loader') {
-        return false;
-      }
-
-      if (!plugin.options) {
-        return false;
-      }
-
-      return true;
-    });
-
-    if (fontLoaderPlugin) {
+    if (fontLoaderPlugin?.options) {
       WebFont.load(fontLoaderPlugin.options);
     }
   }
