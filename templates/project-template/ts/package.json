@@ -16,7 +16,7 @@
   "dependencies": {
     "@types/jest": "24.0.15",
     "direflow-project": "1.0.9",
-    "typescript": "3.5.3",
+    "typescript": "^3.7.0",
     "tslint": "5.18.0",
     "tslint-config-airbnb": "5.11.1",
     "tslint-config-silind": "1.0.21",

@@ -1,16 +1,8 @@
-
-# Created by https://www.gitignore.io/api/osx,node,windows,webstorm+all,intellij+all,visualstudiocode
-# Edit at https://www.gitignore.io/?templates=osx,node,windows,webstorm+all,intellij+all,visualstudiocode
-
-### Intellij+all ###
-# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
-# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
-
-
 # Project setup specifics
 
 dist
 package-lock.json
+config-overrides.js
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -34,16 +26,6 @@ package-lock.json
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
-
-# Gradle and Maven with auto-import
-# When using Gradle or Maven with auto-import, you should exclude module files,
-# since they will be recreated, and may cause churn.  Uncomment if using
-# auto-import.
-# .idea/modules.xml
-# .idea/*.iml
-# .idea/modules
-# *.iml
-# *.ipr
 
 # CMake
 cmake-build-*/
@@ -77,10 +59,6 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
-
-### Intellij+all Patch ###
-# Ignores the whole .idea folder and all .iml files
-# See https://github.com/joeblau/gitignore.io/issues/186 and https://github.com/joeblau/gitignore.io/issues/360
 
 .idea/
 

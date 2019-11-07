@@ -1,4 +1,10 @@
-import CustomComponent, { setComponentAttributes, setComponentProperties, setRootComponent, setMode, setElementName } from './CustomComponent';
+import CustomComponent, {
+  setComponentAttributes,
+  setComponentProperties,
+  setRootComponent,
+  setMode,
+  setElementName,
+} from './CustomComponent';
 
 let componentAttributes: any | null = null;
 let componentProperties: any | null = null;
@@ -6,15 +12,19 @@ let elementName: string | null = null;
 let rootComponent: React.FC<any> | React.ComponentClass<any, any> | null = null;
 
 export class DireflowComponent {
-  public static setAttributes(attributes: any) {
+  public static setAttributes(attributes: any): void {
     componentAttributes = attributes;
   }
 
-  public static setProperties(properties: any) {
+  public static setProperties(properties: any): void {
     componentProperties = properties;
   }
 
-  public static render(App: React.FC<any> | React.ComponentClass<any, any>, name: string, option?: { shadow: boolean }) {
+  public static render(
+    App: React.FC<any> | React.ComponentClass<any, any>,
+    name: string,
+    option?: { shadow: boolean },
+  ): void {
     rootComponent = App;
     elementName = name;
 
@@ -33,11 +43,11 @@ export class DireflowComponent {
     customElements.define(elementName, CustomComponent);
   }
 
-  private static setComponentProperties() {
+  private static setComponentProperties(): void {
     if (!rootComponent) {
       return;
     }
-    
+
     const properties = { ...componentProperties };
     const propertyMap = {} as PropertyDescriptorMap;
 
@@ -45,10 +55,10 @@ export class DireflowComponent {
       const property: PropertyDescriptor = {
         configurable: true,
         enumerable: true,
-        get() {
+        get(): any {
           return properties[key];
         },
-        set(newValue) {
+        set(newValue: any): any {
           const oldValue = properties[key];
           properties[key] = newValue;
           (this as any).reactPropsChangedCallback(key, oldValue, newValue);
@@ -61,7 +71,7 @@ export class DireflowComponent {
     Object.defineProperties(CustomComponent.prototype, propertyMap);
   }
 
-  private static validateDependencies() {
+  private static validateDependencies(): void {
     if (!componentAttributes) {
       throw Error('Cannot define custom element: Attributes have not been set.');
     }

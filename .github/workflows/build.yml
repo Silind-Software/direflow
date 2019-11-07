@@ -37,6 +37,9 @@ jobs:
       run: |
         yarn build:all
 
+    - name: Version patch
+      run: yarn update-version patch
+
     - name: Publish to direflow-cli to NPM
       run: npm publish
       env:

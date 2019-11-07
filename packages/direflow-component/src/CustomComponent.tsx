@@ -3,7 +3,7 @@ import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import root from 'react-shadow';
+import { createProxy } from 'react-shadow';
 import WebFont from 'webfontloader';
 import { EventProvider } from './components/EventContext';
 
@@ -95,7 +95,8 @@ class CustomComponent extends HTMLElement {
     if (shadow !== undefined && !shadow) {
       ReactDOM.render(application, this);
     } else {
-      ReactDOM.render(<root.div>{application}</root.div>, this);
+      const root = createProxy({ span: undefined });
+      ReactDOM.render(<root.span>{application}</root.span>, this);
     }
   }
 

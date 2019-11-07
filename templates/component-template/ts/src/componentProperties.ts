@@ -1,9 +1,3 @@
-/*!
-* Use the two interfaces and two objects below to register
-* the properties and attributes the Web Component is expected to receive.
-* These will be passed down as props to the React App underneath.
-*/
-
 /**
  * Update this interface to reflect the types of the properties
  */
@@ -24,7 +18,6 @@ export const componentProperties: IComponentProperties = {
 
 /**
  * Update this interface to reflect the attributes of the Web Component
- * NB: The type of an attribute must be primitive
  */
 export interface IComponentAttributes {
   componentTitle: string;

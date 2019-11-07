@@ -1,10 +1,21 @@
 const fs = require('fs');
+const { execSync } = require('child_process');
 
-const version = process.argv[2];
+const arg = process.argv[2];
+let patchVersion;
 
-if (!version) {
+if (!arg) {
   console.log('Provide a version number');
   return;
+}
+
+if (arg === 'patch') {
+  const buffer = execSync('npm view direflow-cli version');
+  const currentVersion = buffer.toString('utf8');
+  const versionNumbers = currentVersion.split('.');
+  const patch = Number(versionNumbers[2]);
+
+  patchVersion = `${versionNumbers[0]}.${versionNumbers[1]}.${patch + 1}`;
 }
 
 const rootPackage = require('../package.json');
@@ -16,7 +27,7 @@ const projectPackageTs = require('../templates/project-template/ts/package.json'
 const componentPackageJs = require('../templates/component-template/js/package.json');
 const componentPackageTs = require('../templates/component-template/ts/package.json');
 
-if (version === 'link') {
+if (arg === 'link') {
   const currentDirectory = process.cwd();
 
   if (!rootPackage.version.includes('-link')) {
@@ -41,6 +52,8 @@ if (version === 'link') {
   console.log(`New version: ${rootPackage.version}`);
   console.log('');
 } else {
+
+  const version = arg === 'patch' ? patchVersion : arg;
 
   rootPackage.version = version;
   projectPackage.version = version;
