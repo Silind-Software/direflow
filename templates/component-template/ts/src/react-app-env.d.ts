@@ -5,6 +5,11 @@ declare module '*.css' {
   export default classes;
 }
 
+declare module '*.scss' {
+  const classes: { readonly [key: string]: string };
+  export default classes;
+}
+
 declare module '*.svg' {
   import * as React from 'react';
 

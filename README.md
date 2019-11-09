@@ -1,17 +1,17 @@
-<div style="display: flex; justify-content: center;">
+<span align="center">
 
   ![](https://silind-s3.s3.eu-west-2.amazonaws.com/direflow/gh-banner.png)
 
-</div>
+</span>
 
-<div style="display: flex; justify-content: flex-end; align-item: center">
+<span align="right">
 
   ![NPM Version](https://img.shields.io/npm/v/direflow-cli)
   [![Github License](https://img.shields.io/github/license/Silind-Software/direflow)](https://github.com/Silind-Software/direflow/blob/master/LICENSE)
   ![Build Status](https://github.com/Silind-Software/direflow/workflows/build/badge.svg)
   ![Code Coverage](https://img.shields.io/codecov/c/github/Silind-Software/direflow)
 
-</div>
+</span>
 
 #### Direflow is an upgrade and enhancement of the project: [create-react-web-component](https://create-react-web-component.com/)
 

@@ -2,6 +2,8 @@ import program from 'commander';
 import chalk from 'chalk';
 import { headline } from './headline';
 import { createProject, createComponent, create } from './create';
+import { updateAvailable } from './messages';
+import checkForUpdates from './checkForUpdate';
 
 const packageJson = require('../package.json');
 
@@ -16,6 +18,7 @@ export const cli = () => {
     .option('-p, --project', 'Create a new Direflow Project')
     .option('-c, --component', 'Create a new Direflow Component')
     .action((args: any) => {
+      checkForUpdates()
       if (args.project) {
         createProject();
       } else if (args.component) {
@@ -37,7 +40,7 @@ export const cli = () => {
   if (!process.argv.slice(2).length) {
     console.log('');
     program.help();
-    return;
+
   }
 
   program.parse(process.argv);

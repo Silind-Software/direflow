@@ -3,12 +3,15 @@ body {
   margin: 0;
   width: 100vw;
   padding-top: 150px;
+  background-color: #F6FAFA;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body > div {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #F6FAFA;
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 body > * {
