@@ -1,6 +1,6 @@
 {
   "name": "direflow-component",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Create Web Components using React",
   "main": "dist/index.js",
   "author": "Silind Software",

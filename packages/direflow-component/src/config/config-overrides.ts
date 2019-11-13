@@ -130,19 +130,14 @@ const copyBundleScript = async (env: any) => {
 };
 
 const getCustomScripts = () => {
-  const config = require('./dist/utils/direflowConfigExtrator');
+  const { getDireflowPlugin } = require('./dist/utils/direflowConfigExtrator');
+  const plugin = getDireflowPlugin('script-loader');
 
-  if (!config) {
+  if (!plugin) {
     return;
   }
 
-  if (!config.plugins || !config.plugins.length) {
-    return;
-  }
-
-  const scriptLoaderPlugin = config.plugins.find((plugin: any) => plugin.name === 'script-loader');
-
-  if (scriptLoaderPlugin && scriptLoaderPlugin.options.externals.length) {
-    return scriptLoaderPlugin.options.externals;
+  if (plugin.options.externals && plugin.options.externals.length) {
+    return plugin.options.externals;
   }
 };
