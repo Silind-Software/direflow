@@ -1,5 +1,4 @@
 import EventHooksPlugin from 'event-hooks-webpack-plugin';
-import HtmlWebpackExternalsPlugin from 'html-webpack-externals-plugin';
 import FilterWarningsPlugin from 'webpack-filter-warnings-plugin';
 import rimraf from 'rimraf';
 import fs from 'fs';
@@ -101,15 +100,6 @@ const overridePlugins = (plugins: any, env: any) => {
     }),
   );
 
-  const customScripts = getCustomScripts();
-  if (customScripts) {
-    plugins.push(
-      new HtmlWebpackExternalsPlugin({
-        externals: customScripts,
-      }),
-    );
-  }
-
   return plugins;
 };
 
@@ -127,17 +117,4 @@ const copyBundleScript = async (env: any) => {
       rimraf.sync(`build/${file}`);
     }
   });
-};
-
-const getCustomScripts = () => {
-  const { getDireflowPlugin } = require('./dist/utils/direflowConfigExtrator');
-  const plugin = getDireflowPlugin('script-loader');
-
-  if (!plugin) {
-    return;
-  }
-
-  if (plugin.options.externals && plugin.options.externals.length) {
-    return plugin.options.externals;
-  }
 };
