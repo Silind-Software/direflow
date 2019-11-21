@@ -20,5 +20,5 @@ const direflowConfig = getDireflowConfig();
 export default direflowConfig;
 
 export const getDireflowPlugin = (pluginName: string): IDireflowPlugin | undefined => {
-  return direflowConfig?.plugins.find((plugin) => plugin.name === pluginName);
+  return direflowConfig?.plugins?.find((plugin) => plugin.name === pluginName);
 };

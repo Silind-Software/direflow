@@ -144,27 +144,29 @@ class CustomComponent extends HTMLElement {
   }
 
   private includeExternals(): void {
-    const fontLoaderPlugin = getDireflowPlugin('external-loader');
-    const paths = fontLoaderPlugin?.options.paths;
+    const externalLoaderPlugin = getDireflowPlugin('external-loader');
+    const paths = externalLoaderPlugin?.options?.paths;
 
-    setTimeout(() => {
-      paths.forEach((path: string) => {
-        if (path.endsWith('.js')) {
-          const script = document.createElement('script');
-          script.src = path;
+    if (paths && paths.length) {
+      setTimeout(() => {
+        paths.forEach((path: string) => {
+          if (path.endsWith('.js')) {
+            const script = document.createElement('script');
+            script.src = path;
 
-          injectIntoShadowRoot(this, script);
-        }
+            injectIntoShadowRoot(this, script);
+          }
 
-        if (path.endsWith('.css')) {
-          const link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = path;
+          if (path.endsWith('.css')) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = path;
 
-          injectIntoShadowRoot(this, link);
-        }
+            injectIntoShadowRoot(this, link);
+          }
+        });
       });
-    });
+    }
   }
 }
 

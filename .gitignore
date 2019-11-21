@@ -2,6 +2,7 @@
 
 dist
 package-lock.json
+yarn.lock
 config-overrides.js
 
 # User-specific stuff
