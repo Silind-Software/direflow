@@ -13,7 +13,7 @@
 
 </span>
 
-## [Official webpage](https://direflow.io/)
+## [Official web page](https://direflow.io/)
 
 #### Set up a React App and build it as a Web Component
 > This setup is is based on [*react-scripts*](https://www.npmjs.com/package/react-scripts) from [*create-react-app*](https://create-react-app.dev/docs/getting-started)  
@@ -22,7 +22,7 @@
 ### Features include
 ✔ Full Webpack control  
 ✔ Bundling multiple components together  
-✔ Data-sharing and interactions bewteen components  
+✔ Data-sharing and interactions between components  
 ✔ Passing child elements to the component  
 ✔ Plugins for varies purposes: font-loading, external scripts, styled-components, and more ...
 
@@ -50,7 +50,7 @@ yarn start
 Your Direflow Component will start running on `localhost:3000` and your browser opens a new window  
 
 <p align="center">
-<img src="https://silind-s3.s3.eu-west-2.amazonaws.com/create-react-web-component-demo/create-react-web-component.png" />
+<img src="https://silind-s3.s3.eu-west-2.amazonaws.com/direflow/direflow-component.png" />
 </p>
 
 #### Read more on [direflow.io](https://direflow.io/direflow-component)

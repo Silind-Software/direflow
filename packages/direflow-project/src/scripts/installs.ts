@@ -42,4 +42,4 @@ function triggerCommand(directory: string): Promise<string> {
   });
 }
 
-export { installAllComponents };
+installAllComponents();

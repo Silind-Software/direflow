@@ -35,4 +35,4 @@ function triggerCommand(directory: string): Promise<string> {
   });
 }
 
-export { testAllComponents };
+testAllComponents();

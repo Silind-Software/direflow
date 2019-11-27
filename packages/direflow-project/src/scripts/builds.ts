@@ -82,4 +82,4 @@ function clearWidgetRegistry(): void {
   fs.writeFileSync(resolve(__dirname, '../../config/componentRegistrations.json'), JSON.stringify([]));
 }
 
-export { buildAllComponents };
+buildAllComponents();

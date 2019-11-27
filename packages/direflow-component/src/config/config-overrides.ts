@@ -5,7 +5,7 @@ import fs from 'fs';
 import { resolve } from 'path';
 import { PromiseTask } from 'event-hooks-webpack-plugin/lib/tasks';
 
-module.exports = function override(config: any, env: any): any {
+module.exports = function override(config: any, env: string): any {
   const overridenConfig = {
     ...addWelcomeMessage(config, env),
     module: overrideModule(config.module),
@@ -17,7 +17,7 @@ module.exports = function override(config: any, env: any): any {
   return overridenConfig;
 };
 
-const addWelcomeMessage = (config: any, env: any) => {
+const addWelcomeMessage = (config: any, env: string) => {
   if (env === 'production') {
     return config;
   }
@@ -69,23 +69,34 @@ const overrideOutput = (output: any) => {
   return {
     ...newOutput,
     filename: 'componentBundle.js',
+    chunkFilename: 'vendor.js',
   };
 };
 
-const overrideOptimization = (optimization: any, env: any) => {
+const overrideOptimization = (optimization: any, env: string) => {
   const newOptions = optimization.minimizer[0].options;
+  const vendorSplitChunks = {
+    cacheGroups: {
+      vendor: {
+        test: /node_modules/,
+        chunks: 'initial',
+        name: 'vendor',
+        enforce: true,
+      }
+    }
+  };
 
   newOptions.sourceMap = env === 'development';
   optimization.minimizer[0].options = newOptions;
 
   return {
     ...optimization,
-    splitChunks: false,
+    splitChunks: shouldUseVendor(env) ? vendorSplitChunks : false,
     runtimeChunk: false,
   };
 };
 
-const overridePlugins = (plugins: any, env: any) => {
+const overridePlugins = (plugins: any, env: string) => {
   plugins[0].options.inject = 'head';
 
   plugins.push(
@@ -103,7 +114,7 @@ const overridePlugins = (plugins: any, env: any) => {
   return plugins;
 };
 
-const copyBundleScript = async (env: any) => {
+const copyBundleScript = async (env: string) => {
   if (env !== 'production') {
     return;
   }
@@ -113,8 +124,24 @@ const copyBundleScript = async (env: any) => {
   }
 
   fs.readdirSync('build').forEach((file: string) => {
-    if (file !== 'componentBundle.js') {
+    if (file !== 'componentBundle.js' && file !== 'vendor.js') {
       rimraf.sync(`build/${file}`);
     }
   });
+};
+
+const shouldUseVendor = (env: string) => {
+  if (env !== 'production') {
+    return false;
+  }
+
+  if (process.argv.length < 3) {
+    return false;
+  }
+
+  if (!process.argv.some((arg: string) => arg === '--vendor')) {
+    return false;
+  }
+
+  return true;
 };
