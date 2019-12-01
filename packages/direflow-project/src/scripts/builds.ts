@@ -1,7 +1,15 @@
 import fs from 'fs';
 import { resolve } from 'path';
 import chalk from 'chalk';
-import { exec, execSync } from 'child_process';
+import { promisify } from 'util';
+import cp from 'child_process';
+
+const exec = promisify(cp.exec);
+const writeFile = promisify(fs.writeFile);
+const appendFile = promisify(fs.appendFile);
+const readdir = promisify(fs.readdir);
+const stat = promisify(fs.stat);
+const exists = promisify(fs.exists);
 
 async function buildAllComponents(): Promise<void> {
   if (!fs.existsSync('direflow-components')) {
@@ -14,44 +22,46 @@ async function buildAllComponents(): Promise<void> {
   console.log(chalk.blueBright('Building all Direflow Components...'));
   console.log('');
 
-  const componentsDirectory = fs.readdirSync('direflow-components');
-  clearWidgetRegistry();
+  await clearWidgetRegistry();
+  const componentsDirectory = await readdir('direflow-components');
 
   for (const directory of componentsDirectory) {
-    if (fs.statSync(`direflow-components/${directory}`).isDirectory()) {
+    if ((await stat(`direflow-components/${directory}`)).isDirectory()) {
+      if (!(await exists(`direflow-components/${directory}/node_modules/`))) {
+        await installWidget(directory);
+      }
+
+      console.log(chalk.white(`Build started: ${directory}`));
+
       try {
-        const result = await triggerCommand(directory);
-        console.log(chalk.greenBright(result));
+        await exec(`cd direflow-components/${directory} && ../../node_modules/direflow-project/node_modules/yarn/bin/yarn build`);
+        registerWidget(directory);
+
+        console.log(chalk.greenBright(`Build success: ${directory}`));
       } catch (err) {
-        console.log(chalk.red(err));
+        console.log(chalk.red(`Build failed: ${directory}`));
+        console.log(err);
         process.exit(1);
       }
     }
   }
 }
 
-function triggerCommand(directory: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    if (!fs.existsSync(`direflow-components/${directory}/node_modules/`)) {
-      console.log(chalk.blueBright(`${directory} has not been installed.`));
-      console.log(chalk.white(`Install started: ${directory}`));
-      execSync(`cd direflow-components/${directory} && yarn install`);
-    }
+async function installWidget(directory: string): Promise<void> {
+  console.log(chalk.blueBright(`${directory} has not been installed.`));
+  console.log(chalk.white(`Install started: ${directory}`));
 
-    console.log(chalk.white(`Build started: ${directory}`));
-    exec(`cd direflow-components/${directory} && yarn build`, (err) => {
-      if (err) {
-        console.log(err);
-        reject(`Build failed: ${directory}`);
-      }
-
-      registerWidget(directory);
-      resolve(`Build success: ${directory}`);
-    });
-  });
+  try {
+    await exec(`cd direflow-components/${directory} && ../../node_modules/direflow-project/node_modules/yarn/bin/yarn install`);
+    console.log(chalk.greenBright(`Install success: ${directory}`));
+  } catch (err) {
+    console.log(chalk.red(`Install failed: ${directory}`));
+    console.log(err);
+    process.exit(1);
+  }
 }
 
-function registerWidget(directory: string): void {
+async function registerWidget(directory: string): Promise<void> {
   const componentRegistrations = require('../../config/componentRegistrations.json');
   const fullPath = `direflow-components/${directory}/build`;
 
@@ -70,16 +80,18 @@ function registerWidget(directory: string): void {
     }
   }`;
 
-  fs.appendFileSync(resolve(__dirname, '../../config/registerDireflowComponents.js'), addedScript);
-  fs.writeFileSync(
+  await appendFile(resolve(__dirname, '../../config/registerDireflowComponents.js'), addedScript);
+  await writeFile(
     resolve(__dirname, '../../config/componentRegistrations.json'),
     JSON.stringify(componentRegistrations, null, 2),
   );
 }
 
-function clearWidgetRegistry(): void {
-  fs.writeFileSync(resolve(__dirname, '../../config/registerDireflowComponents.js'), 'window.direflowComponents = {};');
-  fs.writeFileSync(resolve(__dirname, '../../config/componentRegistrations.json'), JSON.stringify([]));
+async function clearWidgetRegistry(): Promise<void> {
+  await Promise.all([
+    writeFile(resolve(__dirname, '../../config/registerDireflowComponents.js'), 'window.direflowComponents = {};'),
+    writeFile(resolve(__dirname, '../../config/componentRegistrations.json'), JSON.stringify([])),
+  ]);
 }
 
 buildAllComponents();
