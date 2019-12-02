@@ -1,9 +1,9 @@
 import React, { FC, useContext } from 'react';
 import { EventContext, Styled } from 'direflow-component';
-import { IComponentProperties, IComponentAttributes } from './componentProperties';
+import { IProperties, IAttributes } from './properties';
 import styles from './App.css';
 
-interface IProps extends IComponentProperties, IComponentAttributes {}
+interface IProps extends IProperties, IAttributes {}
 
 const App: FC<IProps> = (props) => {
   const dispatch = useContext(EventContext);
@@ -13,22 +13,24 @@ const App: FC<IProps> = (props) => {
     dispatch(event);
   };
 
-  const renderTodos = props.todos.map((todo: string) => (
-    <li key={todo} className='todo-title'>
-      {todo}
-    </li>
+  const renderSampleList = props.sampleList.map((sample) => (
+    <div key={sample} className='sample-text'>
+      → {sample}
+    </div>
   ));
 
   return (
     <Styled styles={styles}>
       <div className='app'>
-        <div className='header-title'>{props.componentTitle}</div>
-        <div className='sub-title'>To get started:</div>
-        <div className='todo-list'>
-          <ul>{renderTodos}</ul>
+        <div className='header'>
+          <div className='header-image' />
+          <div className='header-title'>{props.componentTitle}</div>
+        </div>
+        <div className='sample-container'>
+          {renderSampleList}
         </div>
         <button className='button' onClick={handleClick}>
-          Let's go!
+          Go go!
         </button>
       </div>
     </Styled>

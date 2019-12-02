@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom';
 import renderer from 'react-test-renderer';
 import App from '../App';
 import {
-  componentProperties,
-  componentAttributes,
-} from '../componentProperties';
+  properties,
+  attributes,
+} from '../properties';
 
-const reactProps = { ...componentAttributes, ...componentProperties };
+const reactProps = { ...attributes, ...properties };
 
 it('renders without crashing', () => {
   const div = document.createElement('div');

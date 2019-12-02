@@ -1,56 +1,56 @@
 .app {
-  width: 750px;
-  height: 350px;
+  width: 650px;
+  height: 275px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 5px;
-  border: 1px solid #E6EEF0;
-  padding: 20px;
+  justify-content: space-around;
   box-sizing: border-box;
   background-color: white;
-  box-shadow: 0 4px 9px 0 #375c821c;
+  box-shadow: 0 4px 14px 4px #375c821c;
   font-family: 'PT Sans', sans-serif;
 }
 
-.header-title {
+.header {
   height: 50px;
-  line-height: 50px;
-  font-size: 36px;
-  color: #444;
-  text-align: center;
-  font-family: 'Noto Sans JP', sans-serif;
-}
-
-.sub-title {
-  height: 35px;
-  line-height: 35px;
-  font-size: 26px;
-  margin-top: 35px;
-  color: #444;
-  text-align: center;
-}
-
-.todo-list {
   display: flex;
-  justify-content: center;
 }
 
-.todo-title {
-  height: 25px;
-  line-height: 25px;
-  font-size: 18px;
-  color: #614444;
+.header-image {
+  width: 50px;
+  height: 50px;
+  background: url('https://silind-s3.s3.eu-west-2.amazonaws.com/direflow/logo.png');
+  background-size: contain;
+}
+
+.header-title {
+  font-size: 34px;
+  line-height: 50px;
+  margin-left: 25px;
+  color: #5781C2;
+  text-align: center;
+  font-family: 'Advent Pro', sans-serif;
+}
+
+.sample-container {
+  width: 350px;
+  justify-content: space-between;
+  display: flex;
+}
+
+.sample-text {
+  font-family: 'PT Sans', sans-serif;
+  font-size: 24px;
+  color: #005499;
 }
 
 .button {
   width: 150px;
   height: 45px;
-  border-radius: 5px;
+  font-family: 'PT Sans', sans-serif;
   background-color: #223a7c;
   color: white;
   box-shadow: 2px 2px 5px #16314d98;
-  margin-top: 25px;
   outline: none;
   border: 0;
   cursor: pointer;

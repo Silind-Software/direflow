@@ -1,9 +1,3 @@
-/*!
- * Begin implementing the surrounding logic for your Direflow Components here.
- * The following code is just an example, and everything here can be safely removed.
- *
- * Happy hacking! :)
-*/
 import { registerComponent, IDireflowComponent } from 'direflow-project';
 
 registerComponent('cool-component')
@@ -11,11 +5,13 @@ registerComponent('cool-component')
   .onFail((err: string) => console.warn(err));
 
 const handleComponent = (component: IDireflowComponent): void => {
-  component.todos = [
-    'Build a cool Web Component',
-    'Deploy the Web Component',
-    'Share it and use it',
-  ];
+  component.sampleList = [
+    'Create',
+    'Build',
+    'Share',
+  ],
 
-  component.addEventListener('my-event', () => console.log('Alright! Very cool 😎'));
+  component.addEventListener('my-event', () => {
+    console.log(`${component.componentTitle} dispatched an event...`);
+  });
 };

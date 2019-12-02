@@ -1,7 +1,7 @@
 import DireflowComponent from 'direflow-component';
-import { componentAttributes, componentProperties } from './componentProperties';
+import { attributes, properties } from './properties';
 import App from './App';
 
-DireflowComponent.setAttributes(componentAttributes);
-DireflowComponent.setProperties(componentProperties);
+DireflowComponent.setAttributes(attributes);
+DireflowComponent.setProperties(properties);
 DireflowComponent.render(App, '%name-snake%');

@@ -1,10 +1,10 @@
-import CustomComponent, {
+import WebComponent, {
   setComponentAttributes,
   setComponentProperties,
   setRootComponent,
   setMode,
   setElementName,
-} from './CustomComponent';
+} from './WebComponent';
 
 let componentAttributes: any | null = null;
 let componentProperties: any | null = null;
@@ -40,7 +40,7 @@ export class DireflowComponent {
     }
 
     this.setComponentProperties();
-    customElements.define(elementName, CustomComponent);
+    customElements.define(elementName, WebComponent);
   }
 
   private static setComponentProperties(): void {
@@ -68,7 +68,7 @@ export class DireflowComponent {
       propertyMap[key] = property;
     });
 
-    Object.defineProperties(CustomComponent.prototype, propertyMap);
+    Object.defineProperties(WebComponent.prototype, propertyMap);
   }
 
   private static validateDependencies(): void {

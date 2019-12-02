@@ -35,7 +35,7 @@ export const setMode = (shadowOption: boolean) => {
   shadow = shadowOption;
 };
 
-class CustomComponent extends HTMLElement {
+class WebComponent extends HTMLElement {
   private _application: JSX.Element | undefined;
 
   public static get observedAttributes(): string[] {
@@ -170,4 +170,4 @@ class CustomComponent extends HTMLElement {
   }
 }
 
-export default CustomComponent;
+export default WebComponent;
