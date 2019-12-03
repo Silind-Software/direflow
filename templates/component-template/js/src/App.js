@@ -20,16 +20,16 @@ const App = (props) => {
   return (
     <Styled styles={styles}>
       <div className='app'>
-        <div className='header'>
+        <div className='top'>
           <div className='header-image' />
+        </div>
+        <div className='bottom'>
           <div className='header-title'>{props.componentTitle}</div>
+          <div>{renderSampleList}</div>
+          <button className='button' onClick={handleClick}>
+            Let's go!
+          </button>
         </div>
-        <div className='sample-container'>
-          {renderSampleList}
-        </div>
-        <button className='button' onClick={handleClick}>
-          Go go!
-        </button>
       </div>
     </Styled>
   );

@@ -50,7 +50,7 @@ yarn start
 Your Direflow Component will start running on `localhost:3000` and your browser opens a new window  
 
 <p align="center">
-<img src="https://silind-s3.s3.eu-west-2.amazonaws.com/direflow/direflow-component-base.png" />
+<img src="https://silind-s3.s3.eu-west-2.amazonaws.com/direflow/direflow-component-new-base.png" />
 </p>
 
 #### Read more on [direflow.io](https://direflow.io/direflow-component)

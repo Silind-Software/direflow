@@ -1,54 +1,61 @@
 .app {
-  width: 650px;
-  height: 275px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 400px;
+  height: 575px;
+  padding: 30px 60px;
   justify-content: space-around;
   box-sizing: border-box;
   background-color: white;
   box-shadow: 0 4px 14px 4px #375c821c;
-  font-family: 'PT Sans', sans-serif;
+  font-family: 'Noto Sans JP', sans-serif;
+  border-bottom: 5px solid #cad5e6;
 }
 
-.header {
-  height: 50px;
+.top {
+  width: 100%;
+  height: 50%;
+  border-bottom: 2px solid #7998c7;
   display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bottom {
+  width: 100%;
+  height: 50%;
+  border-top: 2px solid #7998c7;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .header-image {
-  width: 50px;
-  height: 50px;
-  background: url('https://silind-s3.s3.eu-west-2.amazonaws.com/direflow/logo.png');
+  width: 165px;
+  height: 165px;
+  background: url('https://silind-s3.s3.eu-west-2.amazonaws.com/direflow/logo.svg');
   background-size: contain;
 }
 
 .header-title {
   font-size: 34px;
-  line-height: 50px;
-  margin-left: 25px;
   color: #5781C2;
-  text-align: center;
   font-family: 'Advent Pro', sans-serif;
 }
 
-.sample-container {
-  width: 350px;
-  justify-content: space-between;
-  display: flex;
-}
-
 .sample-text {
-  font-family: 'PT Sans', sans-serif;
-  font-size: 24px;
-  color: #005499;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 16px;
+  color: #666;
+  text-align: center;
 }
 
 .button {
   width: 150px;
   height: 45px;
-  font-family: 'PT Sans', sans-serif;
-  background-color: #223a7c;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: #5781C2;
   color: white;
   box-shadow: 2px 2px 5px #16314d98;
   outline: none;
