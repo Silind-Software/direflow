@@ -1,10 +1,10 @@
-import CustomComponent, {
+import WebComponent, {
   setComponentAttributes,
   setComponentProperties,
   setRootComponent,
   setMode,
   setElementName,
-} from './CustomComponent';
+} from './WebComponent';
 
 let componentAttributes: any | null = null;
 let componentProperties: any | null = null;
@@ -39,7 +39,7 @@ export class DireflowComponent {
       setMode(option.shadow);
     }
 
-    customElements.define(elementName, CustomComponent);
+    customElements.define(elementName, WebComponent);
   }
 
   private static validateDependencies(): void {

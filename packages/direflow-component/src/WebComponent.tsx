@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import { createProxy } from 'react-shadow';
 import WebFont from 'webfontloader';
 import { EventProvider } from './components/EventContext';
-import { injectIntoFirstChild, stripStyleFromHead } from './services/DomControllers';
+import { injectIntoFirstChild, stripStyleFromHead, injectIntoShadowRoot } from './services/DomControllers';
 import { getDireflowPlugin } from './utils/direflowConfigExtrator';
 
 let componentAttributes: any;
@@ -35,7 +35,7 @@ export const setMode = (shadowOption: boolean) => {
   shadow = shadowOption;
 };
 
-class CustomComponent extends HTMLElement {
+class WebComponent extends HTMLElement {
   private _application: JSX.Element | undefined;
   private properties: any = Object.assign({}, componentProperties);
 
@@ -66,7 +66,7 @@ class CustomComponent extends HTMLElement {
       };
     });
 
-    Object.defineProperties(CustomComponent.prototype, propertyMap);
+    Object.defineProperties(WebComponent.prototype, propertyMap);
   }
 
   public static get observedAttributes(): string[] {
@@ -84,9 +84,10 @@ class CustomComponent extends HTMLElement {
   }
 
   public connectedCallback(): void {
-    this.loadFonts();
-    this.registerComponent();
     this.mountReactApp();
+    this.registerComponent();
+    this.loadFonts();
+    this.includeExternals();
   }
 
   public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
@@ -155,7 +156,7 @@ class CustomComponent extends HTMLElement {
 
   private eventDispatcher = (event: Event) => {
     this.dispatchEvent(event);
-  };
+  }
 
   private registerComponent(): void {
     const global = window as any;
@@ -172,6 +173,32 @@ class CustomComponent extends HTMLElement {
       WebFont.load(fontLoaderPlugin.options);
     }
   }
+
+  private includeExternals(): void {
+    const externalLoaderPlugin = getDireflowPlugin('external-loader');
+    const paths = externalLoaderPlugin?.options?.paths;
+
+    if (paths && paths.length) {
+      setTimeout(() => {
+        paths.forEach((path: string) => {
+          if (path.endsWith('.js')) {
+            const script = document.createElement('script');
+            script.src = path;
+
+            injectIntoShadowRoot(this, script);
+          }
+
+          if (path.endsWith('.css')) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = path;
+
+            injectIntoShadowRoot(this, link);
+          }
+        });
+      });
+    }
+  }
 }
 
-export default CustomComponent;
+export default WebComponent;

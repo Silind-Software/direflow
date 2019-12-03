@@ -3,7 +3,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const { resolve } = require('path');
 const { EnvironmentPlugin, HashedModuleIdsPlugin } = require('webpack');
 const webpackConfig = require('./webpack.config');
-const customWebpackConfig = require('../../../direflow-webpack.js');
+const customWebpackConfig = require('../../../../direflow-webpack.js');
 const componentRegistrations = require('./componentRegistrations.json');
 
 module.exports = merge(webpackConfig, customWebpackConfig, {

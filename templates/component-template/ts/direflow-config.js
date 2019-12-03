@@ -10,7 +10,7 @@ module.exports = {
       name: 'font-loader',
       options: {
         google: {
-          families: ['PT Sans', 'Noto Sans JP'],
+          families: ['Advent Pro', 'Noto Sans JP'],
         },
       },
     },

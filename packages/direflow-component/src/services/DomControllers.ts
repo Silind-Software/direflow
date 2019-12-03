@@ -17,6 +17,13 @@ export const injectIntoFirstChild = (webComponent: HTMLElement, element: Element
   shadowHost?.shadowRoot?.children[0]?.prepend(element);
 };
 
+export const injectIntoShadowRoot = (webComponent: HTMLElement, element: Element): void => {
+  const allChildren = webComponent.children;
+  const shadowHost = Array.from(allChildren).find((child) => child.nodeName === 'SPAN');
+
+  shadowHost?.shadowRoot?.prepend(element);
+};
+
 export const stripStyleFromHead = () => {
   const allChildren = document.head.children;
   const style = Array.from(allChildren).find((child) => child.hasAttribute('data-styled'));
