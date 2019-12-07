@@ -10,9 +10,9 @@ export interface IProperties {
  */
 export const properties: IProperties = {
   sampleList: [
-    'Create',
-    'Build',
-    'Share',
+    'Create with React',
+    'Build as Web Component',
+    'Use it anywhere!',
   ],
 };
 
