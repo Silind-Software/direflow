@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/jest": "24.0.15",
-    "direflow-project": "1.0.23",
+    "direflow-project": "1.0.25",
     "jest": "24.8.0"
   },
   "jest": {

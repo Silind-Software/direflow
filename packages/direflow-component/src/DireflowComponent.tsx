@@ -1,54 +1,48 @@
-import WebComponent, {
-  setComponentAttributes,
-  setComponentProperties,
-  setRootComponent,
-  setMode,
-  setElementName,
-} from './WebComponent';
-
-let componentAttributes: any | null = null;
-let componentProperties: any | null = null;
-let elementName: string | null = null;
-let rootComponent: React.FC<any> | React.ComponentClass<any, any> | null = null;
+import WebComponentFactory from './WebComponentFactory';
 
 export class DireflowComponent {
-  public static setAttributes(attributes: any): void {
-    componentAttributes = attributes;
+  private componentAttributes: any | null = null;
+  private componentProperties: any | null = null;
+  private elementName: string | null = null;
+  private rootComponent: React.FC<any> | React.ComponentClass<any, any> | null = null;
+  private WebComponent: any | null = null;
+
+  public setAttributes(attributes: any): void {
+    this.componentAttributes = attributes;
   }
 
-  public static setProperties(properties: any): void {
-    componentProperties = properties;
+  public setProperties(properties: any): void {
+    this.componentProperties = properties;
   }
 
-  public static render(
+  public render(
     App: React.FC<any> | React.ComponentClass<any, any>,
     name: string,
     option?: { shadow: boolean },
   ): void {
-    rootComponent = App;
-    elementName = name;
+    this.rootComponent = App;
+    this.elementName = name;
 
     this.validateDependencies();
 
-    setComponentAttributes(componentAttributes);
-    setComponentProperties(componentProperties);
-    setElementName(elementName);
-    setRootComponent(rootComponent);
-
-    if (option) {
-      setMode(option.shadow);
-    }
+    this.WebComponent = new WebComponentFactory(
+      this.componentAttributes,
+      this.componentProperties,
+      this.elementName,
+      this.rootComponent,
+      option?.shadow
+    ).create();
 
     this.setComponentProperties();
-    customElements.define(elementName, WebComponent);
+    customElements.define(this.elementName, this.WebComponent);
   }
 
-  private static setComponentProperties(): void {
-    if (!rootComponent) {
+  private setComponentProperties(): void {
+    if (!this.rootComponent) {
       return;
     }
 
-    const properties = { ...componentProperties };
+    const properties = { ...this.componentProperties };
     const propertyMap = {} as PropertyDescriptorMap;
 
     Object.keys(properties).forEach((key: string) => {
@@ -68,23 +62,23 @@ export class DireflowComponent {
       propertyMap[key] = property;
     });
 
-    Object.defineProperties(WebComponent.prototype, propertyMap);
+    Object.defineProperties(this.WebComponent.prototype, propertyMap);
   }
 
-  private static validateDependencies(): void {
-    if (!componentAttributes) {
+  private validateDependencies(): void {
+    if (!this.componentAttributes) {
       throw Error('Cannot define custom element: Attributes have not been set.');
     }
 
-    if (!componentProperties) {
+    if (!this.componentProperties) {
       throw Error('Cannot define custom element: Properties have not been set.');
     }
 
-    if (!rootComponent) {
+    if (!this.rootComponent) {
       throw Error('Cannot define custom element: Root Component have not been set.');
     }
 
-    if (!elementName) {
+    if (!this.elementName) {
       throw Error('Cannot define custom element: Element name has not been set.');
     }
   }
