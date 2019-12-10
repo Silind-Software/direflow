@@ -37,6 +37,37 @@ export const setMode = (shadowOption: boolean) => {
 
 class WebComponent extends HTMLElement {
   private _application: JSX.Element | undefined;
+  private properties: any = Object.assign({}, componentProperties);
+
+  constructor() {
+    super();
+    this.setComponentProperties();
+  }
+
+  private setComponentProperties(): void {
+    if (!rootComponent) {
+      return;
+    }
+
+    const properties = {...componentProperties};
+    const propertyMap = {} as PropertyDescriptorMap;
+    Object.keys(this.properties).forEach((key: string) => {
+      propertyMap[key] = {
+        configurable: true,
+        enumerable: true,
+        get(): any {
+          return (this as any).properties[key];
+        },
+        set(newValue: any): any {
+          const oldValue = (this as any).properties[key];
+          (this as any).properties[key] = newValue;
+          (this as any).reactPropsChangedCallback(key, oldValue, newValue);
+        },
+      };
+    });
+
+    Object.defineProperties(WebComponent.prototype, propertyMap);
+  }
 
   public static get observedAttributes(): string[] {
     return Object.keys(componentAttributes).map((k) => k.toLowerCase());
@@ -49,7 +80,7 @@ class WebComponent extends HTMLElement {
       attributes[key] = this.getAttribute(key) || (componentAttributes as any)[key];
     });
 
-    return { ...attributes, ...componentProperties };
+    return {...attributes, ...this.properties};
   }
 
   public connectedCallback(): void {
@@ -72,7 +103,7 @@ class WebComponent extends HTMLElement {
       return;
     }
 
-    componentProperties[name] = newValue;
+    this.properties[name] = newValue;
 
     this.mountReactApp();
   }

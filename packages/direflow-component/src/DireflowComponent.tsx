@@ -39,36 +39,7 @@ export class DireflowComponent {
       setMode(option.shadow);
     }
 
-    this.setComponentProperties();
     customElements.define(elementName, WebComponent);
-  }
-
-  private static setComponentProperties(): void {
-    if (!rootComponent) {
-      return;
-    }
-
-    const properties = { ...componentProperties };
-    const propertyMap = {} as PropertyDescriptorMap;
-
-    Object.keys(properties).forEach((key: string) => {
-      const property: PropertyDescriptor = {
-        configurable: true,
-        enumerable: true,
-        get(): any {
-          return properties[key];
-        },
-        set(newValue: any): any {
-          const oldValue = properties[key];
-          properties[key] = newValue;
-          (this as any).reactPropsChangedCallback(key, oldValue, newValue);
-        },
-      };
-
-      propertyMap[key] = property;
-    });
-
-    Object.defineProperties(WebComponent.prototype, propertyMap);
   }
 
   private static validateDependencies(): void {
