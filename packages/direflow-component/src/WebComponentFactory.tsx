@@ -35,6 +35,36 @@ class WebComponentFactory {
 
     return class extends HTMLElement {
       private _application: JSX.Element | undefined;
+      private properties: any = Object.assign({}, factory.componentProperties);
+
+      constructor() {
+        super();
+        this.setComponentProperties();
+      }
+
+      private setComponentProperties(): void {
+        if (!factory.rootComponent) {
+          return;
+        }
+
+        const propertyMap = {} as PropertyDescriptorMap;
+        Object.keys(this.properties).forEach((key: string) => {
+          propertyMap[key] = {
+            configurable: true,
+            enumerable: true,
+            get(): any {
+              return (this as any).properties[key];
+            },
+            set(newValue: any): any {
+              const oldValue = (this as any).properties[key];
+              (this as any).properties[key] = newValue;
+              (this as any).reactPropsChangedCallback(key, oldValue, newValue);
+            },
+          };
+        });
+
+        Object.defineProperties(this, propertyMap);
+      }
 
       public static get observedAttributes(): string[] {
         return Object.keys(factory.componentAttributes).map((k) => k.toLowerCase());

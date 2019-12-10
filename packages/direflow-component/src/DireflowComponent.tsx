@@ -33,11 +33,11 @@ export class DireflowComponent {
       option?.shadow
     ).create();
 
-    customElements.define(elementName, WebComponent);
+    customElements.define(this.elementName, this.WebComponent);
   }
 
   private validateDependencies(): void {
-    if (!componentAttributes) {
+    if (!this.componentAttributes) {
       throw Error('Cannot define custom element: Attributes have not been set.');
     }
 
