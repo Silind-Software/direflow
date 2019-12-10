@@ -1,61 +1,62 @@
-import WebComponent, {
-  setComponentAttributes,
-  setComponentProperties,
-  setRootComponent,
-  setMode,
-  setElementName,
-} from './WebComponent';
-
-let componentAttributes: any | null = null;
-let componentProperties: any | null = null;
-let elementName: string | null = null;
-let rootComponent: React.FC<any> | React.ComponentClass<any, any> | null = null;
+import WebComponentFactory from './WebComponentFactory';
 
 export class DireflowComponent {
-  public static setAttributes(attributes: any): void {
-    componentAttributes = attributes;
+  private componentAttributes: any | null = null;
+  private componentProperties: any | null = null;
+  private elementName: string | null = null;
+  private rootComponent: React.FC<any> | React.ComponentClass<any, any> | null = null;
+  private WebComponent: any | null = null;
+  private shadow: boolean = true;
+
+  constructor(option?: { shadow: boolean }) {
+    if (option && !option.shadow) {
+      this.shadow = false;
+    }
   }
 
-  public static setProperties(properties: any): void {
-    componentProperties = properties;
+  public setAttributes(attributes: any): void {
+    this.componentAttributes = attributes;
   }
 
-  public static render(
+  public setProperties(properties: any): void {
+    this.componentProperties = properties;
+  }
+
+  public render(
     App: React.FC<any> | React.ComponentClass<any, any>,
     name: string,
-    option?: { shadow: boolean },
+    
   ): void {
-    rootComponent = App;
-    elementName = name;
+    this.rootComponent = App;
+    this.elementName = name;
 
     this.validateDependencies();
 
-    setComponentAttributes(componentAttributes);
-    setComponentProperties(componentProperties);
-    setElementName(elementName);
-    setRootComponent(rootComponent);
+    this.WebComponent = new WebComponentFactory(
+      this.componentAttributes,
+      this.componentProperties,
+      this.elementName,
+      this.rootComponent,
+      this.shadow
+    ).create();
 
-    if (option) {
-      setMode(option.shadow);
-    }
-
-    customElements.define(elementName, WebComponent);
+    customElements.define(this.elementName, this.WebComponent);
   }
 
-  private static validateDependencies(): void {
-    if (!componentAttributes) {
+  private validateDependencies(): void {
+    if (!this.componentAttributes) {
       throw Error('Cannot define custom element: Attributes have not been set.');
     }
 
-    if (!componentProperties) {
+    if (!this.componentProperties) {
       throw Error('Cannot define custom element: Properties have not been set.');
     }
 
-    if (!rootComponent) {
+    if (!this.rootComponent) {
       throw Error('Cannot define custom element: Root Component have not been set.');
     }
 
-    if (!elementName) {
+    if (!this.elementName) {
       throw Error('Cannot define custom element: Element name has not been set.');
     }
   }
