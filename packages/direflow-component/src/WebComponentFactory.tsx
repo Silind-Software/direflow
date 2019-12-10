@@ -21,7 +21,7 @@ class WebComponentFactory {
     properties: any,
     name: string,
     component: React.FC<any> | React.ComponentClass<any, any>,
-    shadowOption?: boolean,
+    shadowOption: boolean,
   ) {
     this.componentAttributes = attributes;
     this.componentProperties = properties;
@@ -112,7 +112,7 @@ class WebComponentFactory {
       private mountReactApp(): void {
         const application = this.application();
 
-        if (factory.shadow !== undefined && !factory.shadow) {
+        if (!factory.shadow) {
           ReactDOM.render(application, this);
         } else {
           const root = createProxy({ span: undefined });

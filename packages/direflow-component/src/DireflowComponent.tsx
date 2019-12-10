@@ -6,6 +6,13 @@ export class DireflowComponent {
   private elementName: string | null = null;
   private rootComponent: React.FC<any> | React.ComponentClass<any, any> | null = null;
   private WebComponent: any | null = null;
+  private shadow: boolean = true;
+
+  constructor(option?: { shadow: boolean }) {
+    if (option && !option.shadow) {
+      this.shadow = false;
+    }
+  }
 
   public setAttributes(attributes: any): void {
     this.componentAttributes = attributes;
@@ -18,7 +25,7 @@ export class DireflowComponent {
   public render(
     App: React.FC<any> | React.ComponentClass<any, any>,
     name: string,
-    option?: { shadow: boolean },
+    
   ): void {
     this.rootComponent = App;
     this.elementName = name;
@@ -30,7 +37,7 @@ export class DireflowComponent {
       this.componentProperties,
       this.elementName,
       this.rootComponent,
-      option?.shadow
+      this.shadow
     ).create();
 
     customElements.define(this.elementName, this.WebComponent);
