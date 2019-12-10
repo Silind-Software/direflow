@@ -33,40 +33,11 @@ export class DireflowComponent {
       option?.shadow
     ).create();
 
-    this.setComponentProperties();
-    customElements.define(this.elementName, this.WebComponent);
-  }
-
-  private setComponentProperties(): void {
-    if (!this.rootComponent) {
-      return;
-    }
-
-    const properties = { ...this.componentProperties };
-    const propertyMap = {} as PropertyDescriptorMap;
-
-    Object.keys(properties).forEach((key: string) => {
-      const property: PropertyDescriptor = {
-        configurable: true,
-        enumerable: true,
-        get(): any {
-          return properties[key];
-        },
-        set(newValue: any): any {
-          const oldValue = properties[key];
-          properties[key] = newValue;
-          (this as any).reactPropsChangedCallback(key, oldValue, newValue);
-        },
-      };
-
-      propertyMap[key] = property;
-    });
-
-    Object.defineProperties(this.WebComponent.prototype, propertyMap);
+    customElements.define(elementName, WebComponent);
   }
 
   private validateDependencies(): void {
-    if (!this.componentAttributes) {
+    if (!componentAttributes) {
       throw Error('Cannot define custom element: Attributes have not been set.');
     }
 
