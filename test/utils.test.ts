@@ -1,4 +1,4 @@
-import { toTitleFormat, toPascalCase, toSnakeCase, createDefaultName } from '../cli/utils/utils';
+import { toTitleFormat, toPascalCase, toSnakeCase, createDefaultName, getNameFormats } from '../cli/utils/utils';
 
 const nameSnake = 'super-cool-component';
 const nameCamelCase = 'superCoolComponent';
@@ -35,14 +35,43 @@ describe('Name Formatters: PascalCase', () => {
 })
 
 describe('Name Formatters: snake-case', () => {
-  it ('should return correct snake-case from camelCase', () => {
+  it('should return correct snake-case from camelCase', () => {
     const title = toSnakeCase(nameCamelCase);
     expect(title).toEqual(nameSnake);
   });
 
-  it ('should return correct snake-case from PascalCase', () => {
+  it('should return correct snake-case from PascalCase', () => {
     const title = toSnakeCase(namePascalcase);
     expect(title).toEqual(nameSnake);
+  });
+});
+
+describe('Get correct name formats', () => {
+  it('should return correct name formats from snake-case', () => {
+    const title = 'awesome-component';
+    const formats = getNameFormats(title);
+
+    expect(formats.title).toBe('Awesome Component');
+    expect(formats.snake).toBe('awesome-component');
+    expect(formats.pascal).toBe('AwesomeComponent');
+  });
+
+  it('should return correct name formats from camelCase', () => {
+    const title = 'awesomeComponent';
+    const formats = getNameFormats(title);
+
+    expect(formats.title).toBe('Awesome Component');
+    expect(formats.snake).toBe('awesome-component');
+    expect(formats.pascal).toBe('AwesomeComponent');
+  });
+
+  it('should return correct name formats from PascalCase', () => {
+    const title = 'AwesomeComponent';
+    const formats = getNameFormats(title);
+
+    expect(formats.title).toBe('Awesome Component');
+    expect(formats.snake).toBe('awesome-component');
+    expect(formats.pascal).toBe('AwesomeComponent');
   });
 });
 
