@@ -1,6 +1,6 @@
 import DireflowComponent from 'direflow-component';
-import { attributes, properties } from './properties';
-import App from './App';
+import { attributes, properties } from './direflow-component/properties';
+import App from './direflow-component/App';
 
 const direflowComponent = new DireflowComponent();
 
