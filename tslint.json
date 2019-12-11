@@ -14,7 +14,7 @@
       ],
       "severity": "warning"
     },
-    "no-this-assignment": false,
+    "no-this-assignment": false
   },
   "extends": ["tslint-config-airbnb", "tslint-config-silind"]
 }

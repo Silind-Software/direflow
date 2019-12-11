@@ -20,11 +20,12 @@
 > A thorough description of the principles used in this setup, can be read [in this article](https://itnext.io/react-and-web-components-3e0fca98a593)
 
 ### Features include
-✔ Full Webpack control  
-✔ Bundling multiple components together  
-✔ Data-sharing and interactions between components  
-✔ Passing child elements to the component  
-✔ Plugins for varies purposes: font-loading, external scripts, styled-components, and more ...
+✔️ Create, build and ship Web Components easier than ever before
+✔️ Configure your project with full Webpack control
+✔️ Bundling multiple components together for optimzed bundlesize
+✔️ Data-sharing and interactions bewteen components
+✔️ Passing child elements to the component
+✔️ Plugins for varies purposes: font-loading, external resources, styled-components, and more ...
 
 ## Get started
 
@@ -36,7 +37,7 @@ npm i -g direflow-cli
 
 ### Create a new Direflow Component
 ```console
-direflow create -c
+direflow create
 ```
 
 This will bootstrap a new Direflow Component for you.
@@ -54,22 +55,6 @@ Your Direflow Component will start running on `localhost:3000` and your browser 
 </p>
 
 #### Read more on [direflow.io](https://direflow.io/direflow-component)
-
-
-### Create a new Direflow Project
-```console
-direflow create -p
-```
-
-Now cd into the project, and create the first Direflow Component  
-```consloe
-cd <project-name>
-direflow create -c
-```
-
-This will create a folder called `direflow-components`, which will contain all Direflow Components related to the project.
-
-#### Read more on [direflow.io](https://direflow.io/direflow-project)
 
 ## Contributing
 

@@ -72,18 +72,7 @@ export const createDefaultName = (name: string) => {
   return snakeName;
 };
 
-export const isProject = (): boolean => {
-  const currentDirectory = process.cwd();
-  if (!fs.existsSync(`${currentDirectory}/direflow-config.js`)) {
-    return false;
-  }
-
-  const spec = require(`${currentDirectory}/direflow-config.js`);
-
-  return spec.direflowMetadata && spec.direflowMetadata.type && spec.direflowMetadata.type === 'direflow-project';
-};
-
-export const isComponent = (): boolean => {
+export const isDireflowSetup = (): boolean => {
   const currentDirectory = process.cwd();
   if (!fs.existsSync(`${currentDirectory}/direflow-config.js`)) {
     return false;

@@ -1,8 +1,7 @@
 import program from 'commander';
 import chalk from 'chalk';
 import { headline } from './headline';
-import { createProject, createComponent, create } from './create';
-import { updateAvailable } from './messages';
+import { createProject, createDireflowSetup, create } from './create';
 import checkForUpdates from './checkForUpdate';
 
 const packageJson = require('../package.json');
@@ -15,14 +14,13 @@ export const cli = () => {
     .command('create')
     .alias('c')
     .description('Create a new Direflow Project or Direflow Component')
-    .option('-p, --project', 'Create a new Direflow Project')
+    .option('-p, --project', 'Deprecated: Create a new Direflow Project')
     .option('-c, --component', 'Create a new Direflow Component')
     .action((args: any) => {
-      checkForUpdates()
       if (args.project) {
         createProject();
       } else if (args.component) {
-        createComponent();
+        createDireflowSetup();
       } else {
         create();
       }
@@ -31,8 +29,9 @@ export const cli = () => {
   program.description(chalk.magenta(headline));
 
   const versionMessage = `
-  Current version of direflow-cli:
-  ${packageJson.version}
+    ${checkForUpdates()}
+    Current version of direflow-cli:
+    ${packageJson.version}
   `;
 
   program.version(versionMessage, '-v, --version', 'Show the current version');

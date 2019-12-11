@@ -5,7 +5,7 @@ import ITemplateOption from '../interfaces/ITemplateOption';
 
 export const copyTemplate = async (options: ITemplateOption): Promise<string> => {
   const currentDirectory = process.cwd();
-  const templateDirectory = resolve(__dirname, `../../templates/${options.template}/${options.language}`);
+  const templateDirectory = resolve(__dirname, `../../templates/${options.language}`);
 
   const projectDirectory: string = await new Promise((resolve, reject) => {
     const projectDir = `${currentDirectory}/${options.projectName}`;

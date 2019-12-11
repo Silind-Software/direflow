@@ -1,19 +1,6 @@
 import chalk from 'chalk';
 import boxen from 'boxen';
 
-export const projectFinishedMessage = (projectName: string) => `
-
-  Your Direflow Project is ready!
-  To get started:
-
-    cd ${projectName}
-    yarn install
-
-  Then you can create your first component:
-
-    direflow create --component
-`;
-
 export const componentFinishedMessage = (componentName: string) => `
 
   Your Direflow Component is ready!
@@ -35,6 +22,14 @@ export const updateAvailable = (currentVersion: string, newVersion: string) => {
   const content = `There is a new version of direflow-cli available: ${chalk.greenBright(newVersion)}.
 You are currently running direflow-cli version: ${chalk.blueBright(currentVersion)}.
 Run '${chalk.magenta('npm i -g direflow-cli')}' to get the latest version.`;
+
+  return boxen(content, { padding: 1, align: 'center', margin: 1 });
+};
+
+export const projectDeprecated = () => {
+  const content = `${chalk.red('The "Direflow Project" feature has been deprecated.')}
+Use '${chalk.magenta('direflow create')}' to create a new Direflow Setup.
+You can now create multiple instances of Direflow Components.`;
 
   return boxen(content, { padding: 1, align: 'center', margin: 1 });
 };
