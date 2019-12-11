@@ -20,12 +20,12 @@
 > A thorough description of the principles used in this setup, can be read [in this article](https://itnext.io/react-and-web-components-3e0fca98a593)
 
 ### Features include
-✔️ Create, build and ship Web Components easier than ever before
-✔️ Configure your project with full Webpack control
-✔️ Bundling multiple components together for optimzed bundlesize
-✔️ Data-sharing and interactions bewteen components
-✔️ Passing child elements to the component
-✔️ Plugins for varies purposes: font-loading, external resources, styled-components, and more ...
+✔️ Create, build and ship Web Components easier than ever before  
+✔️ Configure your project with full Webpack control  
+✔️ Bundling multiple components together for optimized bundlesize  
+✔️ Data-sharing and interactions between components  
+✔️ Passing child elements to the component  
+✔️ Plugins for varies purposes: font-loading, external resources, styled-components, and more ...  
 
 ## Get started
 
