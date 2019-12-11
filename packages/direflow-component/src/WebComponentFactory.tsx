@@ -4,10 +4,10 @@ import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createProxy } from 'react-shadow';
-import WebFont from 'webfontloader';
 import { EventProvider } from './components/EventContext';
-import { injectIntoFirstChild, stripStyleFromHead, injectIntoShadowRoot } from './services/DomControllers';
-import { getDireflowPlugin } from './utils/direflowConfigExtrator';
+import addStyledComponentStyles from './services/styledComponentsHandler';
+import includeExternalSources from './services/externalSourceHandler';
+import loadFonts from './services/fontLoaderHandler';
 
 class WebComponentFactory {
   private componentAttributes: any;
@@ -82,8 +82,10 @@ class WebComponentFactory {
 
       public connectedCallback(): void {
         this.mountReactApp();
-        this.loadFonts();
-        this.includeExternals();
+
+        loadFonts();
+        includeExternalSources(this);
+        addStyledComponentStyles(this);
 
         if (factory.callback) {
           factory.callback(this);
@@ -134,62 +136,11 @@ class WebComponentFactory {
           </EventProvider>
         );
 
-        if (getDireflowPlugin('styled-components')) {
-          setTimeout(() => {
-            try {
-              const scSecrets = require('styled-components'). __DO_NOT_USE_OR_YOU_WILL_BE_HAUNTED_BY_SPOOKY_GHOSTS;
-              const { StyleSheet } = scSecrets;
-              const styles = StyleSheet.instance.tags[0].css();
-
-              const styleElement = document.createElement('style');
-              styleElement.type = 'text/css';
-              styleElement.innerHTML = styles;
-
-              injectIntoFirstChild(this, styleElement);
-              stripStyleFromHead();
-            } catch (err) {}
-          });
-        }
-
         return baseApplication;
       }
 
       private eventDispatcher = (event: Event) => {
         this.dispatchEvent(event);
-      }
-
-      private loadFonts(): void {
-        const fontLoaderPlugin = getDireflowPlugin('font-loader');
-
-        if (fontLoaderPlugin?.options) {
-          WebFont.load(fontLoaderPlugin.options);
-        }
-      }
-
-      private includeExternals(): void {
-        const externalLoaderPlugin = getDireflowPlugin('external-loader');
-        const paths = externalLoaderPlugin?.options?.paths;
-
-        if (paths && paths.length) {
-          setTimeout(() => {
-            paths.forEach((path: string) => {
-              if (path.endsWith('.js')) {
-                const script = document.createElement('script');
-                script.src = path;
-
-                injectIntoShadowRoot(this, script);
-              }
-
-              if (path.endsWith('.css')) {
-                const link = document.createElement('link');
-                link.rel = 'stylesheet';
-                link.href = path;
-
-                injectIntoShadowRoot(this, link);
-              }
-            });
-          });
-        }
       }
     }
   }
