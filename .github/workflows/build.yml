@@ -45,13 +45,6 @@ jobs:
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
   
-    - name: Publish direflow-project to NPM
-      run: |
-        cd packages/direflow-project
-        npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-  
     - name: Publish direflow-component to NPM
       run: |
         cd packages/direflow-component
