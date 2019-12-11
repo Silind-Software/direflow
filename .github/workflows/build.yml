@@ -31,7 +31,9 @@ jobs:
     - name: Test
       run: |
         yarn test
-        codecov
+
+    - name: Codecov
+      run: codecov
 
     - name: Build
       run: |
