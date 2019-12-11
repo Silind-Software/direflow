@@ -68,7 +68,7 @@ const overrideOutput = (output: any) => {
 
   return {
     ...newOutput,
-    filename: 'componentBundle.js',
+    filename: 'direflowBundle.js',
     chunkFilename: 'vendor.js',
   };
 };
@@ -124,7 +124,7 @@ const copyBundleScript = async (env: string) => {
   }
 
   fs.readdirSync('build').forEach((file: string) => {
-    if (file !== 'componentBundle.js' && file !== 'vendor.js') {
+    if (file !== 'direflowBundle.js' && file !== 'vendor.js') {
       rimraf.sync(`build/${file}`);
     }
   });

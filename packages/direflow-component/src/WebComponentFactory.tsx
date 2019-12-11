@@ -12,21 +12,21 @@ import { getDireflowPlugin } from './utils/direflowConfigExtrator';
 class WebComponentFactory {
   private componentAttributes: any;
   private componentProperties: any;
-  private elementName: string;
   private rootComponent: React.FC<any> | React.ComponentClass<any, any>;
+  private callback: ((component: Element) => void) | null;
   private shadow: boolean | undefined;
 
   constructor(
     attributes: any,
     properties: any,
-    name: string,
     component: React.FC<any> | React.ComponentClass<any, any>,
+    callback: ((component: Element) => void) | null,
     shadowOption: boolean,
   ) {
     this.componentAttributes = attributes;
     this.componentProperties = properties;
-    this.elementName = name;
     this.rootComponent = component;
+    this.callback = callback;
     this.shadow = shadowOption;
   }
 
@@ -82,9 +82,12 @@ class WebComponentFactory {
 
       public connectedCallback(): void {
         this.mountReactApp();
-        this.registerComponent();
         this.loadFonts();
         this.includeExternals();
+
+        if (factory.callback) {
+          factory.callback(this);
+        }
       }
 
       public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
@@ -153,14 +156,6 @@ class WebComponentFactory {
 
       private eventDispatcher = (event: Event) => {
         this.dispatchEvent(event);
-      }
-
-      private registerComponent(): void {
-        const global = window as any;
-        const widget = global.direflowComponents && global.direflowComponents[factory.elementName];
-        if (widget && widget.callback) {
-          widget.callback(this);
-        }
       }
 
       private loadFonts(): void {
