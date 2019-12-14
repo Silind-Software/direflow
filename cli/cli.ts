@@ -39,7 +39,6 @@ export const cli = () => {
   if (!process.argv.slice(2).length) {
     console.log('');
     program.help();
-
   }
 
   program.parse(process.argv);
