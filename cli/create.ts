@@ -2,7 +2,8 @@ import fs from 'fs';
 import chalk from 'chalk';
 import { chooseLanguage, askCreateDireflowSetup } from './questions';
 import { copyTemplate } from './utils/copyTemplate';
-import { getNameFormats, isDireflowSetup, createDefaultName } from './utils/utils';
+import { getNameFormats, createDefaultName } from './utils/nameTransformers';
+import { isDireflowSetup } from './utils/detectDireflowSetup';
 import { writeProjectNames } from './utils/writeNames';
 import { moreInfoMessage, componentFinishedMessage, projectDeprecated } from './messages';
 

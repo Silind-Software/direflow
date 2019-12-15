@@ -1,5 +1,6 @@
 {
   "name": "%name-snake%",
+  "description": "%description%",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -11,7 +12,7 @@
     "react": "16.10.2",
     "react-dom": "16.10.2",
     "react-scripts": "3.2.0",
-    "direflow-component": "2.0.5"
+    "direflow-component": "2.0.6"
   },
   "devDependencies": {
     "jest-environment-jsdom-fourteen": "0.1.0",

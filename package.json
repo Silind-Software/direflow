@@ -1,6 +1,6 @@
 {
   "name": "direflow-cli",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Official CLI for Direflow",
   "main": "dist/index.js",
   "scripts": {
@@ -50,13 +50,16 @@
   "devDependencies": {
     "@types/inquirer": "6.5.0",
     "@types/jest": "24.0.15",
+    "@types/jsdom": "^12.2.4",
     "@types/mkdirp": "0.5.2",
+    "@types/mock-fs": "^4.10.0",
     "@types/ncp": "2.0.1",
     "@types/node": "12.7.4",
     "@types/rimraf": "2.0.2",
-    "@types/jsdom": "^12.2.4",
     "jest": "24.8.0",
     "jest-environment-jsdom-fourteen": "^0.1.0",
+    "mock-fs": "^4.10.4",
+    "prettier": "^1.19.1",
     "ts-jest": "24.0.2",
     "tslint": "^5.20.0",
     "tslint-config-airbnb": "^5.11.2",

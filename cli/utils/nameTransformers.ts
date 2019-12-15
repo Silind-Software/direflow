@@ -1,4 +1,3 @@
-import fs from 'fs';
 import INames from '../interfaces/INames';
 
 export const toTitleFormat = (name: string) => {
@@ -30,30 +29,6 @@ export const toPascalCase = (name: string) => {
   return capitalized.join('');
 };
 
-export const changeNameInfile = async (file: string, changeWhere: RegExp, changeTo: string) => {
-  const changedFile = await new Promise((resolve, reject) => {
-    fs.readFile(file, 'utf-8', (err, data) => {
-      if (err) {
-        reject('Could not read file');
-      }
-
-      const changed = data.replace(changeWhere, changeTo);
-
-      resolve(changed);
-    });
-  });
-
-  await new Promise((resolve, reject) => {
-    fs.writeFile(file, changedFile, 'utf-8', (err) => {
-      if (err) {
-        reject('Could not write file');
-      }
-
-      resolve();
-    });
-  });
-};
-
 export const getNameFormats = (name: string): INames => {
   return {
     title: toTitleFormat(name),
@@ -70,15 +45,4 @@ export const createDefaultName = (name: string) => {
   }
 
   return snakeName;
-};
-
-export const isDireflowSetup = (): boolean => {
-  const currentDirectory = process.cwd();
-  if (!fs.existsSync(`${currentDirectory}/direflow-config.js`)) {
-    return false;
-  }
-
-  const spec = require(`${currentDirectory}/direflow-config.js`);
-
-  return spec.direflowMetadata && spec.direflowMetadata.type && spec.direflowMetadata.type === 'direflow-component';
 };

@@ -1,5 +1,6 @@
 {
   "name": "%name-snake%",
+  "description": "%description%",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -11,7 +12,7 @@
     "@types/node": "12.7.8",
     "@types/react": "16.9.3",
     "@types/react-dom": "16.9.1",
-    "direflow-component": "2.0.5",
+    "direflow-component": "2.0.6",
     "react": "16.10.1",
     "react-dom": "16.10.1",
     "react-scripts": "3.1.2"
