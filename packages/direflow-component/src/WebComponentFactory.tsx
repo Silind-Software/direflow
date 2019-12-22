@@ -17,17 +17,26 @@ class WebComponentFactory {
   private shadow: boolean | undefined;
 
   constructor(
-    attributes: any,
     properties: any,
     component: React.FC<any> | React.ComponentClass<any, any>,
     callback: ((component: Element) => void) | null,
     shadowOption: boolean,
   ) {
-    this.componentAttributes = attributes;
+    this.componentAttributes = {};
     this.componentProperties = properties;
     this.rootComponent = component;
     this.callback = callback;
     this.shadow = shadowOption;
+  }
+
+  private reflectPropertiesAndAttributes(): void {
+    Object.entries(this.componentProperties).forEach(([key, value]) => {
+      if (typeof value !== 'number' && typeof value !== 'string' && typeof value !== 'boolean') {
+        return;
+      }
+
+      this.componentAttributes[key] = value;
+    });
   }
 
   public create(): any {
@@ -73,11 +82,12 @@ class WebComponentFactory {
       private reactProps(): any {
         const attributes = {} as any;
 
+        factory.reflectPropertiesAndAttributes();
         Object.keys(factory.componentAttributes).forEach((key: string) => {
           attributes[key] = this.getAttribute(key) || (factory.componentAttributes as any)[key];
         });
 
-        return { ...attributes, ...factory.componentProperties };
+        return { ...factory.componentProperties, ...attributes };
       }
 
       public connectedCallback(): void {

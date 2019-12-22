@@ -68,6 +68,10 @@ describe('Write names to file', () => {
     );
   });
 
+  afterAll(() => {
+    fileMock.restore()
+  });
+
   it('should change package.json correctly', async () => {
     const changedFile = await readFile(`${filePath}/package.json`);
     expect(changedFile.toString()).toBe(`

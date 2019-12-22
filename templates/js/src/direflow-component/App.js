@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { EventContext, Styled } from 'direflow-component';
-import { propTypes } from './properties';
 import styles from './App.css';
 
 const App = (props) => {
@@ -35,6 +35,9 @@ const App = (props) => {
   );
 };
 
-App.propTypes = propTypes;
+App.propTypes = {
+  sampleList: PropTypes.array,
+  componentTitle: PropTypes.string,
+};
 
 export default App;

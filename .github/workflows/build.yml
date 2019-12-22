@@ -33,7 +33,7 @@ jobs:
         yarn test
 
     - name: Codecov
-      run: codecov -t {CODECOV_TOKEN}
+      run: codecov -t ${{ secrets.CODECOV_TOKEN }}
 
     - name: Build
       run: |

@@ -1,6 +1,6 @@
 {
   "name": "direflow-cli",
-  "version": "2.0.6",
+  "version": "2.1.0",
   "description": "Official CLI for Direflow",
   "main": "dist/index.js",
   "scripts": {
@@ -61,9 +61,9 @@
     "mock-fs": "^4.10.4",
     "prettier": "^1.19.1",
     "ts-jest": "24.0.2",
-    "tslint": "^5.20.0",
+    "tslint": "^5.20.1",
     "tslint-config-airbnb": "^5.11.2",
-    "tslint-config-silind": "^1.0.21"
+    "tslint-config-silind": "^1.0.22"
   },
   "jest": {
     "moduleFileExtensions": [

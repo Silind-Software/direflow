@@ -23,6 +23,10 @@ fileMock({
 });
 
 describe('Detect Direflow Setup', () => {
+  afterAll(() => {
+    fileMock.restore()
+  });
+
   it('should return true if Direflow Setup', () => {
     const isSetup = isDireflowSetup(isSetupFilePath, mockFile);
     expect(isSetup).toBeTruthy();

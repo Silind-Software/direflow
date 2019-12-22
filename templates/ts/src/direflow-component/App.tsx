@@ -1,9 +1,11 @@
 import React, { FC, useContext } from 'react';
 import { EventContext, Styled } from 'direflow-component';
-import { IProperties, IAttributes } from './properties';
 import styles from './App.css';
 
-interface IProps extends IProperties, IAttributes {}
+interface IProps {
+  sampleList: string[];
+  componentTitle: string;
+}
 
 const App: FC<IProps> = (props) => {
   const dispatch = useContext(EventContext);
