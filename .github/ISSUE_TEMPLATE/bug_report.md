@@ -20,10 +20,8 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Package Manager (please place an 'x' below):**
-To install Direflow, I used...
-- [ ] NPM
-- [ ] Yarn
+**Package Manager:**
+To install Direflow, I used... (npm / yarn / something else)
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.

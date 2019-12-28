@@ -3,7 +3,7 @@ import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createProxy } from 'react-shadow';
+import createProxyRoot from './services/proxyRoot';
 import { EventProvider } from './components/EventContext';
 import addStyledComponentStyles from './services/styledComponentsHandler';
 import includeExternalSources from './services/externalSourceHandler';
@@ -130,8 +130,8 @@ class WebComponentFactory {
         if (!factory.shadow) {
           ReactDOM.render(application, this);
         } else {
-          const root = createProxy({ span: undefined });
-          ReactDOM.render(<root.span>{application}</root.span>, this);
+          const root = createProxyRoot(this);
+          ReactDOM.render(<root.open>{application}</root.open>, this);
         }
       }
 

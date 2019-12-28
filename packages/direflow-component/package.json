@@ -1,6 +1,6 @@
 {
   "name": "direflow-component",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Create Web Components using React",
   "main": "dist/index.js",
   "author": "Silind Software",
@@ -19,17 +19,15 @@
   "homepage": "direflow.io",
   "dependencies": {
     "@svgr/webpack": "4.3.2",
-    "@types/react": "16.9.3",
     "@types/webfontloader": "^1.6.29",
     "@webcomponents/webcomponentsjs": "^2.3.0",
     "babel-plugin-styled-components": "^1.10.6",
     "event-hooks-webpack-plugin": "2.1.4",
     "node-sass": "^4.13.0",
-    "react-shadow": "17.1.3",
+    "style-it": "2.1.4",
     "to-string-loader": "1.1.5",
     "webfontloader": "^1.6.28",
-    "webpack-filter-warnings-plugin": "^1.2.1",
-    "style-it": "2.1.4"
+    "webpack-filter-warnings-plugin": "^1.2.1"
   },
   "devDependencies": {
     "typescript": "3.7.2"
