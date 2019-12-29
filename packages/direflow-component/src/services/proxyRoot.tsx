@@ -15,6 +15,8 @@ interface IComponentOptions {
   mode: 'open' | 'closed';
 }
 
+let shadowedRoot: ShadowRoot | undefined;
+
 const ShadowContent: FC<IShadowContent> = (props) => {
   const root = props.root as any;
   return createPortal(props.children, root);
@@ -22,8 +24,11 @@ const ShadowContent: FC<IShadowContent> = (props) => {
 
 const createProxyComponent = (options: IComponentOptions) => {
   const ShadowRoot: FC<IShadowComponent> = (props) => {
-    const root = options.root.attachShadow({ mode: options.mode });
-    return <ShadowContent root={root}>{props.children}</ShadowContent>;
+    if (!shadowedRoot) {
+      shadowedRoot = options.root.attachShadow({ mode: options.mode });
+    }
+
+    return <ShadowContent root={shadowedRoot}>{props.children}</ShadowContent>;
   };
 
   return ShadowRoot;

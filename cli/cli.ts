@@ -26,7 +26,7 @@ export const cli = () => {
     });
 
   program.description(chalk.magenta(headline));
-  
+
   program.version(showVersion(), '-v, --version', 'Show the current version');
   program.helpOption('-h, --help', 'Show how to use direflow-cli');
 

@@ -38,8 +38,7 @@ Read more on ${chalk.blueBright('https://direflow.io/get-started#multiple-web-co
 
 export const showVersion = () => {
   const packageJson = require('../package.json');
-  return `
-  Current version of direflow-cli:
+  return `Current version of direflow-cli:
   ${packageJson.version}
   `;
 };
