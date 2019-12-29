@@ -1,6 +1,6 @@
 {
   "name": "direflow-cli",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Official CLI for Direflow",
   "main": "dist/index.js",
   "scripts": {
@@ -33,7 +33,7 @@
   ],
   "author": "Silind Software",
   "license": "MIT",
-  "homepage": "direflow.io",
+  "homepage": "https://direflow.io",
   "dependencies": {
     "boxen": "^4.1.0",
     "chalk": "2.4.2",

@@ -1,6 +1,6 @@
 {
   "name": "direflow-component",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Create Web Components using React",
   "main": "dist/index.js",
   "author": "Silind Software",
@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git@github.com:Silind-Software/direflow.git"
   },
-  "homepage": "direflow.io",
+  "homepage": "https://direflow.io",
   "dependencies": {
     "@svgr/webpack": "4.3.2",
     "@types/webfontloader": "^1.6.29",
