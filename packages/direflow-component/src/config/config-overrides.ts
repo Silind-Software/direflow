@@ -11,6 +11,7 @@ module.exports = function override(config: any, env: string): any {
     module: overrideModule(config.module),
     output: overrideOutput(config.output),
     optimization: overrideOptimization(config.optimization, env),
+    resolve: overrideResolve(config.resolve),
     plugins: overridePlugins(config.plugins, env),
   };
 
@@ -82,8 +83,8 @@ const overrideOptimization = (optimization: any, env: string) => {
         chunks: 'initial',
         name: 'vendor',
         enforce: true,
-      }
-    }
+      },
+    },
   };
 
   newOptions.sourceMap = env === 'development';
@@ -102,16 +103,25 @@ const overridePlugins = (plugins: any, env: string) => {
   plugins.push(
     new EventHooksPlugin({
       done: new PromiseTask(() => copyBundleScript(env)),
-    }),
+    })
   );
 
   plugins.push(
     new FilterWarningsPlugin({
       exclude: [/Module not found.*/, /Critical dependency: the request of a dependency is an expression/],
-    }),
+    })
   );
 
   return plugins;
+};
+
+const overrideResolve = (resolve: any) => {
+  const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
+  const filteredPlugins = resolve.plugins.filter((plugin: any) => !(plugin instanceof ModuleScopePlugin));
+
+  resolve.plugins = filteredPlugins;
+
+  return resolve;
 };
 
 const copyBundleScript = async (env: string) => {
