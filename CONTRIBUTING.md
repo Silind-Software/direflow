@@ -27,7 +27,7 @@ yarn update-version patch
 ```
 
 ## Developing on Direflow
-Start by cloning the repository.  
+Start by making a fork of the direflow repository, and clone it down.  
   
 ### Install
 Now cd into the project folder and run the command:
