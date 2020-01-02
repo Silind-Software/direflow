@@ -80,17 +80,15 @@ class WebComponentFactory {
       }
 
       private reactProps(): any {
-        const attributes = {} as any;
-
         factory.reflectPropertiesAndAttributes();
-        Object.keys(factory.componentAttributes).forEach((key: string) => {
-          attributes[key] = this.getAttribute(key) || (factory.componentAttributes as any)[key];
-        });
-
-        return { ...factory.componentProperties, ...attributes };
+        return { ...factory.componentProperties };
       }
 
       public connectedCallback(): void {
+        Object.keys(factory.componentProperties).forEach((key: string) => {
+          factory.componentProperties[key] = this.getAttribute(key) || (factory.componentProperties as any)[key];
+        });
+
         this.mountReactApp();
 
         loadFonts();
