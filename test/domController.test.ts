@@ -32,10 +32,10 @@ describe('Inject into Shadow Root', () => {
 describe('Inject into head', () => {
   it('should correctly inject into head', () => {
     const element = document.createElement('style');
-    element.setAttribute('data-styled', 'true');
+    element.id = 'direflow-style';
     injectIntoHead(element);
 
-    expect(document.head.children[0]?.getAttribute('data-styled')).toBe('true');
+    expect(document.head.children[0]?.id).toBe('direflow-style');
   });
 });
 
