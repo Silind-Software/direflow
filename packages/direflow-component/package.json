@@ -21,7 +21,6 @@
     "@svgr/webpack": "4.3.2",
     "@types/webfontloader": "^1.6.29",
     "@webcomponents/webcomponentsjs": "^2.3.0",
-    "babel-plugin-styled-components": "^1.10.6",
     "event-hooks-webpack-plugin": "2.1.4",
     "node-sass": "^4.13.0",
     "style-it": "2.1.4",
@@ -35,9 +34,7 @@
   "peerDependencies": {
     "@types/react": "16.9.3",
     "@types/react-dom": "16.9.1",
-    "@types/styled-components": "^4.1.22",
     "react": "16.10.1",
-    "react-dom": "16.10.1",
-    "styled-components": "4.4.1"
+    "react-dom": "16.10.1"
   }
 }
