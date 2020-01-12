@@ -1,8 +1,8 @@
+import { IDireflowPlugin } from '../interfaces/IDireflowConfig';
 import { injectIntoShadowRoot } from './domControllers';
-import { getDireflowPlugin } from '../utils/direflowConfigExtrator';
 
-const includeGoogleIcons = (element: HTMLElement) => {
-  const iconLoaderPlugin = getDireflowPlugin('icon-loader');
+const includeGoogleIcons = (element: HTMLElement, plugins: IDireflowPlugin[] | undefined) => {
+  const iconLoaderPlugin = plugins?.find((plugin) => plugin.name === 'icon-loader');
 
   if (iconLoaderPlugin?.options?.packs.includes('material-icons')) {
     setTimeout(() => {
@@ -15,4 +15,4 @@ const includeGoogleIcons = (element: HTMLElement) => {
   }
 };
 
-export { includeGoogleIcons };
+export default includeGoogleIcons;

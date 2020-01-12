@@ -1,20 +1,14 @@
 import WebFont from 'webfontloader';
-import { getDireflowPlugin } from '../utils/direflowConfigExtrator';
+import { IDireflowPlugin } from '../interfaces/IDireflowConfig';
 
-let didLoadOnce = false;
 
-const loadFonts = () => {
-  if (didLoadOnce) {
-    return;
-  }
 
-  const fontLoaderPlugin = getDireflowPlugin('font-loader');
+const loadFonts = (plugins: IDireflowPlugin[] | undefined) => {
+  const fontLoaderPlugin = plugins?.find((plugin) => plugin.name === 'font-loader');
 
   if (fontLoaderPlugin?.options) {
     WebFont.load(fontLoaderPlugin.options);
   }
-
-  didLoadOnce = true;
 }
 
 export default loadFonts;

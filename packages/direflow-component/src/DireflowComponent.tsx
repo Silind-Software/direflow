@@ -1,44 +1,51 @@
 import WebComponentFactory from './WebComponentFactory';
+import IDireflowConfig, { IDireflowPlugin } from './interfaces/IDireflowConfig';
 
 export class DireflowComponent {
-  private componentProperties: any | null = null;
-  private elementName: string | null = null;
-  private rootComponent: React.FC<any> | React.ComponentClass<any, any> | null = null;
-  private callback: ((component: Element) => void) | null = null;
+  private componentProperties: any | undefined;
+  private rootComponent: React.FC<any> | React.ComponentClass<any, any> | undefined;
+  private WebComponent: any | undefined;
   private shadow: boolean = true;
-  private WebComponent: any | null = null;
+  private elementName: string | undefined;
+  private plugins: IDireflowPlugin[] | undefined;
 
-  constructor(option?: { shadow: boolean }) {
-    if (option && !option.shadow) {
-      this.shadow = false;
-    }
+  public configure(config: IDireflowConfig): void {
+    this.componentProperties = config.properties;
+    this.shadow = config.useShadow;
+    this.elementName = config.name;
+    this.plugins = config.plugins;
   }
 
   public setProperties(properties: any): void {
     this.componentProperties = properties;
   }
 
-  public onConnected(callback: (component: Element) => void): void {
-    this.callback = callback;
-  }
-
-  public async render(
+  public create(
     App: React.FC<any> | React.ComponentClass<any, any>,
-    name: string,
-  ): Promise<void> {
-    this.rootComponent = App;
-    this.elementName = name;
+  ): Promise<HTMLElement> {
+    return new Promise(async (resolve, reject) => {
+      this.rootComponent = App;
 
-    this.validateDependencies();
+      try {
+        this.validateDependencies();
+      } catch (error) {
+        reject(error);
+      }
 
-    this.WebComponent = await new WebComponentFactory(
-      this.componentProperties || {},
-      this.rootComponent,
-      this.callback,
-      this.shadow
-    ).create();
+      const callback = (element: HTMLElement) => {
+        resolve(element);
+      };
 
-    customElements.define(this.elementName, this.WebComponent);
+      this.WebComponent = await new WebComponentFactory(
+        this.componentProperties || {},
+        this.rootComponent,
+        this.shadow,
+        this.plugins,
+        callback,
+      ).create();
+
+      customElements.define(this.elementName || '', this.WebComponent);
+    });
   }
 
   private validateDependencies(): void {

@@ -1,10 +1,10 @@
-import { getDireflowPlugin } from '../utils/direflowConfigExtrator';
+import { IDireflowPlugin } from '../interfaces/IDireflowConfig';
 import { injectIntoShadowRoot, stripStyleFromHead } from './domControllers';
 
 let styles = '';
 
-const addStyledComponentStyles = (element: HTMLElement) => {
-  if (getDireflowPlugin('styled-components')) {
+const addStyledComponentStyles = (element: HTMLElement, plugins: IDireflowPlugin[] | undefined) => {
+  if (plugins?.find((plugin) => plugin.name === 'styled-components')) {
     setTimeout(() => {
       try {
         if (!styles) {

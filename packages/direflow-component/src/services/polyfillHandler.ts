@@ -1,14 +1,13 @@
 import { IDireflowPlugin } from '../interfaces/IDireflowConfig';
-import { getDireflowPlugin } from '../utils/direflowConfigExtrator';
 
 let didIncludeOnce = false;
 
-const includePolyfills = async (options: { usesShadow: boolean }) => {
+const includePolyfills = async (options: { usesShadow: boolean }, plugins: IDireflowPlugin[] | undefined) => {
   if (didIncludeOnce) {
     return;
   }
 
-  const polyfillLoaderPlugin = getDireflowPlugin('polyfill-loader');
+  const polyfillLoaderPlugin = plugins?.find((plugin) => plugin.name === 'polyfill-loader');
 
   if (polyfillLoaderPlugin) {
     return includePolyfillsFromPlugin(polyfillLoaderPlugin);

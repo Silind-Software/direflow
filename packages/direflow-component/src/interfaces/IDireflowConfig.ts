@@ -1,13 +1,8 @@
 export default interface IDireflowConfig {
-  direflowMetadata: IDireflowMetadata;
-  plugins: IDireflowPlugin[];
-}
-
-export interface IDireflowMetadata {
-  title: string;
-  description: string;
-  type: 'direflow-project' | 'direflow-component';
-  createVersion: string;
+  name: string;
+  useShadow: boolean;
+  properties?: any;
+  plugins?: IDireflowPlugin[];
 }
 
 export interface IDireflowPlugin {

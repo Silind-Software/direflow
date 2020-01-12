@@ -1,16 +1,14 @@
-import { getDireflowPlugin } from '../utils/direflowConfigExtrator';
+import { IDireflowPlugin } from '../interfaces/IDireflowConfig';
 import { injectIntoShadowRoot, injectIntoHead } from './domControllers';
 
-let didIncludeOnce = false;
-
-const includeExternalSources = (element: HTMLElement) => {
-  const externalLoaderPlugin = getDireflowPlugin('external-loader');
+const includeExternalSources = (element: HTMLElement, plugins: IDireflowPlugin[] | undefined) => {
+  const externalLoaderPlugin = plugins?.find((plugin) => plugin.name === 'external-loader');
   const paths = externalLoaderPlugin?.options?.paths;
 
   if (paths && paths.length) {
     setTimeout(() => {
       paths.forEach((path: string) => {
-        if (!didIncludeOnce && path.endsWith('.js')) {
+        if (path.endsWith('.js')) {
           const script = document.createElement('script');
           script.src = path;
 
@@ -25,8 +23,6 @@ const includeExternalSources = (element: HTMLElement) => {
           injectIntoShadowRoot(element, link);
         }
       });
-
-      didIncludeOnce = true;
     });
   }
 }

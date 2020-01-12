@@ -3,13 +3,31 @@ import App from './direflow-component/App';
 
 const direflowComponent = new DireflowComponent();
 
-direflowComponent.setProperties({
+const direflowProperties = {
   componentTitle: '%name-title%',
   sampleList: [
     'Create with React',
     'Build as Web Component',
     'Use it anywhere!',
   ],
+};
+
+const direflowPlugins = [
+  {
+    name: 'font-loader',
+    options: {
+      google: {
+        families: ['Advent Pro', 'Noto Sans JP'],
+      },
+    },
+  },
+];
+
+direflowComponent.configure({
+  name: '%name-snake%',
+  useShadow: true,
+  properties: direflowProperties,
+  plugins: direflowPlugins,
 });
 
-direflowComponent.render(App, '%name-snake%');
+direflowComponent.create(App);

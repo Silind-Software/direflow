@@ -4,20 +4,9 @@ import { isDireflowSetup } from '../cli/utils/detectDireflowSetup';
 const isSetupFilePath = 'path/to/mock/setup';
 const isNotSetupFilePath = 'path/to/mock/non-setup';
 
-const mockFile = `
-  {
-    "direflowMetadata": {
-      "title": "cool-component",
-      "description": "This component is cool",
-      "type": "direflow-component",
-      "createVersion": "0.0.0"
-    }
-  }
-`;
-
 fileMock({
   [isSetupFilePath]: {
-    'direflow-config.js': mockFile,
+    'direflow-webpack.js': '',
   },
   [isNotSetupFilePath]: {},
 });
@@ -28,7 +17,7 @@ describe('Detect Direflow Setup', () => {
   });
 
   it('should return true if Direflow Setup', () => {
-    const isSetup = isDireflowSetup(isSetupFilePath, mockFile);
+    const isSetup = isDireflowSetup(isSetupFilePath);
     expect(isSetup).toBeTruthy();
   });
 

@@ -29,17 +29,6 @@ const files = [
     > %description%
     `,
   },
-  {
-    name: 'direflow-config.js',
-    content: `
-    direflowMetadata: {
-      title: '%name-snake%',
-      description: '%description%',
-      type: '%setup-type%',
-      createVersion: '%install-version%',
-    },
-    `,
-  },
 ];
 
 const fileMocks = files.reduce((acc: any, current: any) => {
@@ -94,18 +83,6 @@ describe('Write names to file', () => {
     expect(changedFile.toString()).toBe(`
     # Cool Component
     > This component is cool
-    `);
-  });
-
-  it('should change direflow-config.js correctly', async () => {
-    const changedFile = await readFile(`${filePath}/direflow-config.js`);
-    expect(changedFile.toString()).toBe(`
-    direflowMetadata: {
-      title: 'cool-component',
-      description: 'This component is cool',
-      type: 'direflow-component',
-      createVersion: '0.0.0',
-    },
     `);
   });
 });

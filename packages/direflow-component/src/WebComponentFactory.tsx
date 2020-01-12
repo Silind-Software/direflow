@@ -1,31 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { IDireflowPlugin } from './interfaces/IDireflowConfig';
 import createProxyRoot from './services/proxyRoot';
-import { EventProvider } from './components/EventContext';
 import addStyledComponentStyles from './services/styledComponentsHandler';
 import includeExternalSources from './services/externalSourceHandler';
 import loadFonts from './services/fontLoaderHandler';
-import { includeGoogleIcons } from './services/iconLoaderHandler';
 import includePolyfills from './services/polyfillHandler';
+import includeGoogleIcons from './services/iconLoaderHandler';
+import { EventProvider } from './components/EventContext';
 
 class WebComponentFactory {
   private componentAttributes: any;
   private componentProperties: any;
   private rootComponent: React.FC<any> | React.ComponentClass<any, any>;
-  private callback: ((component: Element) => void) | null;
   private shadow: boolean | undefined;
+  private plugins: IDireflowPlugin[] | undefined;
+  private connectCallback: (element: HTMLElement) => void;
 
   constructor(
     properties: any,
     component: React.FC<any> | React.ComponentClass<any, any>,
-    callback: ((component: Element) => void) | null,
     shadowOption: boolean,
+    plugins: IDireflowPlugin[] | undefined,
+    connectCallback: (element: HTMLElement) => void,
   ) {
     this.componentAttributes = {};
     this.componentProperties = properties;
     this.rootComponent = component;
-    this.callback = callback;
     this.shadow = shadowOption;
+    this.plugins = plugins;
+    this.connectCallback = connectCallback;
   }
 
   private reflectPropertiesAndAttributes(): void {
@@ -41,7 +45,7 @@ class WebComponentFactory {
   public async create(): Promise<any> {
     const factory = this;
 
-    await includePolyfills({ usesShadow: !!factory.shadow });
+    await includePolyfills({ usesShadow: !!factory.shadow }, this.plugins);
 
     return class extends HTMLElement {
       private _application: JSX.Element | undefined;
@@ -61,7 +65,7 @@ class WebComponentFactory {
         this.preparePlugins();
         this.mountReactApp();
 
-        factory.callback?.(this);
+        factory.connectCallback(this);
       }
 
       public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
@@ -117,10 +121,10 @@ class WebComponentFactory {
       }
 
       private preparePlugins(): void {
-        loadFonts();
-        includeGoogleIcons(this);
-        includeExternalSources(this);
-        addStyledComponentStyles(this);
+        loadFonts(factory.plugins);
+        includeGoogleIcons(this, factory.plugins);
+        includeExternalSources(this, factory.plugins);
+        addStyledComponentStyles(this, factory.plugins);
       }
 
       private reactProps(): any {
