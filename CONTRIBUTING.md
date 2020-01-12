@@ -47,6 +47,11 @@ Now, in order to make sure all version-references are pointed to your local vers
 yarn update-version link
 ```
 
+_NB: To do all of this in one command, you can use:_
+```console
+yarn setup-local
+```
+
 ### Build
 After applying your changes, build the project using the command:
 ```console
@@ -63,7 +68,8 @@ This should give you the latest version with a '-link' appended:
   Current version of direflow-cli:
   2.0.2-link
 ```
-
+In this way you know that the command `direflow` is using your local setup.  
+  
 Now, test your new functionality.
 > Note: After you have build the project using build-link, you may want to run install:all again before continuing to develop.
 
