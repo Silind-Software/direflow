@@ -1,6 +1,3 @@
-import '@webcomponents/webcomponentsjs/webcomponents-bundle.js';
-import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import createProxyRoot from './services/proxyRoot';
@@ -8,6 +5,8 @@ import { EventProvider } from './components/EventContext';
 import addStyledComponentStyles from './services/styledComponentsHandler';
 import includeExternalSources from './services/externalSourceHandler';
 import loadFonts from './services/fontLoaderHandler';
+import { includeGoogleIcons } from './services/iconLoaderHandler';
+import includePolyfills from './services/polyfillHandler';
 
 class WebComponentFactory {
   private componentAttributes: any;
@@ -39,8 +38,10 @@ class WebComponentFactory {
     });
   }
 
-  public create(): any {
+  public async create(): Promise<any> {
     const factory = this;
+
+    await includePolyfills({ usesShadow: !!factory.shadow });
 
     return class extends HTMLElement {
       private _application: JSX.Element | undefined;
@@ -49,6 +50,40 @@ class WebComponentFactory {
       constructor() {
         super();
         this.setComponentProperties();
+      }
+
+      public static get observedAttributes(): string[] {
+        return Object.keys(factory.componentAttributes).map((k) => k.toLowerCase());
+      }
+
+      public connectedCallback(): void {
+        this.preparePropertiesAndAttributes();
+        this.preparePlugins();
+        this.mountReactApp();
+
+        factory.callback?.(this);
+      }
+
+      public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
+        if (oldValue === newValue) {
+          return;
+        }
+
+        this.mountReactApp();
+      }
+
+      public reactPropsChangedCallback(name: string, oldValue: any, newValue: any): void {
+        if (oldValue === newValue) {
+          return;
+        }
+
+        factory.componentProperties[name] = newValue;
+
+        this.mountReactApp();
+      }
+
+      public disconnectedCallback(): void {
+        ReactDOM.unmountComponentAtNode(this);
       }
 
       private setComponentProperties(): void {
@@ -75,51 +110,22 @@ class WebComponentFactory {
         Object.defineProperties(this, propertyMap);
       }
 
-      public static get observedAttributes(): string[] {
-        return Object.keys(factory.componentAttributes).map((k) => k.toLowerCase());
+      private preparePropertiesAndAttributes(): void {
+        Object.keys(factory.componentProperties).forEach((key: string) => {
+          factory.componentProperties[key] = this.getAttribute(key) || (factory.componentProperties as any)[key];
+        });
+      }
+
+      private preparePlugins(): void {
+        loadFonts();
+        includeGoogleIcons(this);
+        includeExternalSources(this);
+        addStyledComponentStyles(this);
       }
 
       private reactProps(): any {
         factory.reflectPropertiesAndAttributes();
         return { ...factory.componentProperties };
-      }
-
-      public connectedCallback(): void {
-        Object.keys(factory.componentProperties).forEach((key: string) => {
-          factory.componentProperties[key] = this.getAttribute(key) || (factory.componentProperties as any)[key];
-        });
-
-        this.mountReactApp();
-
-        loadFonts();
-        includeExternalSources(this);
-        addStyledComponentStyles(this);
-
-        if (factory.callback) {
-          factory.callback(this);
-        }
-      }
-
-      public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
-        if (oldValue === newValue) {
-          return;
-        }
-
-        this.mountReactApp();
-      }
-
-      public reactPropsChangedCallback(name: string, oldValue: any, newValue: any): void {
-        if (oldValue === newValue) {
-          return;
-        }
-
-        factory.componentProperties[name] = newValue;
-
-        this.mountReactApp();
-      }
-
-      public disconnectedCallback(): void {
-        ReactDOM.unmountComponentAtNode(this);
       }
 
       private mountReactApp(): void {

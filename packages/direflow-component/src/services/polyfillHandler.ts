@@ -1,0 +1,101 @@
+import { IDireflowPlugin } from '../interfaces/IDireflowConfig';
+import { getDireflowPlugin } from '../utils/direflowConfigExtrator';
+
+let didIncludeOnce = false;
+
+const includePolyfills = async (options: { usesShadow: boolean }) => {
+  if (didIncludeOnce) {
+    return;
+  }
+
+  const polyfillLoaderPlugin = getDireflowPlugin('polyfill-loader');
+
+  if (polyfillLoaderPlugin) {
+    return includePolyfillsFromPlugin(polyfillLoaderPlugin);
+  }
+
+  const scriptsLists = [];
+
+  if (options.usesShadow) {
+    scriptsLists.push(
+      loadScript(
+        'https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.1/bundles/webcomponents-sd.js',
+      ),
+    );
+  }
+
+  scriptsLists.push(
+    loadScript(
+      'https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.1/bundles/webcomponents-ce.js',
+    ),
+  );
+
+  scriptsLists.push(
+    loadScript(
+      'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.4.1/custom-elements-es5-adapter.js',
+    ),
+  );
+
+  try {
+    await Promise.all(scriptsLists);
+    didIncludeOnce = true;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+let didIncludeOncePlugin = false;
+
+const includePolyfillsFromPlugin = async (plugin: IDireflowPlugin) => {
+  if (didIncludeOncePlugin) {
+    return;
+  }
+
+  const scriptsLists = [];
+
+  if (plugin.options?.use.sd) {
+    const src =
+      typeof plugin.options?.use.sd === 'string'
+        ? plugin.options?.use.sd
+        : 'https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.1/bundles/webcomponents-sd.js';
+
+    scriptsLists.push(loadScript(src));
+  }
+
+  if (plugin.options?.use.ce) {
+    const src =
+      typeof plugin.options?.use.ce === 'string'
+        ? plugin.options?.use.ce
+        : 'https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.1/bundles/webcomponents-ce.js';
+
+    scriptsLists.push(loadScript(src));
+  }
+
+  scriptsLists.push(
+    loadScript(
+      'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.4.1/custom-elements-es5-adapter.js',
+    ),
+  );
+
+  try {
+    await Promise.all(scriptsLists);
+    didIncludeOncePlugin = true;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const loadScript = (src: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = src;
+
+    script.addEventListener('load', () => resolve());
+    script.addEventListener('error', () => reject('Polyfill failed to load'));
+
+    document.head.appendChild(script);
+  });
+};
+
+export default includePolyfills;

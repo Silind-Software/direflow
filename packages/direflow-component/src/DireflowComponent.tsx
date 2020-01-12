@@ -22,16 +22,16 @@ export class DireflowComponent {
     this.callback = callback;
   }
 
-  public render(
+  public async render(
     App: React.FC<any> | React.ComponentClass<any, any>,
     name: string,
-  ): void {
+  ): Promise<void> {
     this.rootComponent = App;
     this.elementName = name;
 
     this.validateDependencies();
 
-    this.WebComponent = new WebComponentFactory(
+    this.WebComponent = await new WebComponentFactory(
       this.componentProperties || {},
       this.rootComponent,
       this.callback,

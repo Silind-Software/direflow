@@ -1,5 +1,9 @@
 export const injectIntoShadowRoot = (webComponent: HTMLElement, element: Element): void => {
-  webComponent.shadowRoot?.prepend(element);
+  if (!webComponent.shadowRoot) {
+    webComponent.prepend(element);
+  } else {
+    webComponent.shadowRoot.prepend(element);
+  }
 };
 
 export const injectIntoHead = (element: Element) => {
