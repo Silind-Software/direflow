@@ -1,6 +1,6 @@
 {
   "name": "direflow-cli",
-  "version": "2.2.9",
+  "version": "3.0.0",
   "description": "Official CLI for Direflow",
   "main": "dist/index.js",
   "scripts": {
@@ -10,7 +10,8 @@
     "clean:all": "node ./scripts/cleanupAll.js",
     "install:all": "node ./scripts/installAll.js",
     "build:all": "node ./scripts/buildAll.js && yarn install:all --no-deps",
-    "build-link": "yarn clean:all && yarn install:all && yarn build:all"
+    "build-link": "yarn clean:all && yarn install:all && yarn build:all",
+    "setup-local": "./scripts/setupLocal.sh"
   },
   "bin": {
     "direflow": "bin/direflow"
