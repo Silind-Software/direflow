@@ -1,12 +1,18 @@
 export const injectIntoShadowRoot = (webComponent: HTMLElement, element: Element): void => {
-  if (!webComponent.shadowRoot) {
-    webComponent.prepend(element);
-  } else {
-    webComponent.shadowRoot.prepend(element);
+  const elementToPrepend = webComponent.shadowRoot || webComponent;
+
+  if (existsIdenticalElement(element, elementToPrepend)) {
+    return;
   }
+
+  elementToPrepend.prepend(element);
 };
 
 export const injectIntoHead = (element: Element) => {
+  if (existsIdenticalElement(element, document.head)) {
+    return;
+  }
+
   document.head.append(element);
 };
 
@@ -17,4 +23,10 @@ export const stripStyleFromHead = () => {
   if (style) {
     document.head.removeChild(style);
   }
+};
+
+const existsIdenticalElement = (element: Element, host: Element | ShadowRoot): boolean => {
+  const allChildren = host.children;
+  const exists = Array.from(allChildren).some((child) => element.isEqualNode(child));
+  return exists;
 };

@@ -1,8 +1,12 @@
 import { IDireflowPlugin } from '../interfaces/IDireflowConfig';
 
 let didIncludeOnce = false;
+const polyfillsLoaded: Array<{ script: Element; hasLoaded: boolean }> = [];
 
-const includePolyfills = async (options: { usesShadow: boolean }, plugins: IDireflowPlugin[] | undefined) => {
+const includePolyfills = async (
+  options: { usesShadow: boolean },
+  plugins: IDireflowPlugin[] | undefined,
+) => {
   if (didIncludeOnce) {
     return;
   }
@@ -90,7 +94,31 @@ const loadScript = (src: string): Promise<void> => {
     script.async = true;
     script.src = src;
 
-    script.addEventListener('load', () => resolve());
+    const existingPolyfill = polyfillsLoaded.find((loadedScript) =>
+      loadedScript.script.isEqualNode(script),
+    );
+
+    if (existingPolyfill) {
+      if (existingPolyfill.hasLoaded) {
+        resolve();
+      }
+
+      existingPolyfill.script.addEventListener('load', () => resolve());
+      return;
+    }
+
+    const scriptEntry = {
+      script,
+      hasLoaded: false,
+    };
+
+    polyfillsLoaded.push(scriptEntry);
+
+    script.addEventListener('load', () => {
+      scriptEntry.hasLoaded = true;
+      resolve();
+    });
+
     script.addEventListener('error', () => reject('Polyfill failed to load'));
 
     document.head.appendChild(script);
