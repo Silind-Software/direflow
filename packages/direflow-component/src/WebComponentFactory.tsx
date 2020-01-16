@@ -53,12 +53,13 @@ class WebComponentFactory {
 
       constructor() {
         super();
+
         for (const key in this.properties) {
           if ((this as any)[key] != null) {
             this.properties[key] = (this as any)[key];
           }
         }
-        this.setComponentProperties();
+        this.subscribeToProperties();
       }
 
       public static get observedAttributes(): string[] {
@@ -95,18 +96,20 @@ class WebComponentFactory {
         ReactDOM.unmountComponentAtNode(this);
       }
 
-      private setComponentProperties(): void {
+      private subscribeToProperties(): void {
         if (!factory.rootComponent) {
           return;
         }
 
         const propertyMap = {} as PropertyDescriptorMap;
         Object.keys(this.properties).forEach((key: string) => {
+          const presetValue = (this as any)[key];
+
           propertyMap[key] = {
             configurable: true,
             enumerable: true,
             get(): any {
-              return (this as any).properties[key];
+              return presetValue || (this as any).properties[key];
             },
             set(newValue: any): any {
               const oldValue = (this as any).properties[key];
