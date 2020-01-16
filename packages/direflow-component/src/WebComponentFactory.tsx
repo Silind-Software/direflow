@@ -53,13 +53,12 @@ class WebComponentFactory {
 
       constructor() {
         super();
-        this.setComponentProperties();
-
         for (const key in this.properties) {
           if ((this as any)[key] != null) {
             this.properties[key] = (this as any)[key];
           }
         }
+        this.setComponentProperties();
       }
 
       public static get observedAttributes(): string[] {
