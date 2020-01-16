@@ -54,6 +54,12 @@ class WebComponentFactory {
       constructor() {
         super();
         this.setComponentProperties();
+
+        for (const key in this.properties) {
+          if ((this as any)[key] != null) {
+            this.properties[key] = (this as any)[key];
+          }
+        }
       }
 
       public static get observedAttributes(): string[] {
@@ -116,7 +122,9 @@ class WebComponentFactory {
 
       private preparePropertiesAndAttributes(): void {
         Object.keys(factory.componentProperties).forEach((key: string) => {
-          factory.componentProperties[key] = this.getAttribute(key) || (factory.componentProperties as any)[key];
+          factory.componentProperties[key] = this.getAttribute(key)
+            || ((this as any)[key] != null && (this as any)[key])
+            || (factory.componentProperties as any)[key];
         });
       }
 
