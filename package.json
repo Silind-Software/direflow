@@ -4,7 +4,7 @@
   "description": "Official CLI for Direflow",
   "main": "dist/index.js",
   "scripts": {
-    "build": "node_modules/typescript/bin/tsc",
+    "build": "tsc",
     "test": "jest --env=jest-environment-jsdom-fourteen",
     "update-version": "node scripts/updateVersion.js",
     "clean:all": "node ./scripts/cleanupAll.js",
