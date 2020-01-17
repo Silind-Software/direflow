@@ -1,18 +1,15 @@
 /// <reference types="react-scripts" />
 
 declare module '*.css' {
-  const classes: string
-  export default classes
+  export default style as string
 }
 
 declare module '*.scss' {
-  const classes: string
-  export default classes
+  export default style as string
 }
 
 declare module '*.sass' {
-  const classes: string
-  export default classes
+  export default style as string
 }
 
 declare module '*.svg' {
