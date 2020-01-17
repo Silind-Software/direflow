@@ -1,6 +1,6 @@
 {
   "name": "direflow-cli",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "description": "Official CLI for Direflow",
   "main": "dist/index.js",
   "scripts": {

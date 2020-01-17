@@ -1,13 +1,15 @@
 /// <reference types="react-scripts" />
 
 declare module '*.css' {
-  const classes: { readonly [key: string]: string };
-  export default classes;
+  export default style as string
 }
 
 declare module '*.scss' {
-  const classes: { readonly [key: string]: string };
-  export default classes;
+  export default style as string
+}
+
+declare module '*.sass' {
+  export default style as string
 }
 
 declare module '*.svg' {
