@@ -2,7 +2,7 @@ import React, { FC, Component, ReactNode, ComponentClass, CSSProperties } from '
 import Style from 'style-it';
 
 interface IStyled {
-  styles: CSSProperties | CSSProperties[];
+  styles: string | CSSProperties | CSSProperties[];
   children: ReactNode | ReactNode[];
 }
 
@@ -20,7 +20,7 @@ const Styled: FC<IStyled> = (props): JSX.Element => {
   return Style.it(styles, props.children);
 };
 
-const withStyles = (styles: CSSProperties | CSSProperties[]) => <P, S>(
+const withStyles = (styles: string | CSSProperties | CSSProperties[]) => <P, S>(
   WrappedComponent: ComponentClass<P, S> | FC<P>,
 ) => {
   return class extends Component<P, S> {
