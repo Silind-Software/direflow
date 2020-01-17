@@ -36,24 +36,18 @@ const overrideModule = (module: any) => {
   const scssRuleIndex = module.rules[2].oneOf.findIndex((rule: any) => '.scss'.match(rule.test));
 
   if (cssRuleIndex !== -1) {
-    module.rules[2].oneOf[cssRuleIndex].use[0] = {
-      loader: 'to-string-loader',
-    };
-    module.rules[2].oneOf[cssRuleIndex].use[1] = {
-      loader: 'css-loader',
-    };
+    module.rules[2].oneOf[cssRuleIndex].use = [
+      'to-string-loader',
+      'css-loader',
+    ];
   }
 
   if (scssRuleIndex !== -1) {
-    module.rules[2].oneOf[scssRuleIndex].use[0] = {
-      loader: 'to-string-loader',
-    };
-    module.rules[2].oneOf[cssRuleIndex].use[1] = {
-      loader: 'css-loader',
-    };
-    module.rules[2].oneOf[scssRuleIndex].use[2] = {
-      loader: 'sass-loader',
-    };
+    module.rules[2].oneOf[scssRuleIndex].use = [
+      'to-string-loader',
+      'css-loader',
+      'sass-loader',
+    ];
   }
 
   module.rules[2].oneOf.unshift({
