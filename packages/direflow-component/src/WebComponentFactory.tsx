@@ -125,9 +125,9 @@ class WebComponentFactory {
       private preparePropertiesAndAttributes(): void {
         Object.keys(factory.componentProperties).forEach((key: string) => {
           if (this.getAttribute(key)) {
-            factory.componentProperties[key] = this.getAttribute(key)
+            factory.componentProperties[key] = this.getAttribute(key);
           } else if ((this as any)[key] != null) {
-            factory.componentProperties[key] = (this as any)[key]
+            factory.componentProperties[key] = (this as any)[key];
           }
         });
       }
@@ -150,8 +150,14 @@ class WebComponentFactory {
         if (!factory.shadow) {
           ReactDOM.render(application, this);
         } else {
+          const currentChildren = Array.from(this.children).map((child: Node) =>
+            child.cloneNode(true),
+          );
+
           const root = createProxyRoot(this);
           ReactDOM.render(<root.open>{application}</root.open>, this);
+
+          currentChildren.forEach((child: Node) => this.append(child));
         }
       }
 
@@ -172,7 +178,7 @@ class WebComponentFactory {
       private eventDispatcher = (event: Event) => {
         this.dispatchEvent(event);
       }
-    }
+    };
   }
 }
 
