@@ -9,6 +9,10 @@ export class DireflowComponent {
   private elementName: string | undefined;
   private plugins: IDireflowPlugin[] | undefined;
 
+  /**
+   * Configure Direflow Component
+   * @param config direflow configuration
+   */
   public configure(config: IDireflowConfig): void {
     this.componentProperties = config.properties;
     this.shadow = config.useShadow;
@@ -16,6 +20,10 @@ export class DireflowComponent {
     this.plugins = config.plugins;
   }
 
+  /**
+   * Create Direflow Component
+   * @param App React Component
+   */
   public create(
     App: React.FC<any> | React.ComponentClass<any, any>,
   ): Promise<HTMLElement> {
