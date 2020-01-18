@@ -2,12 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import renderer from 'react-test-renderer';
 import App from '../App';
-import {
-  properties,
-  attributes,
-} from '../properties';
 
-const reactProps = { ...attributes, ...properties };
+const reactProps = {
+  componentTitle: 'Component Test',
+  sampleList: ['Mock', 'Test', 'Data'],
+};
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
