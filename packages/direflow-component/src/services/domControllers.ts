@@ -25,7 +25,7 @@ export const stripStyleFromHead = () => {
   }
 };
 
-const existsIdenticalElement = (element: Element, host: Element | ShadowRoot): boolean => {
+export const existsIdenticalElement = (element: Element, host: Element | ShadowRoot): boolean => {
   const allChildren = host.children;
   const exists = Array.from(allChildren).some((child) => element.isEqualNode(child));
   return exists;

@@ -32,7 +32,10 @@ class WebComponentFactory {
     this.connectCallback = connectCallback;
   }
 
-  private reflectPropertiesAndAttributes(): void {
+  /**
+   * All properties with primitive values is added to attributes.
+   */
+  private reflectPropertiesToAttributes(): void {
     Object.entries(this.componentProperties).forEach(([key, value]) => {
       if (typeof value !== 'number' && typeof value !== 'string' && typeof value !== 'boolean') {
         return;
@@ -42,38 +45,51 @@ class WebComponentFactory {
     });
   }
 
+  /**
+   * Create new class that will serve as the Web Component.
+   */
   public async create(): Promise<any> {
     const factory = this;
 
+    /**
+     * Wait for Web Component polyfills to be included in the host application.
+     * Polyfill scripts are loaded async.
+     */
     await includePolyfills({ usesShadow: !!factory.shadow }, this.plugins);
 
     return class extends HTMLElement {
       private _application: JSX.Element | undefined;
-      private properties: any = Object.assign({}, factory.componentProperties);
 
       constructor() {
         super();
-
-        for (const key in this.properties) {
-          if ((this as any)[key] != null) {
-            this.properties[key] = (this as any)[key];
-          }
-        }
         this.subscribeToProperties();
       }
 
+      /**
+       * Observe attributes for changes.
+       * Part of the Web Component Standard.
+       */
       public static get observedAttributes(): string[] {
         return Object.keys(factory.componentAttributes).map((k) => k.toLowerCase());
       }
 
+      /**
+       * Web Component gets mounted on the DOM.
+       */
       public connectedCallback(): void {
         this.preparePropertiesAndAttributes();
         this.preparePlugins();
-        this.mountReactApp();
+        this.mountReactApp({ initial: true });
 
         factory.connectCallback(this);
       }
 
+      /**
+       * When an attribute is changed, this callback function is called.
+       * @param name name of the attribute
+       * @param oldValue value before change
+       * @param newValue value after change
+       */
       public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
         if (oldValue === newValue) {
           return;
@@ -82,7 +98,13 @@ class WebComponentFactory {
         this.mountReactApp();
       }
 
-      public reactPropsChangedCallback(name: string, oldValue: any, newValue: any): void {
+      /**
+       * When a property is changed, this callback function is called.
+       * @param name name of the property
+       * @param oldValue value before change
+       * @param newValue value after change
+       */
+      public propertyChangedCallback(name: string, oldValue: any, newValue: any): void {
         if (oldValue === newValue) {
           return;
         }
@@ -92,46 +114,73 @@ class WebComponentFactory {
         this.mountReactApp();
       }
 
+      /**
+       * Web Component gets unmounted from the DOM.
+       */
       public disconnectedCallback(): void {
         ReactDOM.unmountComponentAtNode(this);
       }
 
+      /**
+       * Setup getters and setters for all properties.
+       * Here we ensure that the 'propertyChangedCallback' will get invoked
+       * when a property changes.
+       */
       private subscribeToProperties(): void {
         if (!factory.rootComponent) {
           return;
         }
 
+        const properties = Object.assign({}, factory.componentProperties);
+        const self: any = this;
+
+        for (const key in properties) {
+          if (self[key] != null) {
+            properties[key] = self[key];
+          }
+        }
+
         const propertyMap = {} as PropertyDescriptorMap;
-        Object.keys(this.properties).forEach((key: string) => {
-          const presetValue = (this as any)[key];
+        Object.keys(properties).forEach((key: string) => {
+          const presetValue = self[key];
 
           propertyMap[key] = {
             configurable: true,
             enumerable: true,
+
             get(): any {
-              return presetValue || (this as any).properties[key];
+              return presetValue || properties[key];
             },
+
             set(newValue: any): any {
-              const oldValue = (this as any).properties[key];
-              (this as any).properties[key] = newValue;
-              (this as any).reactPropsChangedCallback(key, oldValue, newValue);
+              const oldValue = properties[key];
+              properties[key] = newValue;
+              self.propertyChangedCallback(key, oldValue, newValue);
             },
           };
         });
 
-        Object.defineProperties(this, propertyMap);
+        Object.defineProperties(self, propertyMap);
       }
 
+      /**
+       * Prepare all properties and attributes
+       */
       private preparePropertiesAndAttributes(): void {
+        const self: any = this;
+
         Object.keys(factory.componentProperties).forEach((key: string) => {
-          if (this.getAttribute(key)) {
-            factory.componentProperties[key] = this.getAttribute(key)
-          } else if ((this as any)[key] != null) {
-            factory.componentProperties[key] = (this as any)[key]
+          if (self.getAttribute(key)) {
+            factory.componentProperties[key] = self.getAttribute(key);
+          } else if (self[key] != null) {
+            factory.componentProperties[key] = self[key];
           }
         });
       }
 
+      /**
+       * Fetch and prepare all plugins.
+       */
       private preparePlugins(): void {
         loadFonts(factory.plugins);
         includeGoogleIcons(this, factory.plugins);
@@ -139,22 +188,44 @@ class WebComponentFactory {
         addStyledComponentStyles(this, factory.plugins);
       }
 
+      /**
+       * Generate react props based on properties and attributes.
+       */
       private reactProps(): any {
-        factory.reflectPropertiesAndAttributes();
+        factory.reflectPropertiesToAttributes();
         return { ...factory.componentProperties };
       }
 
-      private mountReactApp(): void {
+      /**
+       * Mount React App onto the Web Component
+       */
+      private mountReactApp(options?: { initial: boolean; }): void {
         const application = this.application();
 
         if (!factory.shadow) {
           ReactDOM.render(application, this);
         } else {
+
+          let currentChildren: Node[] | undefined;
+
+          if (options?.initial) {
+            currentChildren = Array.from(this.children).map((child: Node) =>
+              child.cloneNode(true),
+            );
+          }
+
           const root = createProxyRoot(this);
           ReactDOM.render(<root.open>{application}</root.open>, this);
+
+          if (currentChildren) {
+            currentChildren.forEach((child: Node) => this.append(child));
+          }
         }
       }
 
+      /**
+       * Create the React App
+       */
       private application(): JSX.Element {
         if (this._application) {
           return this._application;
@@ -169,10 +240,13 @@ class WebComponentFactory {
         return baseApplication;
       }
 
+      /**
+       * Dispatch an event on behalf of the Web Component
+       */
       private eventDispatcher = (event: Event) => {
         this.dispatchEvent(event);
       }
-    }
+    };
   }
 }
 

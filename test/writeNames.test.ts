@@ -19,7 +19,11 @@ const files = [
   {
     name: 'index.tsx',
     content: `
-    direflowComponent.render(App, '%name-snake%');
+    direflowComponent.configure({
+      name: '%name-snake%',
+      useShadow: true,
+    });
+    direflowComponent.create(App);
     `,
   },
   {
@@ -53,12 +57,12 @@ describe('Write names to file', () => {
       },
       'This component is cool',
       'direflow-component',
-      '0.0.0'
+      '0.0.0',
     );
   });
 
   afterAll(() => {
-    fileMock.restore()
+    fileMock.restore();
   });
 
   it('should change package.json correctly', async () => {
@@ -74,7 +78,11 @@ describe('Write names to file', () => {
   it('should change index.tsx correctly', async () => {
     const changedFile = await readFile(`${filePath}/index.tsx`);
     expect(changedFile.toString()).toBe(`
-    direflowComponent.render(App, 'cool-component');
+    direflowComponent.configure({
+      name: 'cool-component',
+      useShadow: true,
+    });
+    direflowComponent.create(App);
     `);
   });
 

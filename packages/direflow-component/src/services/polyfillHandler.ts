@@ -1,7 +1,13 @@
 import { IDireflowPlugin } from '../interfaces/IDireflowConfig';
 
+type TWcPolyfillsLoaded = Array<{ script: Element; hasLoaded: boolean }>;
+declare global {
+  interface Window {
+    wcPolyfillsLoaded: TWcPolyfillsLoaded;
+  }
+}
+
 let didIncludeOnce = false;
-const polyfillsLoaded: Array<{ script: Element; hasLoaded: boolean }> = [];
 
 const includePolyfills = async (
   options: { usesShadow: boolean },
@@ -94,7 +100,11 @@ const loadScript = (src: string): Promise<void> => {
     script.async = true;
     script.src = src;
 
-    const existingPolyfill = polyfillsLoaded.find((loadedScript) =>
+    if (!window.wcPolyfillsLoaded) {
+      window.wcPolyfillsLoaded = [];
+    }
+
+    const existingPolyfill = window.wcPolyfillsLoaded.find((loadedScript) =>
       loadedScript.script.isEqualNode(script),
     );
 
@@ -112,7 +122,7 @@ const loadScript = (src: string): Promise<void> => {
       hasLoaded: false,
     };
 
-    polyfillsLoaded.push(scriptEntry);
+    window.wcPolyfillsLoaded.push(scriptEntry);
 
     script.addEventListener('load', () => {
       scriptEntry.hasLoaded = true;

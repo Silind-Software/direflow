@@ -1,5 +1,5 @@
-import WebComponentFactory from './WebComponentFactory';
 import IDireflowConfig, { IDireflowPlugin } from './interfaces/IDireflowConfig';
+import WebComponentFactory from './WebComponentFactory';
 
 export class DireflowComponent {
   private componentProperties: any | undefined;
@@ -9,6 +9,10 @@ export class DireflowComponent {
   private elementName: string | undefined;
   private plugins: IDireflowPlugin[] | undefined;
 
+  /**
+   * Configure Direflow Component
+   * @param config direflow configuration
+   */
   public configure(config: IDireflowConfig): void {
     this.componentProperties = config.properties;
     this.shadow = config.useShadow;
@@ -16,10 +20,10 @@ export class DireflowComponent {
     this.plugins = config.plugins;
   }
 
-  public setProperties(properties: any): void {
-    this.componentProperties = properties;
-  }
-
+  /**
+   * Create Direflow Component
+   * @param App React Component
+   */
   public create(
     App: React.FC<any> | React.ComponentClass<any, any>,
   ): Promise<HTMLElement> {
