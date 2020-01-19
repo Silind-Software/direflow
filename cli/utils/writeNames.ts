@@ -12,6 +12,7 @@ export const writeProjectNames = async (
   packageVersion: string = version,
 ): Promise<void> => {
   const projectDirectory = fs.readdirSync(projectDirectoryPath);
+
   const defaultDescription = description || 'This project is created using Direflow';
 
   const writeNames = projectDirectory.map(async (dirElement: string) => {
@@ -27,14 +28,18 @@ export const writeProjectNames = async (
     }
   });
 
-  await Promise.all(writeNames);
+  try {
+    await Promise.all(writeNames);
+  } catch (error) {
+    console.log('Failed to write files');
+  }
 };
 
 const changeNameInfile = async (file: string, changeWhere: RegExp, changeTo: string) => {
   const changedFile = await new Promise((resolve, reject) => {
     fs.readFile(file, 'utf-8', (err, data) => {
       if (err) {
-        reject('Could not read file');
+        reject();
       }
 
       const changed = data.replace(changeWhere, changeTo);
@@ -46,7 +51,7 @@ const changeNameInfile = async (file: string, changeWhere: RegExp, changeTo: str
   await new Promise((resolve, reject) => {
     fs.writeFile(file, changedFile, 'utf-8', (err) => {
       if (err) {
-        reject('Could not write file');
+        reject();
       }
 
       resolve();
