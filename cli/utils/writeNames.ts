@@ -4,15 +4,22 @@ import path from 'path';
 import INames from '../interfaces/INames';
 
 const packageJson = require('../../package.json');
-const version = packageJson.version;
+const { version } = packageJson;
 
-export const writeProjectNames = async (
-  projectDirectoryPath: string,
-  names: INames,
-  description: string,
-  type: string,
-  packageVersion: string = version,
-): Promise<void> => {
+interface IWriteNameOptions {
+  projectDirectoryPath: string;
+  linter: 'eslint' | 'tslint';
+  packageVersion?: string;
+  description: string;
+  names: INames;
+  type: string;
+}
+
+export async function writeProjectNames({
+  type, names, description, linter,
+  projectDirectoryPath,
+  packageVersion = version,
+}: IWriteNameOptions): Promise<void> {
   const projectDirectory = fs.readdirSync(projectDirectoryPath);
   const defaultDescription = description || 'This project is created using Direflow';
 
@@ -20,16 +27,33 @@ export const writeProjectNames = async (
     const filePath = path.join(projectDirectoryPath, dirElement);
 
     if (fs.statSync(filePath).isDirectory()) {
-      return await writeProjectNames(filePath, names, description, type);
+      return await writeProjectNames({ names, description, type, linter, projectDirectoryPath: filePath });
     }
-    await changeNameInfile(filePath, { names, defaultDescription, type, packageVersion });
+
+    if (linter === 'eslint') {
+      if (filePath.endsWith('tslint.json')) {
+        return fs.unlinkSync(filePath);
+      }
+    }
+
+    if (linter === 'tslint') {
+      if (filePath.endsWith('.eslintrc.json')) {
+        return fs.unlinkSync(filePath);
+      }
+    }
+
+    await changeNameInfile(filePath, {
+      names, defaultDescription, type, packageVersion,
+      eslint: linter === 'eslint',
+      tslint: linter === 'tslint',
+    });
   });
 
   await Promise.all(writeNames)
     .catch(() => console.log('Failed to write files'));
-};
+}
 
-const changeNameInfile = async (filePath: string, data: {}) => {
+async function changeNameInfile(filePath: string, data: {}): Promise<void> {
   const changedFile = await new Promise((resolve, reject) => {
     fs.readFile(filePath, 'utf-8', (err, content) => {
       if (err) {
@@ -52,4 +76,4 @@ const changeNameInfile = async (filePath: string, data: {}) => {
       resolve();
     });
   });
-};
+}
