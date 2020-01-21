@@ -1,10 +1,10 @@
 This component was bootstrapped with [Direflow](https://direflow.io).
 
-# %name-title%
-> %description%
+# {{names.title}}
+> {{defaultDescription}}
 
 ```html
-<%name-snake%></%name-snake%>
+<{{names.snake}}></{{names.snake}}>
 ```
 
 Use this README to describe your Direflow Component

@@ -41,6 +41,7 @@
     "commander": "3.0.1",
     "deepmerge": "4.0.0",
     "esm": "3.2.25",
+    "handlebars": "^4.7.2",
     "inquirer": "7.0.0",
     "mkdirp": "0.5.1",
     "ncp": "2.0.0",

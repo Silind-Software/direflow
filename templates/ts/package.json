@@ -1,6 +1,6 @@
 {
-  "name": "%name-snake%",
-  "description": "%description%",
+  "name": "{{names.snake}}",
+  "description": "{{defaultDescription}}",
   "version": "1.0.0",
   "private": true,
   "scripts": {

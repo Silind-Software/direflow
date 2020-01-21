@@ -4,7 +4,7 @@ import App from './direflow-component/App';
 const direflowComponent = new DireflowComponent();
 
 const direflowProperties = {
-  componentTitle: '%name-title%',
+  componentTitle: '{{names.title}}',
   sampleList: [
     'Create with React',
     'Build as Web Component',
@@ -24,7 +24,7 @@ const direflowPlugins = [
 ];
 
 direflowComponent.configure({
-  name: '%name-snake%',
+  name: '{{names.snake}}',
   useShadow: true,
   properties: direflowProperties,
   plugins: direflowPlugins,

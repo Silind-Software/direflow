@@ -1,4 +1,5 @@
 import fs from 'fs';
+import handelbars from 'handlebars';
 import INames from '../interfaces/INames';
 
 const packageJson = require('../../package.json');
@@ -19,12 +20,8 @@ export const writeProjectNames = async (
     if (fs.statSync(`${projectDirectoryPath}/${dirElement}`).isDirectory()) {
       await writeProjectNames(`${projectDirectoryPath}/${dirElement}`, names, description, type);
     } else {
-      await changeNameInfile(`${projectDirectoryPath}/${dirElement}`, new RegExp(/%name-title%/g), names.title);
-      await changeNameInfile(`${projectDirectoryPath}/${dirElement}`, new RegExp(/%name-snake%/g), names.snake);
-      await changeNameInfile(`${projectDirectoryPath}/${dirElement}`, new RegExp(/%name-pascal%/g), names.pascal);
-      await changeNameInfile(`${projectDirectoryPath}/${dirElement}`, new RegExp(/%description%/g), defaultDescription);
-      await changeNameInfile(`${projectDirectoryPath}/${dirElement}`, new RegExp(/%setup-type%/g), type);
-      await changeNameInfile(`${projectDirectoryPath}/${dirElement}`, new RegExp(/%install-version%/g), packageVersion);
+      const filePath = `${projectDirectoryPath}/${dirElement}`;
+      await changeNameInfile(filePath, { names, defaultDescription, type, packageVersion });
     }
   });
 
@@ -35,21 +32,22 @@ export const writeProjectNames = async (
   }
 };
 
-const changeNameInfile = async (file: string, changeWhere: RegExp, changeTo: string) => {
+const changeNameInfile = async (filePath: string, data: {}) => {
   const changedFile = await new Promise((resolve, reject) => {
-    fs.readFile(file, 'utf-8', (err, data) => {
+    fs.readFile(filePath, 'utf-8', (err, content) => {
       if (err) {
         reject();
       }
 
-      const changed = data.replace(changeWhere, changeTo);
+      const template = handelbars.compile(content);
+      const changed = template(data);
 
       resolve(changed);
     });
   });
 
   await new Promise((resolve, reject) => {
-    fs.writeFile(file, changedFile, 'utf-8', (err) => {
+    fs.writeFile(filePath, changedFile, 'utf-8', (err) => {
       if (err) {
         reject();
       }
