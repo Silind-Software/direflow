@@ -1,5 +1,6 @@
 import fs from 'fs';
 import handelbars from 'handlebars';
+import path from 'path';
 import INames from '../interfaces/INames';
 
 const packageJson = require('../../package.json');
@@ -17,10 +18,11 @@ export const writeProjectNames = async (
   const defaultDescription = description || 'This project is created using Direflow';
 
   const writeNames = projectDirectory.map(async (dirElement: string) => {
-    if (fs.statSync(`${projectDirectoryPath}/${dirElement}`).isDirectory()) {
-      await writeProjectNames(`${projectDirectoryPath}/${dirElement}`, names, description, type);
+    const filePath = path.join(projectDirectoryPath, dirElement);
+
+    if (fs.statSync(filePath).isDirectory()) {
+      await writeProjectNames(filePath, names, description, type);
     } else {
-      const filePath = `${projectDirectoryPath}/${dirElement}`;
       await changeNameInfile(filePath, { names, defaultDescription, type, packageVersion });
     }
   });
