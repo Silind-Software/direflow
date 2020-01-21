@@ -1,55 +1,74 @@
 import fs from 'fs';
+import handelbars from 'handlebars';
+import path from 'path';
 import INames from '../interfaces/INames';
 
 const packageJson = require('../../package.json');
-const version = packageJson.version;
+const { version } = packageJson;
 
-export const writeProjectNames = async (
-  projectDirectoryPath: string,
-  names: INames,
-  description: string,
-  type: string,
-  packageVersion: string = version,
-): Promise<void> => {
+interface IWriteNameOptions {
+  projectDirectoryPath: string;
+  linter: 'eslint' | 'tslint';
+  packageVersion?: string;
+  description: string;
+  names: INames;
+  type: string;
+}
+
+export async function writeProjectNames({
+  type, names, description, linter,
+  projectDirectoryPath,
+  packageVersion = version,
+}: IWriteNameOptions): Promise<void> {
   const projectDirectory = fs.readdirSync(projectDirectoryPath);
-
   const defaultDescription = description || 'This project is created using Direflow';
 
   const writeNames = projectDirectory.map(async (dirElement: string) => {
-    if (fs.statSync(`${projectDirectoryPath}/${dirElement}`).isDirectory()) {
-      await writeProjectNames(`${projectDirectoryPath}/${dirElement}`, names, description, type);
-    } else {
-      await changeNameInfile(`${projectDirectoryPath}/${dirElement}`, new RegExp(/%name-title%/g), names.title);
-      await changeNameInfile(`${projectDirectoryPath}/${dirElement}`, new RegExp(/%name-snake%/g), names.snake);
-      await changeNameInfile(`${projectDirectoryPath}/${dirElement}`, new RegExp(/%name-pascal%/g), names.pascal);
-      await changeNameInfile(`${projectDirectoryPath}/${dirElement}`, new RegExp(/%description%/g), defaultDescription);
-      await changeNameInfile(`${projectDirectoryPath}/${dirElement}`, new RegExp(/%setup-type%/g), type);
-      await changeNameInfile(`${projectDirectoryPath}/${dirElement}`, new RegExp(/%install-version%/g), packageVersion);
+    const filePath = path.join(projectDirectoryPath, dirElement);
+
+    if (fs.statSync(filePath).isDirectory()) {
+      return await writeProjectNames({ names, description, type, linter, projectDirectoryPath: filePath });
     }
+
+    if (linter === 'eslint') {
+      if (filePath.endsWith('tslint.json')) {
+        return fs.unlinkSync(filePath);
+      }
+    }
+
+    if (linter === 'tslint') {
+      if (filePath.endsWith('.eslintrc.json')) {
+        return fs.unlinkSync(filePath);
+      }
+    }
+
+    await changeNameInfile(filePath, {
+      names, defaultDescription, type, packageVersion,
+      eslint: linter === 'eslint',
+      tslint: linter === 'tslint',
+    });
   });
 
-  try {
-    await Promise.all(writeNames);
-  } catch (error) {
-    console.log('Failed to write files');
-  }
-};
+  await Promise.all(writeNames)
+    .catch(() => console.log('Failed to write files'));
+}
 
-const changeNameInfile = async (file: string, changeWhere: RegExp, changeTo: string) => {
+async function changeNameInfile(filePath: string, data: {}): Promise<void> {
   const changedFile = await new Promise((resolve, reject) => {
-    fs.readFile(file, 'utf-8', (err, data) => {
+    fs.readFile(filePath, 'utf-8', (err, content) => {
       if (err) {
         reject();
       }
 
-      const changed = data.replace(changeWhere, changeTo);
+      const template = handelbars.compile(content);
+      const changed = template(data);
 
       resolve(changed);
     });
   });
 
   await new Promise((resolve, reject) => {
-    fs.writeFile(file, changedFile, 'utf-8', (err) => {
+    fs.writeFile(filePath, changedFile, 'utf-8', (err) => {
       if (err) {
         reject();
       }
@@ -57,4 +76,4 @@ const changeNameInfile = async (file: string, changeWhere: RegExp, changeTo: str
       resolve();
     });
   });
-};
+}

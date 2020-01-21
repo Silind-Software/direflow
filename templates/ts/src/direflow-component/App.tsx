@@ -31,7 +31,7 @@ const App: FC<IProps> = (props) => {
           <div className='header-title'>{props.componentTitle}</div>
           <div>{renderSampleList}</div>
           <button className='button' onClick={handleClick}>
-            Let's go!
+            Let&apos;s go!
           </button>
         </div>
       </div>

@@ -1,12 +1,12 @@
 {
   "name": "direflow-component",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Create Web Components using React",
   "main": "dist/index.js",
   "author": "Silind Software",
   "license": "MIT",
   "scripts": {
-    "build": "node_modules/typescript/bin/tsc"
+    "build": "tsc"
   },
   "files": [
     "dist",
@@ -28,6 +28,8 @@
     "webpack-filter-warnings-plugin": "^1.2.1"
   },
   "devDependencies": {
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
     "typescript": "3.7.2"
   },
   "peerDependencies": {
