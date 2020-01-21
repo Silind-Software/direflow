@@ -1,5 +1,7 @@
 const fs = require('fs');
 const { execSync } = require('child_process');
+const handlebars = require('handlebars')
+const path = require('path')
 
 const arg = process.argv[2];
 
@@ -12,7 +14,10 @@ const rootPackage = require('../package.json');
 const componentPackage = require('../packages/direflow-component/package.json');
 
 const componentPackageJs = require('../templates/js/package.json');
-const componentPackageTs = require('../templates/ts/package.json');
+let componentPackageTs = fs.readFileSync('templates/ts/package.json').toString();
+
+const componentRegex = /"direflow-component": "(.*)"/g
+const componentReplace = r => `"direflow-component": ${JSON.stringify(r)}`
 
 const updateLink = () => {
   const currentDirectory = process.cwd();
@@ -25,8 +30,9 @@ const updateLink = () => {
     componentPackage.version = `${componentPackage.version}-link`;
   }
 
-  componentPackageJs.dependencies['direflow-component'] = `${currentDirectory}/packages/direflow-component`;
-  componentPackageTs.dependencies['direflow-component'] = `${currentDirectory}/packages/direflow-component`;
+  const componentPath = path.join(currentDirectory, 'packages', 'direflow-component')
+  componentPackageJs.dependencies['direflow-component'] = componentPath;
+  componentPackageTs = componentPackageTs.replace(componentRegex, componentReplace(componentPath));
 
   console.log('');
   console.log('Version have been set to use LINK.');
@@ -39,7 +45,7 @@ const updateVersion = (version) => {
   componentPackage.version = version;
 
   componentPackageJs.dependencies['direflow-component'] = version;
-  componentPackageTs.dependencies['direflow-component'] = version;
+  componentPackageTs = componentPackageTs.replace(componentRegex, componentReplace(version));
 
   console.log('');
   console.log('Version have updated.');
@@ -51,7 +57,7 @@ const writeToFiles = () => {
   fs.writeFileSync('package.json', JSON.stringify(rootPackage, null, 2), 'utf-8');
   fs.writeFileSync('packages/direflow-component/package.json', JSON.stringify(componentPackage, null, 2), 'utf-8');
   fs.writeFileSync('templates/js/package.json', JSON.stringify(componentPackageJs, null, 2), 'utf-8');
-  fs.writeFileSync('templates/ts/package.json', JSON.stringify(componentPackageTs, null, 2), 'utf-8');
+  fs.writeFileSync('templates/ts/package.json', componentPackageTs, 'utf-8');
 }
 
 if (arg === 'patch') {
@@ -61,9 +67,9 @@ if (arg === 'patch') {
   if (currentVersion.trim() === rootPackage.version.trim() || rootPackage.version.includes('link')) {
     const versionNumbers = currentVersion.split('.');
     const patch = Number(versionNumbers[2]);
-  
+
     const patchVersion = `${versionNumbers[0]}.${versionNumbers[1]}.${patch + 1}`;
-  
+
     updateVersion(patchVersion);
     writeToFiles();
   }
