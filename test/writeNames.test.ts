@@ -48,17 +48,18 @@ fileMock({
 
 describe('Write names to file', () => {
   beforeAll(async () => {
-    await writeProjectNames(
-      filePath,
-      {
+    await writeProjectNames({
+      names: {
         title: 'Cool Component',
         pascal: 'CoolComponent',
         snake: 'cool-component',
       },
-      'This component is cool',
-      'direflow-component',
-      '0.0.0',
-    );
+      projectDirectoryPath: filePath,
+      description: 'This component is cool',
+      linter: 'eslint',
+      packageVersion: '0.0.0',
+      type: 'direflow-component',
+    });
   });
 
   afterAll(() => {
