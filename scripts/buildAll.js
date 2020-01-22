@@ -35,8 +35,18 @@ function build(dir) {
 
         console.log(`✓ config-overrides.js moved succesfully`);
       })
+
+      exec(`mv ${dir}/dist/config/config-overrides.d.ts ${dir}/config-overrides.d.ts`, (err) => {
+        if (err) {
+          console.log(`✗ failed to move config-overrides.d.ts`);
+          console.log(err);
+          return;
+        }
+
+        console.log(`✓ config-overrides.d.ts moved succesfully`);
+      })
     }
-    
+
     console.log(`✓ ${dir} build succesfully`);
     out && console.log(out);
   });

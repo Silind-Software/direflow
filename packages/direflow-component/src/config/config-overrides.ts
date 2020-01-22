@@ -5,14 +5,22 @@ import fs from 'fs';
 import { resolve } from 'path';
 import { PromiseTask } from 'event-hooks-webpack-plugin/lib/tasks';
 
-module.exports = function override(config: any, env: string): any {
+interface IOptions {
+  filename?: string;
+  chunkFilename?: string;
+}
+
+export = function override(config: any, env: string, options?: IOptions): any {
+  const filename = options?.filename || 'direflowBundle.js';
+  const chunkFilename = options?.chunkFilename || 'vendor.js';
+
   const overridenConfig = {
     ...addWelcomeMessage(config, env),
     module: overrideModule(config.module),
-    output: overrideOutput(config.output),
+    output: overrideOutput(config.output, { filename, chunkFilename }),
     optimization: overrideOptimization(config.optimization, env),
     resolve: overrideResolve(config.resolve),
-    plugins: overridePlugins(config.plugins, env),
+    plugins: overridePlugins(config.plugins, env, { filename, chunkFilename }),
   };
 
   return overridenConfig;
@@ -58,13 +66,12 @@ const overrideModule = (module: any) => {
   return module;
 };
 
-const overrideOutput = (output: any) => {
+const overrideOutput = (output: any, { filename, chunkFilename }: IOptions) => {
   const { checkFilename, ...newOutput } = output;
 
   return {
     ...newOutput,
-    filename: 'direflowBundle.js',
-    chunkFilename: 'vendor.js',
+    filename, chunkFilename,
   };
 };
 
@@ -91,12 +98,12 @@ const overrideOptimization = (optimization: any, env: string) => {
   };
 };
 
-const overridePlugins = (plugins: any, env: string) => {
+const overridePlugins = (plugins: any, env: string, options: IOptions) => {
   plugins[0].options.inject = 'head';
 
   plugins.push(
     new EventHooksPlugin({
-      done: new PromiseTask(() => copyBundleScript(env)),
+      done: new PromiseTask(() => copyBundleScript(env, options)),
     })
   );
 
@@ -118,7 +125,7 @@ const overrideResolve = (resolve: any) => {
   return resolve;
 };
 
-const copyBundleScript = async (env: string) => {
+const copyBundleScript = async (env: string, { filename, chunkFilename }: IOptions) => {
   if (env !== 'production') {
     return;
   }
@@ -128,7 +135,7 @@ const copyBundleScript = async (env: string) => {
   }
 
   fs.readdirSync('build').forEach((file: string) => {
-    if (file !== 'direflowBundle.js' && file !== 'vendor.js') {
+    if (file !== filename && file !== chunkFilename) {
       rimraf.sync(`build/${file}`);
     }
   });
