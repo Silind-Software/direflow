@@ -17,5 +17,5 @@ If applicable, add screenshots to demonstrate your changes.
 **Version**  
 Which version is your changes included in?  
   
-Did you remember to remember to update the version of Direflow as explained here:  
+Did you remember to update the version of Direflow as explained here:  
 https://github.com/Silind-Software/direflow/blob/master/CONTRIBUTING.md#version
