@@ -11,7 +11,8 @@ interface IOptions {
 }
 
 export = function override(config: any, env: string, options?: IOptions): any {
-  const { filename = 'direflowBundle.js', chunkFilename = 'vendor.js' } = options || {};
+  const filename = options?.filename || 'direflowBundle.js';
+  const chunkFilename = options?.chunkFilename || 'vendor.js';
 
   const overridenConfig = {
     ...addWelcomeMessage(config, env),
