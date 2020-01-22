@@ -6,11 +6,12 @@ import { resolve } from 'path';
 import { PromiseTask } from 'event-hooks-webpack-plugin/lib/tasks';
 
 interface IOptions {
-  filename: string
-  chunkFilename: string
+  filename?: string;
+  chunkFilename?: string;
 }
 
-module.exports = function override(config: any, env: string, { filename = 'direflowBundle.js', chunkFilename = 'vendor.js' }: IOptions): any {
+module.exports = function override(config: any, env: string, options?: IOptions): any {
+  const { filename = 'direflowBundle.js', chunkFilename = 'vendor.js' } = options || {};
 
   const overridenConfig = {
     ...addWelcomeMessage(config, env),
@@ -69,7 +70,7 @@ const overrideOutput = (output: any, { filename, chunkFilename }: IOptions) => {
 
   return {
     ...newOutput,
-    filename, chunkFilename
+    filename, chunkFilename,
   };
 };
 
