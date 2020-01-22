@@ -29,6 +29,35 @@ export const chooseLanguage = async (): Promise<ILanguageOption> => {
   return inquirer.prompt(questions);
 };
 
+export const chooseLinter = async (language: 'js' | 'ts'): Promise<{ linter: 'eslint' | 'tslint' }> => {
+  if (language === 'js') {
+    return {
+      linter: 'eslint',
+    };
+  }
+
+  const questions = [
+    {
+      type: 'list',
+      name: 'linter',
+      message: 'Which linter do you want to use?',
+      choices: [
+        {
+          value: 'eslint',
+          name: 'ESLint',
+        },
+        {
+          value: 'tslint',
+          name: 'TSLint',
+        },
+      ],
+    },
+  ];
+
+  console.log('');
+  return inquirer.prompt(questions);
+};
+
 const createQuestions = (createName: string): Promise<IQuestionOption> => {
   const questions = [
     {

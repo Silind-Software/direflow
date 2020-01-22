@@ -1,6 +1,6 @@
 import fs from 'fs';
 import chalk from 'chalk';
-import { chooseLanguage, askCreateDireflowSetup } from './questions';
+import { chooseLanguage, askCreateDireflowSetup, chooseLinter } from './questions';
 import { copyTemplate } from './utils/copyTemplate';
 import { getNameFormats, createDefaultName } from './utils/nameTransformers';
 import { isDireflowSetup } from './utils/detectDireflowSetup';
@@ -32,24 +32,29 @@ const handleCreateDireflowSetup = async () => {
     return;
   }
 
-  const setupAnswer = await askCreateDireflowSetup();
-  const languageAnswer = await chooseLanguage();
+  const { name, description } = await askCreateDireflowSetup();
+  const { language } = await chooseLanguage();
+  const { linter } = await chooseLinter(language);
 
-  const componentName = createDefaultName(setupAnswer.name);
-  const componentDir = componentName;
+  const componentName = createDefaultName(name);
+  const projectName = componentName;
 
-  if (fs.existsSync(componentDir)) {
-    console.log(chalk.red(`The directory '${componentDir}' already exists at the current location`));
+  if (fs.existsSync(projectName)) {
+    console.log(chalk.red(`The directory '${projectName}' already exists at the current location`));
     return;
   }
 
-  const componentDirectory = await copyTemplate({
-    projectName: componentDir,
-    language: languageAnswer.language,
+  const projectDirectoryPath = await copyTemplate({
+    language,
+    projectName,
   });
 
-  await writeProjectNames(componentDirectory, getNameFormats(componentName), setupAnswer.description, 'direflow-component');
+  await writeProjectNames({
+    linter, projectDirectoryPath, description,
+    names: getNameFormats(componentName),
+    type: 'direflow-component',
+  });
 
-  console.log(chalk.greenBright(componentFinishedMessage(componentDir)));
+  console.log(chalk.greenBright(componentFinishedMessage(projectName)));
   console.log(chalk.blueBright(moreInfoMessage));
 };

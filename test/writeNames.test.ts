@@ -11,8 +11,8 @@ const files = [
     name: 'package.json',
     content: `
     {
-      "name": "%name-snake%",
-      "description": "%description%"
+      "name": "{{names.snake}}",
+      "description": "{{defaultDescription}}"
     }
     `,
   },
@@ -20,7 +20,7 @@ const files = [
     name: 'index.tsx',
     content: `
     direflowComponent.configure({
-      name: '%name-snake%',
+      name: '{{names.snake}}',
       useShadow: true,
     });
     direflowComponent.create(App);
@@ -29,8 +29,8 @@ const files = [
   {
     name: 'README.md',
     content: `
-    # %name-title%
-    > %description%
+    # {{names.title}}
+    > {{defaultDescription}}
     `,
   },
 ];
@@ -48,17 +48,18 @@ fileMock({
 
 describe('Write names to file', () => {
   beforeAll(async () => {
-    await writeProjectNames(
-      filePath,
-      {
+    await writeProjectNames({
+      names: {
         title: 'Cool Component',
         pascal: 'CoolComponent',
         snake: 'cool-component',
       },
-      'This component is cool',
-      'direflow-component',
-      '0.0.0',
-    );
+      projectDirectoryPath: filePath,
+      description: 'This component is cool',
+      linter: 'eslint',
+      packageVersion: '0.0.0',
+      type: 'direflow-component',
+    });
   });
 
   afterAll(() => {
