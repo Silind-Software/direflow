@@ -4,6 +4,7 @@ dist
 package-lock.json
 yarn.lock
 config-overrides.js
+config-overrides.d.ts
 
 # User-specific stuff
 .idea/**/workspace.xml

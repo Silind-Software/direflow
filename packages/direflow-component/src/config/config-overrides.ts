@@ -10,7 +10,7 @@ interface IOptions {
   chunkFilename?: string;
 }
 
-module.exports = function override(config: any, env: string, options?: IOptions): any {
+export = function override(config: any, env: string, options?: IOptions): any {
   const { filename = 'direflowBundle.js', chunkFilename = 'vendor.js' } = options || {};
 
   const overridenConfig = {

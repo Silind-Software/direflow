@@ -25,7 +25,7 @@ function cleanDeps(dir) {
         console.log(err);
         return;
       }
-      
+
       console.log(`✓ ${dir}/yarn.lock is REMOVED`);
       out && console.log(out);
     });
@@ -78,8 +78,20 @@ function cleanDeps(dir) {
           console.log(err);
           return;
         }
-  
+
         console.log(`✓ ${dir}/config-overrides.js is REMOVED`);
+        out && console.log(out);
+      });
+    }
+    if (fs.existsSync(`${dir}/config-overrides.d.ts`)) {
+      exec(`rm ${dir}/config-overrides.d.ts`, (err, out) => {
+        if (err) {
+          console.log(`✗ ${dir}/config-overrides.d.ts FAILED to remove`);
+          console.log(err);
+          return;
+        }
+
+        console.log(`✓ ${dir}/config-overrides.d.ts is REMOVED`);
         out && console.log(out);
       });
     }
