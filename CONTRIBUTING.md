@@ -78,3 +78,7 @@ Before committing your new changes, remember to change the version using the com
 ```console
 yarn update-version <new-version>
 ```
+
+### Create the PR
+Create a branch for your changes called 'feature/name-of-the-changes'.  
+Make a PR into the 'development' branch on the direflow repository.
