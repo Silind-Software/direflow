@@ -30,13 +30,13 @@ export async function writeProjectNames({
       return await writeProjectNames({ names, description, type, linter, projectDirectoryPath: filePath });
     }
 
-    if (linter === 'eslint') {
+    if (linter !== 'tslint') {
       if (filePath.endsWith('tslint.json')) {
         return fs.unlinkSync(filePath);
       }
     }
 
-    if (linter === 'tslint') {
+    if (linter !== 'eslint') {
       if (filePath.endsWith('.eslintrc.json')) {
         return fs.unlinkSync(filePath);
       }
