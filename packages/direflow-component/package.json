@@ -10,7 +10,8 @@
   },
   "files": [
     "dist",
-    "config-overrides.js"
+    "config-overrides.js",
+    "config-overrides.d.ts"
   ],
   "repository": {
     "type": "git",
