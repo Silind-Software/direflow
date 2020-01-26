@@ -37,7 +37,7 @@ export async function writeProjectNames({
     }
 
     if (linter !== 'eslint') {
-      if (filePath.endsWith('.eslintrc.json')) {
+      if (filePath.endsWith('.eslintrc')) {
         return fs.unlinkSync(filePath);
       }
     }
