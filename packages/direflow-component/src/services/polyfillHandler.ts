@@ -80,11 +80,12 @@ const includePolyfillsFromPlugin = async (plugin: IDireflowPlugin) => {
     scriptsLists.push(loadScript(src));
   }
 
-  scriptsLists.push(
-    loadScript(
-      'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.4.1/custom-elements-es5-adapter.js',
-    ),
-  );
+  const adapterSrc =
+    typeof plugin.options?.use.adapter === 'string'
+      ? plugin.options.use.adapter
+      : 'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.4.1/custom-elements-es5-adapter.js';
+
+  scriptsLists.push(loadScript(adapterSrc));
 
   try {
     await Promise.all(scriptsLists);
