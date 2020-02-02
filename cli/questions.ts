@@ -62,7 +62,7 @@ export const isNpmModule = async (): Promise<{ npmModule: boolean }> => {
   const questions = [
     {
       type: 'list',
-      name: 'linter',
+      name: 'npmModule',
       message: 'Do you want this to be a npm module?',
       choices: [
         {
