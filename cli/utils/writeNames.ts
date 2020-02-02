@@ -11,12 +11,13 @@ interface IWriteNameOptions {
   linter: 'eslint' | 'tslint';
   packageVersion?: string;
   description: string;
+  npmModule: boolean;
   names: INames;
   type: string;
 }
 
 export async function writeProjectNames({
-  type, names, description, linter,
+  type, names, description, linter, npmModule,
   projectDirectoryPath,
   packageVersion = version,
 }: IWriteNameOptions): Promise<void> {
@@ -27,7 +28,7 @@ export async function writeProjectNames({
     const filePath = path.join(projectDirectoryPath, dirElement);
 
     if (fs.statSync(filePath).isDirectory()) {
-      return await writeProjectNames({ names, description, type, linter, projectDirectoryPath: filePath });
+      return await writeProjectNames({ names, description, type, linter, npmModule, projectDirectoryPath: filePath });
     }
 
     if (linter !== 'tslint') {

@@ -1,6 +1,6 @@
 import fs from 'fs';
 import chalk from 'chalk';
-import { chooseLanguage, askCreateDireflowSetup, chooseLinter } from './questions';
+import { chooseLanguage, askCreateDireflowSetup, chooseLinter, isNpmModule } from './questions';
 import { copyTemplate } from './utils/copyTemplate';
 import { getNameFormats, createDefaultName } from './utils/nameTransformers';
 import { isDireflowSetup } from './utils/detectDireflowSetup';
@@ -35,6 +35,7 @@ const handleCreateDireflowSetup = async () => {
   const { name, description } = await askCreateDireflowSetup();
   const { language } = await chooseLanguage();
   const { linter } = await chooseLinter(language);
+  const { npmModule } = await isNpmModule();
 
   const componentName = createDefaultName(name);
   const projectName = componentName;
@@ -50,7 +51,7 @@ const handleCreateDireflowSetup = async () => {
   });
 
   await writeProjectNames({
-    linter, projectDirectoryPath, description,
+    linter, projectDirectoryPath, description, npmModule,
     names: getNameFormats(componentName),
     type: 'direflow-component',
   });
