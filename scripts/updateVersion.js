@@ -56,7 +56,7 @@ const updateVersion = (version) => {
 const writeToFiles = () => {
   fs.writeFileSync('package.json', JSON.stringify(rootPackage, null, 2), 'utf-8');
   fs.writeFileSync('packages/direflow-component/package.json', JSON.stringify(componentPackage, null, 2), 'utf-8');
-  fs.writeFileSync('templates/js/package.json', componentPackageTs, 'utf-8');
+  fs.writeFileSync('templates/js/package.json', componentPackageJs, 'utf-8');
   fs.writeFileSync('templates/ts/package.json', componentPackageTs, 'utf-8');
 }
 
