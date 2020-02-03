@@ -16,7 +16,14 @@ interface IWriteNameOptions {
   type: string;
 }
 
-interface IhandelbarData extends Pick<IWriteNameOptions, 'names' | 'type' | 'packageVersion' | 'npmModule'> {
+type TWriteNameExtendable = Required<Pick<IWriteNameOptions,
+  | 'names'
+  | 'type'
+  | 'packageVersion'
+  | 'npmModule'
+>>;
+
+interface IHandelbarData extends TWriteNameExtendable {
   defaultDescription: string;
   eslint: boolean;
   tslint: boolean;
@@ -60,7 +67,7 @@ export async function writeProjectNames({
     .catch(() => console.log('Failed to write files'));
 }
 
-async function changeNameInfile(filePath: string, data: IhandelbarData): Promise<void> {
+async function changeNameInfile(filePath: string, data: IHandelbarData): Promise<void> {
   const changedFile = await new Promise((resolve, reject) => {
     fs.readFile(filePath, 'utf-8', (err, content) => {
       if (err) {
