@@ -11,12 +11,26 @@ interface IWriteNameOptions {
   linter: 'eslint' | 'tslint';
   packageVersion?: string;
   description: string;
+  npmModule: boolean;
   names: INames;
   type: string;
 }
 
+type TWriteNameExtendable = Required<Pick<IWriteNameOptions,
+  | 'names'
+  | 'type'
+  | 'packageVersion'
+  | 'npmModule'
+>>;
+
+interface IHandelbarData extends TWriteNameExtendable {
+  defaultDescription: string;
+  eslint: boolean;
+  tslint: boolean;
+}
+
 export async function writeProjectNames({
-  type, names, description, linter,
+  type, names, description, linter, npmModule,
   projectDirectoryPath,
   packageVersion = version,
 }: IWriteNameOptions): Promise<void> {
@@ -27,7 +41,7 @@ export async function writeProjectNames({
     const filePath = path.join(projectDirectoryPath, dirElement);
 
     if (fs.statSync(filePath).isDirectory()) {
-      return await writeProjectNames({ names, description, type, linter, projectDirectoryPath: filePath });
+      return await writeProjectNames({ names, description, type, linter, npmModule, projectDirectoryPath: filePath });
     }
 
     if (linter !== 'tslint') {
@@ -43,7 +57,7 @@ export async function writeProjectNames({
     }
 
     await changeNameInfile(filePath, {
-      names, defaultDescription, type, packageVersion,
+      names, defaultDescription, type, packageVersion, npmModule,
       eslint: linter === 'eslint',
       tslint: linter === 'tslint',
     });
@@ -53,7 +67,7 @@ export async function writeProjectNames({
     .catch(() => console.log('Failed to write files'));
 }
 
-async function changeNameInfile(filePath: string, data: {}): Promise<void> {
+async function changeNameInfile(filePath: string, data: IHandelbarData): Promise<void> {
   const changedFile = await new Promise((resolve, reject) => {
     fs.readFile(filePath, 'utf-8', (err, content) => {
       if (err) {

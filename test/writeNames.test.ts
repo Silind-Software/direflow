@@ -59,6 +59,7 @@ describe('Write names to file', () => {
       linter: 'eslint',
       packageVersion: '0.0.0',
       type: 'direflow-component',
+      npmModule: false,
     });
   });
 

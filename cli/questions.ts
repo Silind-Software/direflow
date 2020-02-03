@@ -58,6 +58,29 @@ export const chooseLinter = async (language: 'js' | 'ts'): Promise<{ linter: 'es
   return inquirer.prompt(questions);
 };
 
+export const isNpmModule = async (): Promise<{ npmModule: boolean }> => {
+  const questions = [
+    {
+      type: 'list',
+      name: 'npmModule',
+      message: 'Do you want this to be a npm module?',
+      choices: [
+        {
+          value: true,
+          name: 'yes',
+        },
+        {
+          value: false,
+          name: 'no',
+        },
+      ],
+    },
+  ];
+
+  console.log('');
+  return inquirer.prompt(questions);
+};
+
 const createQuestions = (createName: string): Promise<IQuestionOption> => {
   const questions = [
     {
