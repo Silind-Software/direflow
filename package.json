@@ -47,6 +47,7 @@
     "ncp": "2.0.0",
     "prettier-tslint": "^0.4.2",
     "rimraf": "3.0.0",
+    "to-case": "^2.0.0",
     "typescript": "^3.7.0"
   },
   "devDependencies": {

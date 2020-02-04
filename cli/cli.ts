@@ -5,15 +5,11 @@ import { createProject, createDireflowSetup, create } from './create';
 import checkForUpdates from './checkForUpdate';
 import { showVersion } from './messages';
 
-/**
- * CLI entrypoint
- */
 export const cli = () => {
   program
     .command('create')
     .alias('c')
     .description('Create a new Direflow Setup')
-    .option('-p, --project', 'Deprecated: Create a new Direflow Project')
     .option('-c, --component', 'Create a new Direflow Component')
     .action((args: any) => {
       if (args.project) {
