@@ -1,7 +1,7 @@
 import program from 'commander';
 import chalk from 'chalk';
 import { headline } from './headline';
-import { createProject, createDireflowSetup, create } from './create';
+import { createDireflowSetup } from './create';
 import checkForUpdates from './checkForUpdate';
 import { showVersion } from './messages';
 
@@ -10,16 +10,7 @@ export const cli = () => {
     .command('create')
     .alias('c')
     .description('Create a new Direflow Setup')
-    .option('-c, --component', 'Create a new Direflow Component')
-    .action((args: any) => {
-      if (args.project) {
-        createProject();
-      } else if (args.component) {
-        createDireflowSetup();
-      } else {
-        create();
-      }
-    });
+    .action(createDireflowSetup);
 
   program.description(chalk.magenta(headline));
 

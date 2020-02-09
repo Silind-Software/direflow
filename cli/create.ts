@@ -5,15 +5,7 @@ import { copyTemplate } from './utils/copyTemplate';
 import { getNameFormats, createDefaultName } from './utils/nameFormat';
 import { isDireflowSetup } from './utils/detectDireflowSetup';
 import { writeProjectNames } from './utils/writeNames';
-import { moreInfoMessage, componentFinishedMessage, projectDeprecated } from './messages';
-
-export const create = async (): Promise<void> => {
-  return createDireflowSetup();
-};
-
-export const createProject = async () => {
-  console.log(chalk.gray(projectDeprecated()));
-};
+import { moreInfoMessage, componentFinishedMessage } from './messages';
 
 export const createDireflowSetup = async () => {
   try {

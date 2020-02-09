@@ -20,7 +20,9 @@ const addStyledComponentStyles = (element: HTMLElement, plugins: IDireflowPlugin
 
         injectIntoShadowRoot(element, styleElement);
         stripStyleFromHead();
-      } catch (err) {}
+      } catch (err) {
+        // Suppress error
+      }
     });
   }
 };

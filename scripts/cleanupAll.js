@@ -9,7 +9,7 @@ if (!fs.existsSync('packages')) {
 
 const widgetsDirectory = fs.readdirSync('packages');
 
-for (let directory of widgetsDirectory) {
+for (const directory of widgetsDirectory) {
   if (fs.statSync(`packages/${directory}`).isDirectory()) {
     cleanDeps(`packages/${directory}`);
   }

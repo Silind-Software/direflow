@@ -1,6 +1,5 @@
 const fs = require('fs');
 const { execSync } = require('child_process');
-const handlebars = require('handlebars')
 const path = require('path')
 
 const arg = process.argv[2];

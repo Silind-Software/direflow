@@ -199,7 +199,7 @@ class WebComponentFactory {
       /**
        * Mount React App onto the Web Component
        */
-      private mountReactApp(options?: { initial: boolean; }): void {
+      private mountReactApp(options?: { initial: boolean }): void {
         const application = this.application();
 
         if (!factory.shadow) {

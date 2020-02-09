@@ -5,7 +5,7 @@ export class DireflowComponent {
   private componentProperties: any | undefined;
   private rootComponent: React.FC<any> | React.ComponentClass<any, any> | undefined;
   private WebComponent: any | undefined;
-  private shadow: boolean = true;
+  private shadow = true;
   private elementName: string | undefined;
   private plugins: IDireflowPlugin[] | undefined;
 

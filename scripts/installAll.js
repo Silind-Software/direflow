@@ -10,7 +10,7 @@ async function installAll() {
 
   const widgetsDirectory = fs.readdirSync('packages');
 
-  for (let directory of widgetsDirectory) {
+  for (const directory of widgetsDirectory) {
     if (fs.statSync(`packages/${directory}`).isDirectory()) {
       await install(`packages/${directory}`);
     }
@@ -44,7 +44,7 @@ function install(dir) {
     const peerDeps = packageJson.peerDependencies;
 
     if (peerDeps) {
-      for ([package, version] of Object.entries(peerDeps)) {
+      for (const [package, version] of Object.entries(peerDeps)) {
         execSync(`cd ${dir} && yarn add ${package}@${version}`);
         console.log(`✓ ${package}@${version} peer dependency installed succesfully`);
       }
