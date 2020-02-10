@@ -1,11 +1,11 @@
 import IDireflowConfig, { IDireflowPlugin } from './interfaces/IDireflowConfig';
 import WebComponentFactory from './WebComponentFactory';
 
-export class DireflowComponent {
+class DireflowComponent {
   private componentProperties: any | undefined;
   private rootComponent: React.FC<any> | React.ComponentClass<any, any> | undefined;
   private WebComponent: any | undefined;
-  private shadow: boolean = true;
+  private shadow = true;
   private elementName: string | undefined;
   private plugins: IDireflowPlugin[] | undefined;
 
@@ -62,3 +62,5 @@ export class DireflowComponent {
     }
   }
 }
+
+export default DireflowComponent;

@@ -1,6 +1,6 @@
 {
   "name": "direflow-component",
-  "version": "3.2.4",
+  "version": "3.2.5",
   "description": "Create Web Components using React",
   "main": "dist/index.js",
   "author": "Silind Software",
@@ -26,7 +26,8 @@
     "style-it": "2.1.4",
     "to-string-loader": "1.1.5",
     "webfontloader": "^1.6.28",
-    "webpack-filter-warnings-plugin": "^1.2.1"
+    "webpack-filter-warnings-plugin": "^1.2.1",
+    "rimraf": "3.0.0"
   },
   "devDependencies": {
     "@types/react": "^16.9.17",

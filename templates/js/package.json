@@ -12,7 +12,7 @@
     "react": "16.10.2",
     "react-dom": "16.10.2",
     "react-scripts": "3.2.0",
-    "direflow-component": "3.2.4"
+    "direflow-component": "3.2.5"
   },
   "devDependencies": {
     "eslint-plugin-node": "^11.0.0",
