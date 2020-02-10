@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { IDireflowPlugin } from './interfaces/IDireflowConfig';
@@ -131,14 +132,14 @@ class WebComponentFactory {
           return;
         }
 
-        const properties = Object.assign({}, factory.componentProperties);
+        const properties = { ...factory.componentProperties };
         const self: any = this;
 
-        for (const key in properties) {
+        Object.keys(properties).forEach((key) => {
           if (self[key] != null) {
             properties[key] = self[key];
           }
-        }
+        });
 
         const propertyMap = {} as PropertyDescriptorMap;
         Object.keys(properties).forEach((key: string) => {
@@ -191,6 +192,7 @@ class WebComponentFactory {
       /**
        * Generate react props based on properties and attributes.
        */
+      // eslint-disable-next-line class-methods-use-this
       private reactProps(): any {
         factory.reflectPropertiesToAttributes();
         return { ...factory.componentProperties };
@@ -205,13 +207,10 @@ class WebComponentFactory {
         if (!factory.shadow) {
           ReactDOM.render(application, this);
         } else {
-
           let currentChildren: Node[] | undefined;
 
           if (options?.initial) {
-            currentChildren = Array.from(this.children).map((child: Node) =>
-              child.cloneNode(true),
-            );
+            currentChildren = Array.from(this.children).map((child: Node) => child.cloneNode(true));
           }
 
           const root = createProxyRoot(this);
@@ -245,7 +244,7 @@ class WebComponentFactory {
        */
       private eventDispatcher = (event: Event) => {
         this.dispatchEvent(event);
-      }
+      };
     };
   }
 }

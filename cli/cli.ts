@@ -1,11 +1,11 @@
 import program from 'commander';
 import chalk from 'chalk';
-import { headline } from './headline';
-import { createDireflowSetup } from './create';
 import checkForUpdates from './checkForUpdate';
+import createDireflowSetup from './create';
+import headline from './headline';
 import { showVersion } from './messages';
 
-export const cli = () => {
+const cli = () => {
   program
     .command('create')
     .alias('c')
@@ -28,3 +28,5 @@ export const cli = () => {
 
   program.parse(process.argv);
 };
+
+export default cli;

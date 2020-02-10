@@ -12,7 +12,8 @@
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "airbnb-typescript"
   ],
   "globals": {
     "Atomics": "readonly",
@@ -24,18 +25,28 @@
       "jsx": true
     },
     "ecmaVersion": 2018,
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": "./tsconfig.json"
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
-    "quotes": [2, "single"],
-    "react/prop-types": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/interface-name-prefix": "off",
-    "no-async-promise-executor": "off",
+    "@typescript-eslint/no-this-alias": "off",
+    "react/prop-types": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/destructuring-assignment": "off",
     "react/display-name": "off",
-    "@typescript-eslint/no-this-alias": "off"
+    "import/no-unresolved": "off",
+    "no-async-promise-executor": "off",
+    "no-console": "off",
+    "no-param-reassign": "off",
+    "no-underscore-dangle": "off",
+    "global-require": "off",
+    "arrow-body-style": "off",
+    "object-curly-newline": "off",
+    "lines-between-class-members": "off"
   }
 }

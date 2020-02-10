@@ -8,6 +8,7 @@ const addStyledComponentStyles = (element: HTMLElement, plugins: IDireflowPlugin
     setTimeout(() => {
       try {
         if (!styles) {
+          // eslint-disable-next-line no-underscore-dangle, no-whitespace-before-property
           const scSecrets = require('styled-components'). __DO_NOT_USE_OR_YOU_WILL_BE_HAUNTED_BY_SPOOKY_GHOSTS;
           const { StyleSheet } = scSecrets;
           styles = StyleSheet.instance.tags[0].css();

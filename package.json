@@ -40,6 +40,10 @@
     "chalk": "2.4.2",
     "commander": "3.0.1",
     "deepmerge": "4.0.0",
+    "eslint-config-airbnb-typescript": "^7.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react-hooks": "^2.3.0",
     "esm": "3.2.25",
     "handlebars": "^4.7.2",
     "inquirer": "7.0.0",
@@ -66,6 +70,7 @@
     "eslint-plugin-react": "^7.18.3",
     "jest": "24.8.0",
     "jest-environment-jsdom-fourteen": "^0.1.0",
+    "jsdom": "^16.1.0",
     "mock-fs": "^4.10.4",
     "prettier": "^1.19.1",
     "ts-jest": "24.0.2"

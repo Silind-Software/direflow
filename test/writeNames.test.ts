@@ -1,7 +1,7 @@
 import fileMock from 'mock-fs';
 import { promisify } from 'util';
 import fs from 'fs';
-import { writeProjectNames } from '../cli/utils/writeNames';
+import writeProjectNames from '../cli/utils/writeNames';
 
 const readFile = promisify(fs.readFile);
 
@@ -46,7 +46,7 @@ const nestedFiles = [
     direflowComponent.create(App);
     `,
   },
-]
+];
 
 const fileMocks = files.reduce((acc: any, current: any) => {
   return {
@@ -62,25 +62,29 @@ const nestedFileMocks = nestedFiles.reduce((acc: any, current: any) => {
   };
 }, {});
 
+const createMockFileSystem = async (options?: { noDescription?: boolean; useTslint?: boolean }) => {
+  fileMock({
+    [filePath]: fileMocks,
+    [fileNestedPath]: nestedFileMocks,
+  });
+
+  await writeProjectNames({
+    names: {
+      title: 'Cool Component',
+      pascal: 'CoolComponent',
+      snake: 'cool-component',
+    },
+    projectDirectoryPath: filePath,
+    description: options?.noDescription ? '' : 'This component is cool',
+    linter: options?.useTslint ? 'tslint' : 'eslint',
+    packageVersion: '0.0.0',
+    type: 'direflow-component',
+  });
+};
+
 describe('Write names to file #1', () => {
   beforeAll(async () => {
-    fileMock({
-      [filePath]: fileMocks,
-      [fileNestedPath]: nestedFileMocks,
-    });
-
-    await writeProjectNames({
-      names: {
-        title: 'Cool Component',
-        pascal: 'CoolComponent',
-        snake: 'cool-component',
-      },
-      projectDirectoryPath: filePath,
-      description: 'This component is cool',
-      linter: 'eslint',
-      packageVersion: '0.0.0',
-      type: 'direflow-component',
-    });
+    await createMockFileSystem();
   });
 
   afterAll(() => {
@@ -119,22 +123,7 @@ describe('Write names to file #1', () => {
 
 describe('Write names to file #1', () => {
   beforeAll(async () => {
-    fileMock({
-      [filePath]: fileMocks,
-    });
-
-    await writeProjectNames({
-      names: {
-        title: 'Cool Component',
-        pascal: 'CoolComponent',
-        snake: 'cool-component',
-      },
-      projectDirectoryPath: filePath,
-      description: '',
-      linter: 'eslint',
-      packageVersion: '0.0.0',
-      type: 'direflow-component',
-    });
+    await createMockFileSystem({ noDescription: true });
   });
 
   afterAll(() => {
@@ -162,22 +151,7 @@ describe('Write names to file #1', () => {
 
 describe('Remove tslint file', () => {
   beforeAll(async () => {
-    fileMock({
-      [filePath]: fileMocks,
-    });
-
-    await writeProjectNames({
-      names: {
-        title: 'Cool Component',
-        pascal: 'CoolComponent',
-        snake: 'cool-component',
-      },
-      projectDirectoryPath: filePath,
-      description: '',
-      linter: 'eslint',
-      packageVersion: '0.0.0',
-      type: 'direflow-component',
-    });
+    await createMockFileSystem();
   });
 
   afterAll(() => {
@@ -186,31 +160,18 @@ describe('Remove tslint file', () => {
 
   it('should remove tslint file given eslint option', async () => {
     const getFile = async () => {
-      return await readFile(`${filePath}/tslint.json`);
-    }
+      return readFile(`${filePath}/tslint.json`);
+    };
 
-    expect(getFile()).rejects.toEqual('ENOENT, no such file or directory \'path/to/mock/dir/tslint.json\'');
+    expect(getFile()).rejects.toStrictEqual(
+      Error("ENOENT, no such file or directory 'path/to/mock/dir/tslint.json'"),
+    );
   });
 });
 
 describe('Remove eslint file', () => {
   beforeAll(async () => {
-    fileMock({
-      [filePath]: fileMocks,
-    });
-
-    await writeProjectNames({
-      names: {
-        title: 'Cool Component',
-        pascal: 'CoolComponent',
-        snake: 'cool-component',
-      },
-      projectDirectoryPath: filePath,
-      description: '',
-      linter: 'tslint',
-      packageVersion: '0.0.0',
-      type: 'direflow-component',
-    });
+    await createMockFileSystem({ useTslint: true });
   });
 
   afterAll(() => {
@@ -219,9 +180,11 @@ describe('Remove eslint file', () => {
 
   it('should remove eslint file given tslint option', async () => {
     const getFile = async () => {
-      return await readFile(`${filePath}/.eslintrc`);
-    }
+      return readFile(`${filePath}/.eslintrc`);
+    };
 
-    expect(getFile()).rejects.toEqual('ENOENT, no such file or directory \'path/to/mock/dir/.eslintrc\'');
+    expect(getFile()).rejects.toStrictEqual(
+      Error("ENOENT, no such file or directory 'path/to/mock/dir/.eslintrc'"),
+    );
   });
 });

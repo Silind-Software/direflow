@@ -1,5 +1,5 @@
 import fileMock from 'mock-fs';
-import { isDireflowSetup } from '../cli/utils/detectDireflowSetup';
+import isDireflowSetup from '../cli/utils/detectDireflowSetup';
 
 const isSetupFilePath = 'path/to/mock/setup';
 const isNotSetupFilePath = 'path/to/mock/non-setup';

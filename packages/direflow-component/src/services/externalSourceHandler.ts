@@ -25,6 +25,6 @@ const includeExternalSources = (element: HTMLElement, plugins: IDireflowPlugin[]
       });
     });
   }
-}
+};
 
 export default includeExternalSources;

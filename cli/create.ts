@@ -1,13 +1,13 @@
 import fs from 'fs';
 import chalk from 'chalk';
 import { chooseLanguage, askCreateDireflowSetup, chooseLinter } from './questions';
-import { copyTemplate } from './utils/copyTemplate';
+import copyTemplate from './utils/copyTemplate';
 import { getNameFormats, createDefaultName } from './utils/nameFormat';
-import { isDireflowSetup } from './utils/detectDireflowSetup';
-import { writeProjectNames } from './utils/writeNames';
+import isDireflowSetup from './utils/detectDireflowSetup';
+import writeProjectNames from './utils/writeNames';
 import { moreInfoMessage, componentFinishedMessage } from './messages';
 
-export const createDireflowSetup = async () => {
+const createDireflowSetup = async () => {
   try {
     await handleCreateDireflowSetup();
   } catch (err) {
@@ -20,7 +20,9 @@ export const createDireflowSetup = async () => {
 
 const handleCreateDireflowSetup = async () => {
   if (isDireflowSetup()) {
-    console.log(chalk.red('You are trying to create a new Direflow Setup inside an existing Direflow Setup.'));
+    console.log(
+      chalk.red('You are trying to create a new Direflow Setup inside an existing Direflow Setup.'),
+    );
     return;
   }
 
@@ -42,7 +44,9 @@ const handleCreateDireflowSetup = async () => {
   });
 
   await writeProjectNames({
-    linter, projectDirectoryPath, description,
+    linter,
+    projectDirectoryPath,
+    description,
     names: getNameFormats(componentName),
     type: 'direflow-component',
   });
@@ -50,3 +54,5 @@ const handleCreateDireflowSetup = async () => {
   console.log(chalk.greenBright(componentFinishedMessage(projectName)));
   console.log(chalk.blueBright(moreInfoMessage));
 };
+
+export default createDireflowSetup;
