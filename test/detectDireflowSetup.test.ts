@@ -13,7 +13,7 @@ fileMock({
 
 describe('Detect Direflow Setup', () => {
   afterAll(() => {
-    fileMock.restore()
+    fileMock.restore();
   });
 
   it('should return true if Direflow Setup', () => {
