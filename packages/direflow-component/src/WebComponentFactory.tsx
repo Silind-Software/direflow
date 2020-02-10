@@ -1,6 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import clonedeep from 'lodash.clonedeep';
 import { IDireflowPlugin } from './interfaces/IDireflowConfig';
 import createProxyRoot from './services/proxyRoot';
 import addStyledComponentStyles from './services/styledComponentsHandler';
@@ -31,6 +32,8 @@ class WebComponentFactory {
     this.shadow = shadowOption;
     this.plugins = plugins;
     this.connectCallback = connectCallback;
+
+    this.reflectPropertiesToAttributes();
   }
 
   /**
@@ -60,6 +63,7 @@ class WebComponentFactory {
 
     return class extends HTMLElement {
       private _application: JSX.Element | undefined;
+      private _properties: any = clonedeep(factory.componentProperties);
 
       constructor() {
         super();
@@ -78,7 +82,6 @@ class WebComponentFactory {
        * Web Component gets mounted on the DOM.
        */
       public connectedCallback(): void {
-        this.preparePropertiesAndAttributes();
         this.preparePlugins();
         this.mountReactApp({ initial: true });
 
@@ -110,7 +113,7 @@ class WebComponentFactory {
           return;
         }
 
-        factory.componentProperties[name] = newValue;
+        this._properties[name] = newValue;
 
         this.mountReactApp();
       }
@@ -132,7 +135,7 @@ class WebComponentFactory {
           return;
         }
 
-        const properties = { ...factory.componentProperties };
+        const properties = this._properties;
         const self: any = this;
 
         Object.keys(properties).forEach((key) => {
@@ -165,16 +168,16 @@ class WebComponentFactory {
       }
 
       /**
-       * Prepare all properties and attributes
+       * Syncronize all properties and attributes
        */
-      private preparePropertiesAndAttributes(): void {
+      private syncronizePropertiesAndAttributes(): void {
         const self: any = this;
 
-        Object.keys(factory.componentProperties).forEach((key: string) => {
+        Object.keys(this._properties).forEach((key: string) => {
           if (self.getAttribute(key)) {
-            factory.componentProperties[key] = self.getAttribute(key);
+            this._properties[key] = self.getAttribute(key);
           } else if (self[key] != null) {
-            factory.componentProperties[key] = self[key];
+            this._properties[key] = self[key];
           }
         });
       }
@@ -192,10 +195,9 @@ class WebComponentFactory {
       /**
        * Generate react props based on properties and attributes.
        */
-      // eslint-disable-next-line class-methods-use-this
       private reactProps(): any {
-        factory.reflectPropertiesToAttributes();
-        return { ...factory.componentProperties };
+        this.syncronizePropertiesAndAttributes();
+        return { ...this._properties };
       }
 
       /**

@@ -22,9 +22,8 @@ const ShadowContent: FC<IShadowContent> = (props) => {
 
 const createProxyComponent = (options: IComponentOptions) => {
   const ShadowRoot: FC<IShadowComponent> = (props) => {
-    const currentShadowRoot = options.root.shadowRoot;
-    const newShadowRoot = options.root.attachShadow({ mode: options.mode });
-    const shadowedRoot = currentShadowRoot || newShadowRoot;
+    const shadowedRoot = options.root.shadowRoot
+    || options.root.attachShadow({ mode: options.mode });
 
     return <ShadowContent root={shadowedRoot}>{props.children}</ShadowContent>;
   };
