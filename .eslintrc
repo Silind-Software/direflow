@@ -47,6 +47,7 @@
     "global-require": "off",
     "arrow-body-style": "off",
     "object-curly-newline": "off",
-    "lines-between-class-members": "off"
+    "lines-between-class-members": "off",
+    "linebreak-style": "off"
   }
 }
