@@ -1,39 +1,48 @@
-import program from 'commander';
+import commander, { Command } from 'commander';
 import chalk from 'chalk';
 import { headline } from './headline';
-import { createProject, createDireflowSetup, create } from './create';
+import { createDireflowSetup } from './create';
 import checkForUpdates from './checkForUpdate';
 import { showVersion } from './messages';
 
+type IOptions =
+  | 'small'
+  | 'js'
+  | 'ts'
+  | 'tslint'
+  | 'eslint';
+
+type TParsed = { [key in IOptions]?: true } & Command;
+
 export const cli = () => {
-  program
-    .command('create')
+  commander
+    .command('create [project-name] [description]')
     .alias('c')
     .description('Create a new Direflow Setup')
-    .option('-c, --component', 'Create a new Direflow Component')
-    .action((args: any) => {
-      if (args.project) {
-        createProject();
-      } else if (args.component) {
-        createDireflowSetup();
-      } else {
-        create();
-      }
+    .option('--js', 'Choose JavaScript Direflow Template')
+    .option('--ts', 'Choose TypeScript Direflow Template')
+    .option('--tslint', 'Use TSLint for TypeScript Template')
+    .option('--eslint', 'Use ESLint for TypeScript Template')
+    .action((projectNames: string | undefined, description: string | undefined, parsed: TParsed) => {
+      const { js, ts, tslint, eslint, args } = parsed;
+      console.log({ projectNames, description, js, ts, tslint, eslint, args });
     });
 
-  program.description(chalk.magenta(headline));
+  commander
+    .description(chalk.magenta(headline))
+    .version(showVersion())
+    .helpOption('-h, --help', 'Show how to use direflow-cli')
+    .option('-v, --version', 'Show the current version');
 
-  program.version(showVersion(), '-v, --version', 'Show the current version');
-  program.helpOption('-h, --help', 'Show how to use direflow-cli');
+  const [, , simpleArg] = process.argv;
 
-  if (!process.argv.slice(2).length) {
-    console.log('');
-    program.help();
+  if (!simpleArg) {
+    return commander.help();
   }
 
-  if (process.argv[2] === '-v' || process.argv[2] === '--version') {
-    console.log(checkForUpdates());
+  if (['-v', '--version'].includes(simpleArg)) {
+    return console.log(checkForUpdates());
   }
 
-  program.parse(process.argv);
+  commander.parse(process.argv);
 };
