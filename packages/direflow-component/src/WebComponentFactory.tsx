@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-classes-per-file */
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -37,7 +38,7 @@ class WebComponentFactory {
   }
 
   /**
-   * All properties with primitive values is added to attributes.
+   * All properties with primitive values are added to attributes.
    */
   private reflectPropertiesToAttributes(): void {
     Object.entries(this.componentProperties).forEach(([key, value]) => {
@@ -62,11 +63,13 @@ class WebComponentFactory {
     await includePolyfills({ usesShadow: !!factory.shadow }, this.plugins);
 
     return class extends HTMLElement {
-      private _application: JSX.Element | undefined;
-      private _properties: { [key: string]: any } = clonedeep(factory.componentProperties);
+      private application: JSX.Element | undefined;
+      private initialProperties: { [key: string]: any } = clonedeep(factory.componentProperties);
+      private properties: { [key: string]: any } = {};
 
       constructor() {
         super();
+        this.transferInitialProperties();
         this.subscribeToProperties();
       }
 
@@ -113,8 +116,7 @@ class WebComponentFactory {
           return;
         }
 
-        this._properties[name] = newValue;
-
+        this.properties[name] = newValue;
         this.mountReactApp();
       }
 
@@ -131,34 +133,20 @@ class WebComponentFactory {
        * when a property changes.
        */
       private subscribeToProperties(): void {
-        if (!factory.rootComponent) {
-          return;
-        }
-
-        const properties = this._properties;
         const self: any = this;
 
-        Object.keys(properties).forEach((key) => {
-          if (self[key] != null) {
-            properties[key] = self[key];
-          }
-        });
-
         const propertyMap = {} as PropertyDescriptorMap;
-        Object.keys(properties).forEach((key: string) => {
-          const presetValue = self[key];
-
+        Object.keys(self.initialProperties).forEach((key: string) => {
           propertyMap[key] = {
             configurable: true,
             enumerable: true,
 
             get(): any {
-              return presetValue || properties[key];
+              return self.properties[key] || self.initialProperties[key];
             },
 
             set(newValue: any): any {
-              const oldValue = properties[key];
-              properties[key] = newValue;
+              const oldValue = self.properties[key] || self.initialProperties[key];
               self.propertyChangedCallback(key, oldValue, newValue);
             },
           };
@@ -171,13 +159,32 @@ class WebComponentFactory {
        * Syncronize all properties and attributes
        */
       private syncronizePropertiesAndAttributes(): void {
+        Object.keys(this.initialProperties).forEach((key: string) => {
+          if (this.properties[key] !== undefined) {
+            return;
+          }
+
+          if (this.getAttribute(key)) {
+            this.properties[key] = this.getAttribute(key);
+            return;
+          }
+
+          this.properties[key] = this.initialProperties[key];
+        });
+      }
+
+      /**
+       * Transfer initial properties from the custom element.
+       * The constructor of the Web Component is called asynchronously.
+       * Make sure to transfer all properties that may have been set
+       * before 'subscribeToProperties' have had the chance to be invoked.
+       */
+      private transferInitialProperties(): void {
         const self: any = this;
 
-        Object.keys(this._properties).forEach((key: string) => {
-          if (self.getAttribute(key)) {
-            this._properties[key] = self.getAttribute(key);
-          } else if (self[key] != null) {
-            this._properties[key] = self[key];
+        Object.keys(self.initialProperties).forEach((key: string) => {
+          if (self[key]) {
+            self.properties[key] = self[key];
           }
         });
       }
@@ -195,16 +202,16 @@ class WebComponentFactory {
       /**
        * Generate react props based on properties and attributes.
        */
-      private reactProps(): any {
+      private reactProps(): { [key: string]: any } {
         this.syncronizePropertiesAndAttributes();
-        return { ...this._properties };
+        return this.properties;
       }
 
       /**
        * Mount React App onto the Web Component
        */
       private mountReactApp(options?: { initial: boolean }): void {
-        const application = this.application();
+        const application = this.getApplication();
 
         if (!factory.shadow) {
           ReactDOM.render(application, this);
@@ -227,9 +234,9 @@ class WebComponentFactory {
       /**
        * Create the React App
        */
-      private application(): JSX.Element {
-        if (this._application) {
-          return this._application;
+      private getApplication(): JSX.Element {
+        if (this.application) {
+          return this.application;
         }
 
         const baseApplication = (
