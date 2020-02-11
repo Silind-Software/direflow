@@ -63,7 +63,7 @@ class WebComponentFactory {
 
     return class extends HTMLElement {
       private _application: JSX.Element | undefined;
-      private _properties: any = clonedeep(factory.componentProperties);
+      private _properties: { [key: string]: any } = clonedeep(factory.componentProperties);
 
       constructor() {
         super();
