@@ -48,6 +48,7 @@
     "arrow-body-style": "off",
     "object-curly-newline": "off",
     "lines-between-class-members": "off",
-    "linebreak-style": "off"
+    "linebreak-style": "off",
+    "no-prototype-builtins": "off"
   }
 }

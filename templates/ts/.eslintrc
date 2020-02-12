@@ -28,6 +28,8 @@
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "interface-name-prefix": "off",
+    "@typescript-eslint/explicit-function-return-type": "off"
   }
 }

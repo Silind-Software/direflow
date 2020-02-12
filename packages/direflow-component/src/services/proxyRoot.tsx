@@ -31,12 +31,20 @@ const createProxyComponent = (options: IComponentOptions) => {
   return ShadowRoot;
 };
 
+const componentMap = new WeakMap<Element, React.FC<IShadowComponent>>();
+
 const createProxyRoot = (root: Element) => {
   return new Proxy<any>(
     {},
     {
       get(_: unknown, name: 'open' | 'closed'): any {
-        return createProxyComponent({ root, mode: name });
+        if (componentMap.get(root)) {
+          return componentMap.get(root);
+        }
+
+        const proxyComponent = createProxyComponent({ root, mode: name });
+        componentMap.set(root, proxyComponent);
+        return proxyComponent;
       },
     },
   );
