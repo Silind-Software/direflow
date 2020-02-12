@@ -10,23 +10,23 @@ type IOptions =
   | 'js'
   | 'ts'
   | 'tslint'
-  | 'eslint';
+  | 'eslint'
+  | 'npm';
 
-type TParsed = { [key in IOptions]?: true } & Command;
+type TParsed = Command & { [key in IOptions]?: true } & { desc: string };
 
-export const cli = () => {
+export function cli(): void {
   commander
     .command('create [project-name] [description]')
     .alias('c')
     .description('Create a new Direflow Setup')
+    .option('-d, --desc <description>', 'Choose JavaScript Direflow Template')
     .option('--js', 'Choose JavaScript Direflow Template')
     .option('--ts', 'Choose TypeScript Direflow Template')
     .option('--tslint', 'Use TSLint for TypeScript Template')
     .option('--eslint', 'Use ESLint for TypeScript Template')
-    .action((projectNames: string | undefined, description: string | undefined, parsed: TParsed) => {
-      const { js, ts, tslint, eslint, args } = parsed;
-      console.log({ projectNames, description, js, ts, tslint, eslint, args });
-    });
+    .option('--npm', 'Make project a NPM Module')
+    .action(handleAction);
 
   commander
     .description(chalk.magenta(headline))
@@ -45,4 +45,36 @@ export const cli = () => {
   }
 
   commander.parse(process.argv);
-};
+}
+
+async function handleAction(name: string | undefined, description: string | undefined, parsed: TParsed): Promise<void> {
+  const { js, ts, tslint, eslint, npm, desc } = parsed;
+
+  let language: 'js' | 'ts' | undefined;
+  let linter: 'eslint' | 'tslint' | undefined;
+
+  if (js) {
+    language = 'js';
+  } else if (ts) {
+    language = 'ts';
+  }
+
+  if (eslint) {
+    linter = 'eslint';
+  } else if (tslint) {
+    linter = 'tslint';
+  }
+
+  await createDireflowSetup({
+    name,
+    linter,
+    language,
+    npmModule: !!npm,
+    description: description || desc,
+  }).catch((err) => {
+    console.log('');
+    console.log(chalk.red('Unfortunately, something went wrong creating your Direflow Component'));
+    console.log(err);
+    console.log('');
+  });
+}
