@@ -17,15 +17,15 @@ type TParsed = Command & { [key in IOptions]?: true } & { desc: string };
 
 export function cli(): void {
   commander
-    .command('create [project-name] [description]')
+    .command('create [project-name]')
     .alias('c')
     .description('Create a new Direflow Setup')
-    .option('-d, --desc <description>', 'Choose JavaScript Direflow Template')
-    .option('--js', 'Choose JavaScript Direflow Template')
-    .option('--ts', 'Choose TypeScript Direflow Template')
-    .option('--tslint', 'Use TSLint for TypeScript Template')
-    .option('--eslint', 'Use ESLint for TypeScript Template')
-    .option('--npm', 'Make project a NPM Module')
+    .option('-d, --desc <description>', 'Choose description for your project')
+    .option('--js', 'Choose JavaScript Direflow template')
+    .option('--ts', 'Choose TypeScript Direflow template')
+    .option('--tslint', 'Use TSLint for TypeScript template')
+    .option('--eslint', 'Use ESLint for TypeScript template')
+    .option('--npm', 'Make the project an NPM module')
     .action(handleAction);
 
   commander
