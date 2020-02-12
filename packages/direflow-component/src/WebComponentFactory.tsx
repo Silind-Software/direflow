@@ -63,7 +63,6 @@ class WebComponentFactory {
     await includePolyfills({ usesShadow: !!factory.shadow }, this.plugins);
 
     return class WebComponent extends HTMLElement {
-      private application: JSX.Element | undefined;
       private initialProperties = clonedeep<{ [key: string]: any }>(factory.componentProperties);
       private properties: { [key: string]: any } = {};
 
@@ -211,41 +210,29 @@ class WebComponentFactory {
        * Mount React App onto the Web Component
        */
       private mountReactApp(options?: { initial: boolean }): void {
-        const application = this.getApplication();
-
-        if (!factory.shadow) {
-          ReactDOM.render(application, this);
-        } else {
-          let currentChildren: Node[] | undefined;
-
-          if (options?.initial) {
-            currentChildren = Array.from(this.children).map((child: Node) => child.cloneNode(true));
-          }
-
-          const root = createProxyRoot(this);
-          ReactDOM.render(<root.open>{application}</root.open>, this);
-
-          if (currentChildren) {
-            currentChildren.forEach((child: Node) => this.append(child));
-          }
-        }
-      }
-
-      /**
-       * Create the React App
-       */
-      private getApplication(): JSX.Element {
-        if (this.application) {
-          return this.application;
-        }
-
-        const baseApplication = (
+        const application = (
           <EventProvider value={this.eventDispatcher}>
             {React.createElement(factory.rootComponent, this.reactProps())}
           </EventProvider>
         );
 
-        return baseApplication;
+        if (!factory.shadow) {
+          ReactDOM.render(application, this);
+          return;
+        }
+
+        let currentChildren: Node[] | undefined;
+
+        if (options?.initial) {
+          currentChildren = Array.from(this.children).map((child: Node) => child.cloneNode(true));
+        }
+
+        const root = createProxyRoot(this);
+        ReactDOM.render(<root.open>{application}</root.open>, this);
+
+        if (currentChildren) {
+          currentChildren.forEach((child: Node) => this.append(child));
+        }
       }
 
       /**
