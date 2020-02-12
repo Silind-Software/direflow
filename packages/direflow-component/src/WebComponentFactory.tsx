@@ -62,9 +62,9 @@ class WebComponentFactory {
      */
     await includePolyfills({ usesShadow: !!factory.shadow }, this.plugins);
 
-    return class extends HTMLElement {
+    return class WebComponent extends HTMLElement {
       private application: JSX.Element | undefined;
-      private initialProperties: { [key: string]: any } = clonedeep(factory.componentProperties);
+      private initialProperties = clonedeep<{ [key: string]: any }>(factory.componentProperties);
       private properties: { [key: string]: any } = {};
 
       constructor() {
@@ -133,33 +133,31 @@ class WebComponentFactory {
        * when a property changes.
        */
       private subscribeToProperties(): void {
-        const self: any = this;
-
         const propertyMap = {} as PropertyDescriptorMap;
-        Object.keys(self.initialProperties).forEach((key: string) => {
+        Object.keys(this.initialProperties).forEach((key: string) => {
           propertyMap[key] = {
             configurable: true,
             enumerable: true,
 
-            get(): any {
-              const currentValue = self.properties.hasOwnProperty(key)
-                ? self.properties[key]
-                : self.initialProperties[key];
+            get: (): any => {
+              const currentValue = this.properties.hasOwnProperty(key)
+                ? this.properties[key]
+                : this.initialProperties[key];
 
               return currentValue;
             },
 
-            set(newValue: any): any {
-              const oldValue = self.properties.hasOwnProperty(key)
-                ? self.properties[key]
-                : self.initialProperties[key];
+            set: (newValue: any): any => {
+              const oldValue = this.properties.hasOwnProperty(key)
+                ? this.properties[key]
+                : this.initialProperties[key];
 
-              self.propertyChangedCallback(key, oldValue, newValue);
+              this.propertyChangedCallback(key, oldValue, newValue);
             },
           };
         });
 
-        Object.defineProperties(self, propertyMap);
+        Object.defineProperties(this, propertyMap);
       }
 
       /**
@@ -182,16 +180,11 @@ class WebComponentFactory {
 
       /**
        * Transfer initial properties from the custom element.
-       * The constructor of the Web Component is called asynchronously.
-       * Make sure to transfer all properties that may have been set
-       * before 'subscribeToProperties' have had the chance to be invoked.
        */
       private transferInitialProperties(): void {
-        const self: any = this;
-
-        Object.keys(self.initialProperties).forEach((key: string) => {
-          if (self.hasOwnProperty(key)) {
-            self.properties[key] = self[key];
+        Object.keys(this.initialProperties).forEach((key: string) => {
+          if (this.hasOwnProperty(key)) {
+            this.properties[key] = this[key as keyof WebComponent];
           }
         });
       }
@@ -256,7 +249,7 @@ class WebComponentFactory {
       }
 
       /**
-       * Dispatch an event on behalf of the Web Component
+       * Dispatch an event from the Web Component
        */
       private eventDispatcher = (event: Event) => {
         this.dispatchEvent(event);
