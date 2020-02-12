@@ -142,11 +142,18 @@ class WebComponentFactory {
             enumerable: true,
 
             get(): any {
-              return self.properties[key] || self.initialProperties[key];
+              const currentValue = self.properties.hasOwnProperty(key)
+                ? self.properties[key]
+                : self.initialProperties[key];
+
+              return currentValue;
             },
 
             set(newValue: any): any {
-              const oldValue = self.properties[key] || self.initialProperties[key];
+              const oldValue = self.properties.hasOwnProperty(key)
+                ? self.properties[key]
+                : self.initialProperties[key];
+
               self.propertyChangedCallback(key, oldValue, newValue);
             },
           };
@@ -160,7 +167,7 @@ class WebComponentFactory {
        */
       private syncronizePropertiesAndAttributes(): void {
         Object.keys(this.initialProperties).forEach((key: string) => {
-          if (this.properties[key] !== undefined) {
+          if (this.properties.hasOwnProperty(key)) {
             return;
           }
 
@@ -183,7 +190,7 @@ class WebComponentFactory {
         const self: any = this;
 
         Object.keys(self.initialProperties).forEach((key: string) => {
-          if (self[key]) {
+          if (self.hasOwnProperty(key)) {
             self.properties[key] = self[key];
           }
         });
