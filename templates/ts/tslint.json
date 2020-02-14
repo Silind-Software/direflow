@@ -15,5 +15,5 @@
       "webpack.config.js"
     ]
   },
-  "extends": ["tslint:recommended", "tslint-react", "tslint-config-airbnb", "tslint-config-silind"]
+  "extends": ["tslint:recommended", "tslint-react", "tslint-config-airbnb"]
 }

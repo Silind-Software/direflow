@@ -22,9 +22,8 @@ const Styled: FC<IStyled> = (props): JSX.Element => {
   return Style.it(styles, props.children);
 };
 
-const withStyles = (styles: TStyles) => <P, S>(
-  WrappedComponent: ComponentClass<P, S> | FC<P>,
-) => {
+const withStyles = (styles: TStyles) => <P, S>(WrappedComponent: ComponentClass<P, S> | FC<P>) => {
+  // eslint-disable-next-line react/prefer-stateless-function
   return class extends Component<P, S> {
     public render(): JSX.Element {
       return (

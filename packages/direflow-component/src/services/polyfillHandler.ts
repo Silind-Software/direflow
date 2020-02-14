@@ -20,7 +20,8 @@ const includePolyfills = async (
   const polyfillLoaderPlugin = plugins?.find((plugin) => plugin.name === 'polyfill-loader');
 
   if (polyfillLoaderPlugin) {
-    return includePolyfillsFromPlugin(polyfillLoaderPlugin);
+    includePolyfillsFromPlugin(polyfillLoaderPlugin);
+    return;
   }
 
   const scriptsLists = [];
@@ -63,27 +64,24 @@ const includePolyfillsFromPlugin = async (plugin: IDireflowPlugin) => {
   const scriptsLists = [];
 
   if (plugin.options?.use.sd) {
-    const src =
-      typeof plugin.options?.use.sd === 'string'
-        ? plugin.options?.use.sd
-        : 'https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.1/bundles/webcomponents-sd.js';
+    const src = typeof plugin.options?.use.sd === 'string'
+      ? plugin.options?.use.sd
+      : 'https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.1/bundles/webcomponents-sd.js';
 
     scriptsLists.push(loadScript(src));
   }
 
   if (plugin.options?.use.ce) {
-    const src =
-      typeof plugin.options?.use.ce === 'string'
-        ? plugin.options?.use.ce
-        : 'https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.1/bundles/webcomponents-ce.js';
+    const src = typeof plugin.options?.use.ce === 'string'
+      ? plugin.options?.use.ce
+      : 'https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.1/bundles/webcomponents-ce.js';
 
     scriptsLists.push(loadScript(src));
   }
 
-  const adapterSrc =
-    typeof plugin.options?.use.adapter === 'string'
-      ? plugin.options.use.adapter
-      : 'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.4.1/custom-elements-es5-adapter.js';
+  const adapterSrc = typeof plugin.options?.use.adapter === 'string'
+    ? plugin.options.use.adapter
+    : 'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.4.1/custom-elements-es5-adapter.js';
 
   scriptsLists.push(loadScript(adapterSrc));
 
@@ -105,9 +103,9 @@ const loadScript = (src: string): Promise<void> => {
       window.wcPolyfillsLoaded = [];
     }
 
-    const existingPolyfill = window.wcPolyfillsLoaded.find((loadedScript) =>
-      loadedScript.script.isEqualNode(script),
-    );
+    const existingPolyfill = window.wcPolyfillsLoaded.find((loadedScript) => {
+      return loadedScript.script.isEqualNode(script);
+    });
 
     if (existingPolyfill) {
       if (existingPolyfill.hasLoaded) {
@@ -130,7 +128,7 @@ const loadScript = (src: string): Promise<void> => {
       resolve();
     });
 
-    script.addEventListener('error', () => reject('Polyfill failed to load'));
+    script.addEventListener('error', () => reject(new Error('Polyfill failed to load')));
 
     document.head.appendChild(script);
   });

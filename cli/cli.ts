@@ -3,6 +3,8 @@ import chalk from 'chalk';
 import { headline } from './headline';
 import { createDireflowSetup } from './create';
 import checkForUpdates from './checkForUpdate';
+import createDireflowSetup from './create';
+import headline from './headline';
 import { showVersion } from './messages';
 
 type IOptions =

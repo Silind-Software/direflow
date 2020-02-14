@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable max-classes-per-file */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import clonedeep from 'lodash.clonedeep';
 import { IDireflowPlugin } from './interfaces/IDireflowConfig';
 import createProxyRoot from './services/proxyRoot';
 import addStyledComponentStyles from './services/styledComponentsHandler';
@@ -30,10 +33,12 @@ class WebComponentFactory {
     this.shadow = shadowOption;
     this.plugins = plugins;
     this.connectCallback = connectCallback;
+
+    this.reflectPropertiesToAttributes();
   }
 
   /**
-   * All properties with primitive values is added to attributes.
+   * All properties with primitive values are added to attributes.
    */
   private reflectPropertiesToAttributes(): void {
     Object.entries(this.componentProperties).forEach(([key, value]) => {
@@ -57,11 +62,13 @@ class WebComponentFactory {
      */
     await includePolyfills({ usesShadow: !!factory.shadow }, this.plugins);
 
-    return class extends HTMLElement {
-      private _application: JSX.Element | undefined;
+    return class WebComponent extends HTMLElement {
+      private initialProperties = clonedeep<{ [key: string]: any }>(factory.componentProperties);
+      private properties: { [key: string]: any } = {};
 
       constructor() {
         super();
+        this.transferInitialProperties();
         this.subscribeToProperties();
       }
 
@@ -77,7 +84,6 @@ class WebComponentFactory {
        * Web Component gets mounted on the DOM.
        */
       public connectedCallback(): void {
-        this.preparePropertiesAndAttributes();
         this.preparePlugins();
         this.mountReactApp({ initial: true });
 
@@ -109,8 +115,7 @@ class WebComponentFactory {
           return;
         }
 
-        factory.componentProperties[name] = newValue;
-
+        this.properties[name] = newValue;
         this.mountReactApp();
       }
 
@@ -127,53 +132,58 @@ class WebComponentFactory {
        * when a property changes.
        */
       private subscribeToProperties(): void {
-        if (!factory.rootComponent) {
-          return;
-        }
-
-        const properties = Object.assign({}, factory.componentProperties);
-        const self: any = this;
-
-        for (const key in properties) {
-          if (self[key] != null) {
-            properties[key] = self[key];
-          }
-        }
-
         const propertyMap = {} as PropertyDescriptorMap;
-        Object.keys(properties).forEach((key: string) => {
-          const presetValue = self[key];
-
+        Object.keys(this.initialProperties).forEach((key: string) => {
           propertyMap[key] = {
             configurable: true,
             enumerable: true,
 
-            get(): any {
-              return presetValue || properties[key];
+            get: (): any => {
+              const currentValue = this.properties.hasOwnProperty(key)
+                ? this.properties[key]
+                : this.initialProperties[key];
+
+              return currentValue;
             },
 
-            set(newValue: any): any {
-              const oldValue = properties[key];
-              properties[key] = newValue;
-              self.propertyChangedCallback(key, oldValue, newValue);
+            set: (newValue: any): any => {
+              const oldValue = this.properties.hasOwnProperty(key)
+                ? this.properties[key]
+                : this.initialProperties[key];
+
+              this.propertyChangedCallback(key, oldValue, newValue);
             },
           };
         });
 
-        Object.defineProperties(self, propertyMap);
+        Object.defineProperties(this, propertyMap);
       }
 
       /**
-       * Prepare all properties and attributes
+       * Syncronize all properties and attributes
        */
-      private preparePropertiesAndAttributes(): void {
-        const self: any = this;
+      private syncronizePropertiesAndAttributes(): void {
+        Object.keys(this.initialProperties).forEach((key: string) => {
+          if (this.properties.hasOwnProperty(key)) {
+            return;
+          }
 
-        Object.keys(factory.componentProperties).forEach((key: string) => {
-          if (self.getAttribute(key)) {
-            factory.componentProperties[key] = self.getAttribute(key);
-          } else if (self[key] != null) {
-            factory.componentProperties[key] = self[key];
+          if (this.getAttribute(key)) {
+            this.properties[key] = this.getAttribute(key);
+            return;
+          }
+
+          this.properties[key] = this.initialProperties[key];
+        });
+      }
+
+      /**
+       * Transfer initial properties from the custom element.
+       */
+      private transferInitialProperties(): void {
+        Object.keys(this.initialProperties).forEach((key: string) => {
+          if (this.hasOwnProperty(key)) {
+            this.properties[key] = this[key as keyof WebComponent];
           }
         });
       }
@@ -191,61 +201,46 @@ class WebComponentFactory {
       /**
        * Generate react props based on properties and attributes.
        */
-      private reactProps(): any {
-        factory.reflectPropertiesToAttributes();
-        return { ...factory.componentProperties };
+      private reactProps(): { [key: string]: any } {
+        this.syncronizePropertiesAndAttributes();
+        return this.properties;
       }
 
       /**
        * Mount React App onto the Web Component
        */
-      private mountReactApp(options?: { initial: boolean; }): void {
-        const application = this.application();
-
-        if (!factory.shadow) {
-          ReactDOM.render(application, this);
-        } else {
-
-          let currentChildren: Node[] | undefined;
-
-          if (options?.initial) {
-            currentChildren = Array.from(this.children).map((child: Node) =>
-              child.cloneNode(true),
-            );
-          }
-
-          const root = createProxyRoot(this);
-          ReactDOM.render(<root.open>{application}</root.open>, this);
-
-          if (currentChildren) {
-            currentChildren.forEach((child: Node) => this.append(child));
-          }
-        }
-      }
-
-      /**
-       * Create the React App
-       */
-      private application(): JSX.Element {
-        if (this._application) {
-          return this._application;
-        }
-
-        const baseApplication = (
+      private mountReactApp(options?: { initial: boolean }): void {
+        const application = (
           <EventProvider value={this.eventDispatcher}>
             {React.createElement(factory.rootComponent, this.reactProps())}
           </EventProvider>
         );
 
-        return baseApplication;
+        if (!factory.shadow) {
+          ReactDOM.render(application, this);
+          return;
+        }
+
+        let currentChildren: Node[] | undefined;
+
+        if (options?.initial) {
+          currentChildren = Array.from(this.children).map((child: Node) => child.cloneNode(true));
+        }
+
+        const root = createProxyRoot(this);
+        ReactDOM.render(<root.open>{application}</root.open>, this);
+
+        if (currentChildren) {
+          currentChildren.forEach((child: Node) => this.append(child));
+        }
       }
 
       /**
-       * Dispatch an event on behalf of the Web Component
+       * Dispatch an event from the Web Component
        */
       private eventDispatcher = (event: Event) => {
         this.dispatchEvent(event);
-      }
+      };
     };
   }
 }

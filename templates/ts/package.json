@@ -42,6 +42,8 @@
   },
   "devDependencies": {
     {{#if eslint}}
+    "@typescript-eslint/eslint-plugin": "^2.19.0",
+    "@typescript-eslint/parser": "^2.19.0",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.18.0",
@@ -53,7 +55,6 @@
     "react-test-renderer": "16.9.0",
     {{#if tslint}}
     "tslint-config-airbnb": "5.11.2",
-    "tslint-config-silind": "1.0.22",
     "tslint-react": "4.1.0",
     "tslint": "5.20.0",
     {{/if}}

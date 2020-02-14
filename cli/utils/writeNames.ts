@@ -33,7 +33,7 @@ export async function writeProjectNames({
   type, names, description, linter, npmModule,
   projectDirectoryPath,
   packageVersion = version,
-}: IWriteNameOptions): Promise<void> {
+}: IWriteNameOptions): Promise<void> => {
   const projectDirectory = fs.readdirSync(projectDirectoryPath);
   const defaultDescription = description || 'This project is created using Direflow';
 
@@ -63,9 +63,8 @@ export async function writeProjectNames({
     });
   });
 
-  await Promise.all(writeNames)
-    .catch(() => console.log('Failed to write files'));
-}
+  await Promise.all(writeNames).catch(() => console.log('Failed to write files'));
+};
 
 async function changeNameInfile(filePath: string, data: IHandelbarData): Promise<void> {
   const changedFile = await new Promise((resolve, reject) => {
@@ -90,4 +89,6 @@ async function changeNameInfile(filePath: string, data: IHandelbarData): Promise
       resolve();
     });
   });
-}
+};
+
+export default writeProjectNames;

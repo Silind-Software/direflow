@@ -1,7 +1,6 @@
 const fs = require('fs');
 const { execSync } = require('child_process');
-const handlebars = require('handlebars')
-const path = require('path')
+const path = require('path');
 
 const arg = process.argv[2];
 
@@ -12,12 +11,13 @@ if (!arg) {
 
 const rootPackage = require('../package.json');
 const componentPackage = require('../packages/direflow-component/package.json');
+const componentPackageJs = require('../templates/js/package.json');
 
 let componentPackageJs = fs.readFileSync('templates/js/package.json').toString();
 let componentPackageTs = fs.readFileSync('templates/ts/package.json').toString();
 
-const componentRegex = /"direflow-component": "(.*)"/g
-const componentReplace = r => `"direflow-component": ${JSON.stringify(r)}`
+const componentRegex = /"direflow-component": "(.*)"/g;
+const componentReplace = (r) => `"direflow-component": ${JSON.stringify(r)}`;
 
 const updateLink = () => {
   const currentDirectory = process.cwd();
@@ -38,7 +38,7 @@ const updateLink = () => {
   console.log('Version have been set to use LINK.');
   console.log(`New version: ${rootPackage.version}`);
   console.log('');
-}
+};
 
 const updateVersion = (version) => {
   rootPackage.version = version;
@@ -51,20 +51,23 @@ const updateVersion = (version) => {
   console.log('Version have updated.');
   console.log(`New version: ${version}`);
   console.log('');
-}
+};
 
 const writeToFiles = () => {
   fs.writeFileSync('package.json', JSON.stringify(rootPackage, null, 2), 'utf-8');
   fs.writeFileSync('packages/direflow-component/package.json', JSON.stringify(componentPackage, null, 2), 'utf-8');
   fs.writeFileSync('templates/js/package.json', componentPackageJs, 'utf-8');
   fs.writeFileSync('templates/ts/package.json', componentPackageTs, 'utf-8');
-}
+};
 
 if (arg === 'patch') {
   const buffer = execSync('npm view direflow-cli version');
   const currentVersion = buffer.toString('utf8');
 
-  if (currentVersion.trim() === rootPackage.version.trim() || rootPackage.version.includes('link')) {
+  if (
+    currentVersion.trim() === rootPackage.version.trim()
+    || rootPackage.version.includes('link')
+  ) {
     const versionNumbers = currentVersion.split('.');
     const patch = Number(versionNumbers[2]);
 
