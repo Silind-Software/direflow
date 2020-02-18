@@ -1,10 +1,8 @@
 import commander, { Command } from 'commander';
 import chalk from 'chalk';
-import { headline } from './headline';
+import headline from './headline';
 import { createDireflowSetup } from './create';
 import checkForUpdates from './checkForUpdate';
-import createDireflowSetup from './create';
-import headline from './headline';
 import { showVersion } from './messages';
 
 type IOptions =
@@ -17,7 +15,7 @@ type IOptions =
 
 type TParsed = Command & { [key in IOptions]?: true } & { desc: string };
 
-export function cli(): void {
+export default function cli() {
   commander
     .command('create [project-name]')
     .alias('c')
@@ -49,7 +47,7 @@ export function cli(): void {
   commander.parse(process.argv);
 }
 
-async function handleAction(name: string | undefined, description: string | undefined, parsed: TParsed): Promise<void> {
+async function handleAction(name: string | undefined, description: string | undefined, parsed: TParsed) {
   const { js, ts, tslint, eslint, npm, desc } = parsed;
 
   let language: 'js' | 'ts' | undefined;

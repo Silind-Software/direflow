@@ -1,9 +1,9 @@
 import fs from 'fs';
 import chalk from 'chalk';
 import { chooseName, chooseDescription, chooseLanguage, chooseLinter, isNpmModule } from './questions';
-import { copyTemplate } from './utils/copyTemplate';
+import copyTemplate from './utils/copyTemplate';
 import { getNameFormats, createDefaultName } from './utils/nameFormat';
-import { isDireflowSetup } from './utils/detectDireflowSetup';
+import isDireflowSetup from './utils/detectDireflowSetup';
 import { writeProjectNames } from './utils/writeNames';
 import { moreInfoMessage, componentFinishedMessage } from './messages';
 
@@ -64,7 +64,10 @@ export async function createDireflowSetup(preset: ISetupPresets = {}): Promise<v
   });
 
   await writeProjectNames({
-    linter, projectDirectoryPath, description, npmModule,
+    linter,
+    projectDirectoryPath,
+    description,
+    npmModule,
     names: getNameFormats(componentName),
     type: 'direflow-component',
   });
