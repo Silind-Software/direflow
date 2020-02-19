@@ -47,8 +47,8 @@ export default function cli() {
   commander.parse(process.argv);
 }
 
-async function handleAction(name: string | undefined, description: string | undefined, parsed: TParsed) {
-  const { js, ts, tslint, eslint, npm, desc } = parsed;
+async function handleAction(name: string | undefined, parsed: TParsed) {
+  const { js, ts, tslint, eslint, npm, desc: description } = parsed;
 
   let language: 'js' | 'ts' | undefined;
   let linter: 'eslint' | 'tslint' | undefined;
@@ -69,8 +69,8 @@ async function handleAction(name: string | undefined, description: string | unde
     name,
     linter,
     language,
+    description,
     npmModule: !!npm,
-    description: description || desc,
   }).catch((err) => {
     console.log('');
     console.log(chalk.red('Unfortunately, something went wrong creating your Direflow Component'));
