@@ -79,6 +79,7 @@ const createMockFileSystem = async (options?: { noDescription?: boolean; useTsli
     linter: options?.useTslint ? 'tslint' : 'eslint',
     packageVersion: '0.0.0',
     type: 'direflow-component',
+    npmModule: false,
   });
 };
 
