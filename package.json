@@ -11,7 +11,8 @@
     "install:all": "node ./scripts/installAll.js",
     "build:all": "node ./scripts/buildAll.js && yarn install:all --no-deps",
     "build-link": "yarn clean:all && yarn install:all && yarn build:all",
-    "setup-local": "./scripts/setupLocal.sh"
+    "setup-local": "./scripts/setupLocal.sh",
+    "cypress:open": "cypress open"
   },
   "bin": {
     "direflow": "bin/direflow"
@@ -64,6 +65,7 @@
     "@types/rimraf": "2.0.2",
     "@typescript-eslint/eslint-plugin": "^2.19.0",
     "@typescript-eslint/parser": "^2.19.0",
+    "cypress": "^4.0.2",
     "eslint": "^6.8.0",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^4.2.1",
