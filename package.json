@@ -81,6 +81,9 @@
     "extends": "react-app"
   },
   "jest": {
+    "roots": [
+      "<rootDir>/"
+    ],
     "moduleFileExtensions": [
       "ts",
       "js",
@@ -94,7 +97,8 @@
     ],
     "testPathIgnorePatterns": [
       "<rootDir>/templates",
-      "<rootDir>/packages"
+      "<rootDir>/packages",
+      "<rootDir>/cypress"
     ],
     "collectCoverage": true
   }
