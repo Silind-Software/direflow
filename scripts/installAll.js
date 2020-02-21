@@ -17,6 +17,16 @@ async function installAll() {
       await install(`packages/${directory}`);
     }
   }
+
+  if (!fs.existsSync('cypress/test-setup')) {
+    return;
+  }
+
+  if (!fs.statSync('cypress/test-setup').isDirectory()) {
+    return;
+  }
+
+  install('cypress/test-setup');
 }
 
 function install(dir) {
