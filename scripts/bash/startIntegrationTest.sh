@@ -6,4 +6,7 @@ yarn cypress:run
 
 sleep 2
 
+echo "Cypress has finished testing"
+echo "Closing dev server ..."
+
 kill $(lsof -t -i:3000)
