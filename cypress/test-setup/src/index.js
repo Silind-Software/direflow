@@ -1,4 +1,4 @@
-import { DireflowComponent } from '../../packages/direflow-component/dist';
+import { DireflowComponent } from 'direflow-component';
 import App from './direflow-component/App';
 
 const direflowComponent = new DireflowComponent();
@@ -6,28 +6,16 @@ const direflowComponent = new DireflowComponent();
 const direflowProperties = {
   componentTitle: 'Test Setup',
   sampleList: [
-    'Create with React',
-    'Build as Web Component',
-    'Use it anywhere!',
+    'Item 1',
+    'Item 2',
+    'Item 3',
   ],
 };
-
-const direflowPlugins = [
-  {
-    name: 'font-loader',
-    options: {
-      google: {
-        families: ['Advent Pro', 'Noto Sans JP'],
-      },
-    },
-  },
-];
 
 direflowComponent.configure({
   name: 'test-setup',
   useShadow: true,
   properties: direflowProperties,
-  plugins: direflowPlugins,
 });
 
 direflowComponent.create(App);

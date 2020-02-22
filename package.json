@@ -1,18 +1,20 @@
 {
   "name": "direflow-cli",
-  "version": "3.2.7",
+  "version": "3.2.9",
   "description": "Official CLI for Direflow",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "test": "jest --env=jest-environment-jsdom-fourteen",
-    "update-version": "node scripts/updateVersion.js",
-    "clean:all": "node ./scripts/cleanupAll.js",
-    "install:all": "node ./scripts/installAll.js",
-    "build:all": "node ./scripts/buildAll.js && yarn install:all --no-deps",
+    "update-version": "node scripts/node/updateVersion.js",
+    "clean:all": "node ./scripts/node/cleanupAll.js",
+    "install:all": "node ./scripts/node/installAll.js",
+    "build:all": "node ./scripts/node/buildAll.js && yarn install:all --no-deps",
     "build-link": "yarn clean:all && yarn install:all && yarn build:all",
-    "setup-local": "./scripts/setupLocal.sh",
-    "cypress:open": "cypress open"
+    "setup-local": "./scripts/bash/setupLocal.sh",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:test": "./scripts/bash/startIntegrationTest.sh"
   },
   "bin": {
     "direflow": "bin/direflow"
@@ -75,6 +77,7 @@
     "jsdom": "^16.1.0",
     "mock-fs": "^4.10.4",
     "prettier": "^1.19.1",
+    "start-server-and-test": "^1.10.8",
     "ts-jest": "24.0.2"
   },
   "eslintConfig": {

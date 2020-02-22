@@ -1,4 +1,4 @@
-const webpackConfig = require('../../packages/direflow-component/config-overrides');
+const webpackConfig = require('direflow-component/config-overrides');
 
 /**
  * Webpack configuration for Direflow Component

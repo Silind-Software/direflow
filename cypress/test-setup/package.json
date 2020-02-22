@@ -6,6 +6,9 @@
   "scripts": {
     "start": "react-app-rewired start"
   },
+  "dependencies": {
+    "direflow-component": "../../packages/direflow-component"
+  },
   "peerDependencies": {
     "react": "16.10.2",
     "react-dom": "16.10.2",
