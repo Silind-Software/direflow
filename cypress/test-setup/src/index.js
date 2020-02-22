@@ -4,6 +4,7 @@ import App from './test-component/App';
 const basicTest = new DireflowComponent();
 const propsTest = new DireflowComponent();
 const eventTest = new DireflowComponent();
+const slotTest = new DireflowComponent();
 
 const direflowProperties = {
   componentTitle: 'Test Setup',
@@ -29,6 +30,13 @@ eventTest.configure({
   properties: direflowProperties,
 });
 
+slotTest.configure({
+  name: 'slot-test',
+  useShadow: true,
+  properties: direflowProperties,
+});
+
 basicTest.create(App);
 propsTest.create(App);
 eventTest.create(App);
+slotTest.create(App);

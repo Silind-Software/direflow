@@ -22,6 +22,10 @@ const App = (props) => {
       <div className='app'>
         <div className='header-title'>{title}</div>
         <div>{renderSampleList}</div>
+        <div className='slotted-elements'>
+          <slot name='slotted-item-1' />
+          <slot name='slotted-item-2' />
+        </div>
         <EventConsumer>
           {(dispatch) => (
             <button className='button' onClick={() => handleClick(dispatch)}>
@@ -29,7 +33,6 @@ const App = (props) => {
             </button>
           )}
         </EventConsumer>
-        
       </div>
     </Styled>
   );
