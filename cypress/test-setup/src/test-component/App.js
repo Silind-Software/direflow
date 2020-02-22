@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Styled } from 'direflow-component';
+import { Styled, EventConsumer } from 'direflow-component';
 import styles from './App.css';
 
 const App = (props) => {
-  const handleClick = () => {
-    const event = new Event('my-event');
+  const handleClick = (dispatch) => {
+    const event = new Event('test-click-event');
+    dispatch(event);
   };
 
   const renderSampleList = props.sampleList.map((sample) => (
@@ -21,9 +22,14 @@ const App = (props) => {
       <div className='app'>
         <div className='header-title'>{title}</div>
         <div>{renderSampleList}</div>
-        <button className='button' onClick={handleClick}>
-          Click
-        </button>
+        <EventConsumer>
+          {(dispatch) => (
+            <button className='button' onClick={() => handleClick(dispatch)}>
+              Click
+            </button>
+          )}
+        </EventConsumer>
+        
       </div>
     </Styled>
   );
