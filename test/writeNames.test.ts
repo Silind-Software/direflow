@@ -85,19 +85,7 @@ const createMockFileSystem = async (options?: { noDescription?: boolean; useTsli
 
 describe('Write names to file #1', () => {
   beforeAll(async () => {
-    await writeProjectNames({
-      names: {
-        title: 'Cool Component',
-        pascal: 'CoolComponent',
-        snake: 'cool-component',
-      },
-      projectDirectoryPath: filePath,
-      description: 'This component is cool',
-      linter: 'eslint',
-      packageVersion: '0.0.0',
-      type: 'direflow-component',
-      npmModule: false,
-    });
+    await createMockFileSystem();
   });
 
   afterAll(() => {
