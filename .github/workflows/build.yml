@@ -7,9 +7,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-node@v1
@@ -19,6 +17,7 @@ jobs:
     
     - name: Prepare
       run: |
+        sudo apt-get install lsof
         npm install yarn -g
         npm install codecov -g
         npm install typescript -g
@@ -41,8 +40,8 @@ jobs:
 
     - name: Integration Test
       run: |
+        yarn cypress:prepare
         yarn cypress:test
-
 
     - name: Create version patch
       run: yarn update-version patch

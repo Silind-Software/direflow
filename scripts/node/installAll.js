@@ -17,7 +17,9 @@ async function installAll() {
       await install(`packages/${directory}`);
     }
   }
+}
 
+function installTestSetup() {
   if (!fs.existsSync('cypress/test-setup')) {
     return;
   }
@@ -68,4 +70,8 @@ function install(dir) {
   });
 }
 
-installAll();
+if (process.argv[2] === '--test-setup') {
+  installTestSetup();
+} else {
+  installAll();
+}
