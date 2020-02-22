@@ -1,5 +1,5 @@
 import fileMock from 'mock-fs';
-import { isDireflowSetup } from '../cli/utils/detectDireflowSetup';
+import isDireflowSetup from '../cli/utils/detectDireflowSetup';
 
 const isSetupFilePath = 'path/to/mock/setup';
 const isNotSetupFilePath = 'path/to/mock/non-setup';
@@ -13,7 +13,7 @@ fileMock({
 
 describe('Detect Direflow Setup', () => {
   afterAll(() => {
-    fileMock.restore()
+    fileMock.restore();
   });
 
   it('should return true if Direflow Setup', () => {

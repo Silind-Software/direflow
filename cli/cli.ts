@@ -1,6 +1,6 @@
 import commander, { Command } from 'commander';
 import chalk from 'chalk';
-import { headline } from './headline';
+import headline from './headline';
 import { createDireflowSetup } from './create';
 import checkForUpdates from './checkForUpdate';
 import { showVersion } from './messages';
@@ -15,7 +15,7 @@ type IOptions =
 
 type TParsed = Command & { [key in IOptions]?: true } & { desc: string };
 
-export function cli(): void {
+export default function cli() {
   commander
     .command('create [project-name]')
     .alias('c')
@@ -47,8 +47,8 @@ export function cli(): void {
   commander.parse(process.argv);
 }
 
-async function handleAction(name: string | undefined, description: string | undefined, parsed: TParsed): Promise<void> {
-  const { js, ts, tslint, eslint, npm, desc } = parsed;
+async function handleAction(name: string | undefined, parsed: TParsed) {
+  const { js, ts, tslint, eslint, npm, desc: description } = parsed;
 
   let language: 'js' | 'ts' | undefined;
   let linter: 'eslint' | 'tslint' | undefined;
@@ -69,8 +69,8 @@ async function handleAction(name: string | undefined, description: string | unde
     name,
     linter,
     language,
+    description,
     npmModule: !!npm,
-    description: description || desc,
   }).catch((err) => {
     console.log('');
     console.log(chalk.red('Unfortunately, something went wrong creating your Direflow Component'));

@@ -7,6 +7,6 @@ const loadFonts = (plugins: IDireflowPlugin[] | undefined) => {
   if (fontLoaderPlugin?.options) {
     WebFont.load(fontLoaderPlugin.options);
   }
-}
+};
 
 export default loadFonts;

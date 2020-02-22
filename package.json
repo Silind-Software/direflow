@@ -40,12 +40,15 @@
     "chalk": "2.4.2",
     "commander": "3.0.1",
     "deepmerge": "4.0.0",
+    "eslint-config-airbnb-typescript": "^7.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react-hooks": "^2.3.0",
     "esm": "3.2.25",
     "handlebars": "^4.7.2",
     "inquirer": "7.0.0",
     "mkdirp": "0.5.1",
     "ncp": "2.0.0",
-    "prettier-tslint": "^0.4.2",
     "rimraf": "3.0.0",
     "to-case": "^2.0.0",
     "typescript": "^3.7.0"
@@ -59,14 +62,21 @@
     "@types/ncp": "2.0.1",
     "@types/node": "12.7.4",
     "@types/rimraf": "2.0.2",
+    "@typescript-eslint/eslint-plugin": "^2.19.0",
+    "@typescript-eslint/parser": "^2.19.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.18.3",
     "jest": "24.8.0",
     "jest-environment-jsdom-fourteen": "^0.1.0",
+    "jsdom": "^16.1.0",
     "mock-fs": "^4.10.4",
     "prettier": "^1.19.1",
-    "ts-jest": "24.0.2",
-    "tslint": "^5.20.1",
-    "tslint-config-airbnb": "^5.11.2",
-    "tslint-config-silind": "^1.0.22"
+    "ts-jest": "24.0.2"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   },
   "jest": {
     "moduleFileExtensions": [

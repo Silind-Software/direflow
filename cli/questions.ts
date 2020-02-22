@@ -56,7 +56,7 @@ export async function isNpmModule(): Promise<{ npmModule: boolean }> {
     {
       type: 'list',
       name: 'npmModule',
-      message: 'Do you want this to be a npm module?',
+      message: 'Do you want this to be an NPM module?',
       choices: [
         {
           value: true,

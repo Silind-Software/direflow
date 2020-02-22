@@ -1,9 +1,9 @@
 import fs from 'fs';
 import chalk from 'chalk';
 import { chooseName, chooseDescription, chooseLanguage, chooseLinter, isNpmModule } from './questions';
-import { copyTemplate } from './utils/copyTemplate';
+import copyTemplate from './utils/copyTemplate';
 import { getNameFormats, createDefaultName } from './utils/nameFormat';
-import { isDireflowSetup } from './utils/detectDireflowSetup';
+import isDireflowSetup from './utils/detectDireflowSetup';
 import { writeProjectNames } from './utils/writeNames';
 import { moreInfoMessage, componentFinishedMessage } from './messages';
 
@@ -17,7 +17,9 @@ interface ISetupPresets {
 
 export async function createDireflowSetup(preset: ISetupPresets = {}): Promise<void> {
   if (isDireflowSetup()) {
-    console.log(chalk.red('You are trying to create a new Direflow Setup inside an existing Direflow Setup.'));
+    console.log(
+      chalk.red('You are trying to create a new Direflow Setup inside an existing Direflow Setup.'),
+    );
     return;
   }
 
@@ -62,7 +64,10 @@ export async function createDireflowSetup(preset: ISetupPresets = {}): Promise<v
   });
 
   await writeProjectNames({
-    linter, projectDirectoryPath, description, npmModule,
+    linter,
+    projectDirectoryPath,
+    description,
+    npmModule,
     names: getNameFormats(componentName),
     type: 'direflow-component',
   });
@@ -70,3 +75,5 @@ export async function createDireflowSetup(preset: ISetupPresets = {}): Promise<v
   console.log(chalk.greenBright(componentFinishedMessage(projectName)));
   console.log(chalk.blueBright(moreInfoMessage));
 }
+
+export default createDireflowSetup;

@@ -44,18 +44,11 @@ const overrideModule = (module: any) => {
   const scssRuleIndex = module.rules[2].oneOf.findIndex((rule: any) => '.scss'.match(rule.test));
 
   if (cssRuleIndex !== -1) {
-    module.rules[2].oneOf[cssRuleIndex].use = [
-      'to-string-loader',
-      'css-loader',
-    ];
+    module.rules[2].oneOf[cssRuleIndex].use = ['to-string-loader', 'css-loader'];
   }
 
   if (scssRuleIndex !== -1) {
-    module.rules[2].oneOf[scssRuleIndex].use = [
-      'to-string-loader',
-      'css-loader',
-      'sass-loader',
-    ];
+    module.rules[2].oneOf[scssRuleIndex].use = ['to-string-loader', 'css-loader', 'sass-loader'];
   }
 
   module.rules[2].oneOf.unshift({
@@ -71,7 +64,8 @@ const overrideOutput = (output: any, { filename, chunkFilename }: IOptions) => {
 
   return {
     ...newOutput,
-    filename, chunkFilename,
+    filename,
+    chunkFilename,
   };
 };
 
@@ -104,25 +98,30 @@ const overridePlugins = (plugins: any, env: string, options: IOptions) => {
   plugins.push(
     new EventHooksPlugin({
       done: new PromiseTask(() => copyBundleScript(env, options)),
-    })
+    }),
   );
 
   plugins.push(
     new FilterWarningsPlugin({
-      exclude: [/Module not found.*/, /Critical dependency: the request of a dependency is an expression/],
-    })
+      exclude: [
+        /Module not found.*/,
+        /Critical dependency: the request of a dependency is an expression/,
+      ],
+    }),
   );
 
   return plugins;
 };
 
-const overrideResolve = (resolve: any) => {
+const overrideResolve = (currentResolve: any) => {
   const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
-  const filteredPlugins = resolve.plugins.filter((plugin: any) => !(plugin instanceof ModuleScopePlugin));
+  const filteredPlugins = currentResolve.plugins.filter(
+    (plugin: any) => !(plugin instanceof ModuleScopePlugin),
+  );
 
-  resolve.plugins = filteredPlugins;
+  currentResolve.plugins = filteredPlugins;
 
-  return resolve;
+  return currentResolve;
 };
 
 const copyBundleScript = async (env: string, { filename, chunkFilename }: IOptions) => {

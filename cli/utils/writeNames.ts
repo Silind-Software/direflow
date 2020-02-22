@@ -4,6 +4,7 @@ import path from 'path';
 import INames from '../interfaces/INames';
 
 const packageJson = require('../../package.json');
+
 const { version } = packageJson;
 
 interface IWriteNameOptions {
@@ -17,10 +18,10 @@ interface IWriteNameOptions {
 }
 
 type TWriteNameExtendable = Required<Pick<IWriteNameOptions,
-  | 'names'
-  | 'type'
-  | 'packageVersion'
-  | 'npmModule'
+| 'names'
+| 'type'
+| 'packageVersion'
+| 'npmModule'
 >>;
 
 interface IHandelbarData extends TWriteNameExtendable {
@@ -41,7 +42,9 @@ export async function writeProjectNames({
     const filePath = path.join(projectDirectoryPath, dirElement);
 
     if (fs.statSync(filePath).isDirectory()) {
-      return await writeProjectNames({ names, description, type, linter, npmModule, projectDirectoryPath: filePath });
+      return writeProjectNames({
+        names, description, type, linter, npmModule, projectDirectoryPath: filePath,
+      });
     }
 
     if (linter !== 'tslint') {
@@ -56,15 +59,18 @@ export async function writeProjectNames({
       }
     }
 
-    await changeNameInfile(filePath, {
-      names, defaultDescription, type, packageVersion, npmModule,
+    return changeNameInfile(filePath, {
+      names,
+      defaultDescription,
+      type,
+      packageVersion,
+      npmModule,
       eslint: linter === 'eslint',
       tslint: linter === 'tslint',
     });
   });
 
-  await Promise.all(writeNames)
-    .catch(() => console.log('Failed to write files'));
+  await Promise.all(writeNames).catch(() => console.log('Failed to write files'));
 }
 
 async function changeNameInfile(filePath: string, data: IHandelbarData): Promise<void> {
@@ -91,3 +97,5 @@ async function changeNameInfile(filePath: string, data: IHandelbarData): Promise
     });
   });
 }
+
+export default writeProjectNames;
