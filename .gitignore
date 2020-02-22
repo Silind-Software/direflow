@@ -6,6 +6,11 @@ yarn.lock
 config-overrides.js
 config-overrides.d.ts
 
+
+# Cypress
+cypress/fixtures
+cypress/plugins
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml

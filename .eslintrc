@@ -39,6 +39,7 @@
     "react/jsx-props-no-spreading": "off",
     "react/destructuring-assignment": "off",
     "react/display-name": "off",
+    "import/no-extraneous-dependencies": "off",
     "import/no-unresolved": "off",
     "no-async-promise-executor": "off",
     "no-console": "off",

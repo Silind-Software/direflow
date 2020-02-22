@@ -11,5 +11,12 @@
     "moduleResolution": "node",
     "skipLibCheck": true
   },
-  "exclude": ["node_modules", "dist", "templates", "test", "packages"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "templates",
+    "test",
+    "packages",
+    "cypress"
+  ]
 }
