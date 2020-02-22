@@ -1,20 +1,20 @@
 describe('Running basic component without Shadow DOM', () => {
-  it('should successfully loads page', () => {
+  before(() => {
     cy.visit('/');
   });
 
   it('should contain a custom element', () => {
-    cy.get('test-setup').should('exist');
+    cy.get('basic-test').should('exist');
   });
 
   it('should have default componentTitle', () => {
-    cy.shadowGet('test-setup')
+    cy.shadowGet('basic-test')
       .shadowFind('.app .header-title')
       .shadowContains('Test Setup');
   });
 
   it('should have default sampleList items', () => {
-    cy.shadowGet('test-setup')
+    cy.shadowGet('basic-test')
       .shadowFind('.app')
       .shadowFind('div')
       .shadowEq(1)
@@ -22,7 +22,7 @@ describe('Running basic component without Shadow DOM', () => {
       .shadowEq(0)
       .shadowContains('Item 1');
 
-    cy.shadowGet('test-setup')
+    cy.shadowGet('basic-test')
       .shadowFind('.app')
       .shadowFind('div')
       .shadowEq(1)
@@ -30,7 +30,7 @@ describe('Running basic component without Shadow DOM', () => {
       .shadowEq(1)
       .shadowContains('Item 2');
 
-    cy.shadowGet('test-setup')
+    cy.shadowGet('basic-test')
       .shadowFind('.app')
       .shadowFind('div')
       .shadowEq(1)

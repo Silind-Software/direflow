@@ -1,10 +1,13 @@
 import { DireflowComponent } from 'direflow-component';
 import App from './direflow-component/App';
 
-const direflowComponent = new DireflowComponent();
+const basicTest = new DireflowComponent();
+const propsTest = new DireflowComponent();
+
 
 const direflowProperties = {
   componentTitle: 'Test Setup',
+  showTitle: true,
   sampleList: [
     'Item 1',
     'Item 2',
@@ -12,10 +15,18 @@ const direflowProperties = {
   ],
 };
 
-direflowComponent.configure({
-  name: 'test-setup',
+basicTest.configure({
+  name: 'basic-test',
   useShadow: true,
   properties: direflowProperties,
 });
 
-direflowComponent.create(App);
+basicTest.create(App);
+
+propsTest.configure({
+  name: 'props-test',
+  useShadow: true,
+  properties: direflowProperties,
+});
+
+propsTest.create(App);

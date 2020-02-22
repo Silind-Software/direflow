@@ -14,10 +14,12 @@ const App = (props) => {
     </div>
   ));
 
+  const title = props.showTitle ? props.componentTitle : 'no-title';
+
   return (
     <Styled styles={styles}>
       <div className='app'>
-        <div className='header-title'>{props.componentTitle}</div>
+        <div className='header-title'>{title}</div>
         <div>{renderSampleList}</div>
         <button className='button' onClick={handleClick}>
           Click
