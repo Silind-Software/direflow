@@ -28,16 +28,21 @@ jobs:
         yarn clean:all
         yarn install:all
 
-    - name: Test
-      run: |
-        yarn test
-
     - name: Codecov
       run: codecov -t ${{ secrets.CODECOV_TOKEN }}
 
     - name: Build
       run: |
         yarn build:all
+
+    - name: Test
+      run: |
+        yarn test
+
+    - name: Integration Test
+      run: |
+        yarn cypress:test
+
 
     - name: Create version patch
       run: yarn update-version patch

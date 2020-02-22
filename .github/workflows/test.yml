@@ -1,22 +1,17 @@
 name: test
 
-on:
-  push:
-    branches:
-    - development
-  pull_request:
-    branches:
-    - development
+on: push
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    container: cypress/included:3.8.3
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-node@v1
       with:
         node-version: 12.x
+        browser: chrome
     
     - name: Prepare
       run: |
@@ -27,11 +22,19 @@ jobs:
       run: |
         yarn clean:all
         yarn install:all
+        
+    - name: Build
+      run: |
+        yarn build:all
 
     - name: Test
       run: |
         yarn test
 
-    - name: Build
+    - name: Integration Test
       run: |
-        yarn build:all
+        yarn cypress:test
+
+    - name: Integration Test
+      run: |
+        yarn cypress:test
