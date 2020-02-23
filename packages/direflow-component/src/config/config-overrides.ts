@@ -63,7 +63,7 @@ type TConfig = {
   resolve: IResolve;
 };
 
-export default function override(config: TConfig, env: string, options?: IOptions) {
+export = function override(config: TConfig, env: string, options?: IOptions) {
   const filename = options?.filename || 'direflowBundle.js';
   const chunkFilename = options?.chunkFilename || 'vendor.js';
 
@@ -77,7 +77,7 @@ export default function override(config: TConfig, env: string, options?: IOption
   };
 
   return overridenConfig;
-}
+};
 
 function addWelcomeMessage(config: TConfig, env: string) {
   if (env === 'production') {
