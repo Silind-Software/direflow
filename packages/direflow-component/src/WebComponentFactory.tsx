@@ -125,7 +125,7 @@ class WebComponentFactory {
             configurable: true,
             enumerable: true,
 
-            get: (): any => {
+            get: (): unknown => {
               const currentValue = this.properties.hasOwnProperty(key)
                 ? this.properties[key]
                 : this.initialProperties[key];
@@ -133,7 +133,7 @@ class WebComponentFactory {
               return currentValue;
             },
 
-            set: (newValue: any): any => {
+            set: (newValue: unknown) => {
               const oldValue = this.properties.hasOwnProperty(key)
                 ? this.properties[key]
                 : this.initialProperties[key];
