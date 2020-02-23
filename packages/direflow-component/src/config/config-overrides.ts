@@ -10,7 +10,60 @@ interface IOptions {
   chunkFilename?: string;
 }
 
-export = function override(config: any, env: string, options?: IOptions): any {
+interface IModule {
+  rules: {
+    oneOf: {
+      test: RegExp;
+      use: string[];
+    }[];
+  }[];
+}
+
+interface IOutput {
+  filename: string;
+  chunkFilename: string;
+}
+
+interface IOptimization {
+  minimizer: {
+    options: {
+      sourceMap: boolean;
+    };
+  }[];
+  runtimeChunk: boolean;
+  splitChunks: boolean | {
+    cacheGroups: {
+      vendor: {
+        test: RegExp;
+        chunks: string;
+        name: string;
+        enforce: boolean;
+      };
+    };
+  };
+}
+
+interface IPlugin {
+  options: {
+    inject: string;
+  };
+}
+
+interface IResolve {
+  plugins: unknown[];
+}
+
+type TConfig = {
+  [key: string]: unknown;
+  entry: string[];
+  module: IModule;
+  output: IOutput;
+  optimization: IOptimization;
+  plugins: IPlugin[];
+  resolve: IResolve;
+};
+
+export default function override(config: TConfig, env: string, options?: IOptions) {
   const filename = options?.filename || 'direflowBundle.js';
   const chunkFilename = options?.chunkFilename || 'vendor.js';
 
@@ -24,24 +77,23 @@ export = function override(config: any, env: string, options?: IOptions): any {
   };
 
   return overridenConfig;
-};
+}
 
-const addWelcomeMessage = (config: any, env: string) => {
+function addWelcomeMessage(config: TConfig, env: string) {
   if (env === 'production') {
     return config;
   }
 
   const entry = [...config.entry];
   entry.push(resolve(__dirname, './dist/config/welcome.js'));
-
   config.entry = entry;
 
   return config;
-};
+}
 
-const overrideModule = (module: any) => {
-  const cssRuleIndex = module.rules[2].oneOf.findIndex((rule: any) => '.css'.match(rule.test));
-  const scssRuleIndex = module.rules[2].oneOf.findIndex((rule: any) => '.scss'.match(rule.test));
+function overrideModule(module: IModule) {
+  const cssRuleIndex = module.rules[2].oneOf.findIndex((rule) => '.css'.match(rule.test));
+  const scssRuleIndex = module.rules[2].oneOf.findIndex((rule) => '.scss'.match(rule.test));
 
   if (cssRuleIndex !== -1) {
     module.rules[2].oneOf[cssRuleIndex].use = ['to-string-loader', 'css-loader'];
@@ -57,20 +109,19 @@ const overrideModule = (module: any) => {
   });
 
   return module;
-};
+}
 
-const overrideOutput = (output: any, { filename, chunkFilename }: IOptions) => {
-  const { checkFilename, ...newOutput } = output;
-
+function overrideOutput(output: IOptions, { filename, chunkFilename }: Required<IOptions>) {
   return {
-    ...newOutput,
+    ...output,
     filename,
     chunkFilename,
   };
-};
+}
 
-const overrideOptimization = (optimization: any, env: string) => {
-  const newOptions = optimization.minimizer[0].options;
+function overrideOptimization(optimization: IOptimization, env: string) {
+  optimization.minimizer[0].options.sourceMap = env === 'development';
+
   const vendorSplitChunks = {
     cacheGroups: {
       vendor: {
@@ -82,17 +133,14 @@ const overrideOptimization = (optimization: any, env: string) => {
     },
   };
 
-  newOptions.sourceMap = env === 'development';
-  optimization.minimizer[0].options = newOptions;
-
   return {
     ...optimization,
     splitChunks: shouldUseVendor(env) ? vendorSplitChunks : false,
     runtimeChunk: false,
   };
-};
+}
 
-const overridePlugins = (plugins: any, env: string, options: IOptions) => {
+function overridePlugins(plugins: IPlugin[], env: string, options: IOptions) {
   plugins[0].options.inject = 'head';
 
   plugins.push(
@@ -111,20 +159,19 @@ const overridePlugins = (plugins: any, env: string, options: IOptions) => {
   );
 
   return plugins;
-};
+}
 
-const overrideResolve = (currentResolve: any) => {
+function overrideResolve(currentResolve: IResolve) {
   const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
-  const filteredPlugins = currentResolve.plugins.filter(
-    (plugin: any) => !(plugin instanceof ModuleScopePlugin),
+
+  currentResolve.plugins = currentResolve.plugins.filter(
+    (plugin) => !(plugin instanceof ModuleScopePlugin),
   );
 
-  currentResolve.plugins = filteredPlugins;
-
   return currentResolve;
-};
+}
 
-const copyBundleScript = async (env: string, { filename, chunkFilename }: IOptions) => {
+function copyBundleScript(env: string, { filename, chunkFilename }: IOptions) {
   if (env !== 'production') {
     return;
   }
@@ -138,9 +185,9 @@ const copyBundleScript = async (env: string, { filename, chunkFilename }: IOptio
       rimraf.sync(`build/${file}`);
     }
   });
-};
+}
 
-const shouldUseVendor = (env: string) => {
+function shouldUseVendor(env: string) {
   if (env !== 'production') {
     return false;
   }
@@ -154,4 +201,4 @@ const shouldUseVendor = (env: string) => {
   }
 
   return true;
-};
+}
