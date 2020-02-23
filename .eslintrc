@@ -52,6 +52,6 @@
     "linebreak-style": "off",
     "no-prototype-builtins": "off",
     "consistent-return": "off",
-    "max-len": ["Warning",{ "code": 120 }]
+    "max-len": ["warn",{ "code": 120 }]
   }
 }
