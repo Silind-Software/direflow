@@ -50,6 +50,8 @@
     "object-curly-newline": "off",
     "lines-between-class-members": "off",
     "linebreak-style": "off",
-    "no-prototype-builtins": "off"
+    "no-prototype-builtins": "off",
+    "consistent-return": "off",
+    "max-len": ["Warning",{ "code": 120 }]
   }
 }
