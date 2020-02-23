@@ -16,6 +16,16 @@ for (const directory of widgetsDirectory) {
   }
 }
 
+if (!fs.existsSync('cypress/test-setup')) {
+  return;
+}
+
+if (!fs.statSync('cypress/test-setup').isDirectory()) {
+  return;
+}
+
+cleanDeps('cypress/test-setup');
+
 function cleanDeps(dir) {
   console.log('Beginning to clean:', dir);
 

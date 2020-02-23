@@ -55,7 +55,7 @@ yarn setup-local
 ### Build
 After applying your changes, build the project using the command:
 ```console
-yarn build-link
+yarn build:full
 ```
 
 Now, test that the project is working by using the command:
@@ -82,3 +82,6 @@ yarn update-version <new-version>
 ### Create the PR
 Create a branch for your changes called 'feature/name-of-the-changes'.  
 Make a PR into the 'development' branch on the direflow repository.
+
+## Updating the docs
+If you introduced user-facing changes, please update the [direflow-docs](https://github.com/Silind-Software/direflow-docs) accordingly.
