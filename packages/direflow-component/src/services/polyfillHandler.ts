@@ -1,9 +1,4 @@
-type TWcPolyfillsLoaded = Array<{ script: Element; hasLoaded: boolean }>;
-declare global {
-  interface Window {
-    wcPolyfillsLoaded: TWcPolyfillsLoaded;
-  }
-}
+import asyncScriptLoader from './asyncScriptLoader';
 
 let didIncludeOnce = false;
 
@@ -22,30 +17,33 @@ const includePolyfills = async (
     return;
   }
 
-  const scriptsLists = [];
+  const scriptsList = [];
 
   if (options.usesShadow) {
-    scriptsLists.push(
-      loadScript(
+    scriptsList.push(
+      asyncScriptLoader(
         'https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.1/bundles/webcomponents-sd.js',
+        window.wcPolyfillsLoaded,
       ),
     );
   }
 
-  scriptsLists.push(
-    loadScript(
+  scriptsList.push(
+    asyncScriptLoader(
       'https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.1/bundles/webcomponents-ce.js',
+      window.wcPolyfillsLoaded,
     ),
   );
 
-  scriptsLists.push(
-    loadScript(
+  scriptsList.push(
+    asyncScriptLoader(
       'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.4.1/custom-elements-es5-adapter.js',
+      window.wcPolyfillsLoaded,
     ),
   );
 
   try {
-    await Promise.all(scriptsLists);
+    await Promise.all(scriptsList);
     didIncludeOnce = true;
   } catch (error) {
     console.error(error);
@@ -59,77 +57,39 @@ const includePolyfillsFromPlugin = async (plugin: IDireflowPlugin) => {
     return;
   }
 
-  const scriptsLists = [];
+  const scriptsList = [];
 
   if (plugin.options?.use.sd) {
-    const src = typeof plugin.options?.use.sd === 'string'
-      ? plugin.options?.use.sd
-      : 'https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.1/bundles/webcomponents-sd.js';
+    const src =
+      typeof plugin.options?.use.sd === 'string'
+        ? plugin.options?.use.sd
+        : 'https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.1/bundles/webcomponents-sd.js';
 
-    scriptsLists.push(loadScript(src));
+    scriptsList.push(asyncScriptLoader(src, window.wcPolyfillsLoaded));
   }
 
   if (plugin.options?.use.ce) {
-    const src = typeof plugin.options?.use.ce === 'string'
-      ? plugin.options?.use.ce
-      : 'https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.1/bundles/webcomponents-ce.js';
+    const src =
+      typeof plugin.options?.use.ce === 'string'
+        ? plugin.options?.use.ce
+        : 'https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.1/bundles/webcomponents-ce.js';
 
-    scriptsLists.push(loadScript(src));
+    scriptsList.push(asyncScriptLoader(src, window.wcPolyfillsLoaded));
   }
 
-  const adapterSrc = typeof plugin.options?.use.adapter === 'string'
-    ? plugin.options.use.adapter
-    : 'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.4.1/custom-elements-es5-adapter.js';
+  const adapterSrc =
+    typeof plugin.options?.use.adapter === 'string'
+      ? plugin.options.use.adapter
+      : 'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.4.1/custom-elements-es5-adapter.js';
 
-  scriptsLists.push(loadScript(adapterSrc));
+  scriptsList.push(asyncScriptLoader(adapterSrc, window.wcPolyfillsLoaded));
 
   try {
-    await Promise.all(scriptsLists);
+    await Promise.all(scriptsList);
     didIncludeOncePlugin = true;
   } catch (error) {
     console.error(error);
   }
-};
-
-const loadScript = (src: string): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = src;
-
-    if (!window.wcPolyfillsLoaded) {
-      window.wcPolyfillsLoaded = [];
-    }
-
-    const existingPolyfill = window.wcPolyfillsLoaded.find((loadedScript) => {
-      return loadedScript.script.isEqualNode(script);
-    });
-
-    if (existingPolyfill) {
-      if (existingPolyfill.hasLoaded) {
-        resolve();
-      }
-
-      existingPolyfill.script.addEventListener('load', () => resolve());
-      return;
-    }
-
-    const scriptEntry = {
-      script,
-      hasLoaded: false,
-    };
-
-    window.wcPolyfillsLoaded.push(scriptEntry);
-
-    script.addEventListener('load', () => {
-      scriptEntry.hasLoaded = true;
-      resolve();
-    });
-
-    script.addEventListener('error', () => reject(new Error('Polyfill failed to load')));
-
-    document.head.appendChild(script);
-  });
 };
 
 export default includePolyfills;

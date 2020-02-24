@@ -1,4 +1,5 @@
 import WebComponentFactory from './WebComponentFactory';
+import includePolyfills from './services/polyfillHandler';
 
 class DireflowComponent {
   private componentProperties: any | undefined;
@@ -39,7 +40,11 @@ class DireflowComponent {
         resolve(element);
       };
 
-      this.WebComponent = await new WebComponentFactory(
+      await Promise.all([
+        includePolyfills({ usesShadow: !!this.shadow }, this.plugins),
+      ]);
+
+      this.WebComponent = new WebComponentFactory(
         this.componentProperties || {},
         this.rootComponent,
         this.shadow,

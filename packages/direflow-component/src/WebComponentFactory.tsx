@@ -6,7 +6,6 @@ import createProxyRoot from './services/proxyRoot';
 import addStyledComponentStyles from './services/styledComponentsHandler';
 import includeExternalSources from './services/externalSourceHandler';
 import loadFonts from './services/fontLoaderHandler';
-import includePolyfills from './services/polyfillHandler';
 import includeGoogleIcons from './services/iconLoaderHandler';
 import { EventProvider } from './components/EventContext';
 
@@ -39,14 +38,8 @@ class WebComponentFactory {
   /**
    * Create new class that will serve as the Web Component.
    */
-  public async create() {
+  public create() {
     const factory = this;
-
-    /**
-     * Wait for Web Component polyfills to be included in the host application.
-     * Polyfill scripts are loaded async.
-     */
-    await includePolyfills({ usesShadow: !!factory.shadow }, this.plugins);
 
     return class WebComponent extends HTMLElement {
       public initialProperties = clonedeep(factory.componentProperties);
