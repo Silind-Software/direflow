@@ -10,7 +10,7 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "typeRoots": ["cli/types"]
+    "typeRoots": ["cli/types", "node_modules/@types"]
   },
   "exclude": [
     "node_modules",
