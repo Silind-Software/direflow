@@ -1,4 +1,4 @@
-export default interface INames {
+interface INames {
   title: string;
   pascal: string;
   snake: string;

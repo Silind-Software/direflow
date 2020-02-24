@@ -1,5 +1,4 @@
 import to from 'to-case';
-import INames from '../interfaces/INames';
 
 export const getNameFormats = (name: string): INames => {
   return {

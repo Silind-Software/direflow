@@ -1,4 +1,4 @@
-export default interface ITemplateOption {
+interface ITemplateOption {
   projectName: string;
   language: 'ts' | 'js';
 }
