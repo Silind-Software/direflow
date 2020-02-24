@@ -1,4 +1,3 @@
-import IDireflowConfig, { IDireflowPlugin } from './interfaces/IDireflowConfig';
 import WebComponentFactory from './WebComponentFactory';
 
 class DireflowComponent {
