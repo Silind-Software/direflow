@@ -2,7 +2,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import clonedeep from 'lodash.clonedeep';
-import { IDireflowPlugin } from './interfaces/IDireflowConfig';
 import createProxyRoot from './services/proxyRoot';
 import addStyledComponentStyles from './services/styledComponentsHandler';
 import includeExternalSources from './services/externalSourceHandler';
