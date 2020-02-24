@@ -33,8 +33,8 @@ const createProxyComponent = (options: IComponentOptions) => {
 
 const componentMap = new WeakMap<Element, React.FC<IShadowComponent>>();
 
-const createProxyRoot = (root: Element) => {
-  return new Proxy(
+const createProxyRoot = (root: Element): { [key in 'open' | 'closed']: React.FC<IShadowComponent> } => {
+  return new Proxy<any>(
     {},
     {
       get(_: unknown, name: 'open' | 'closed') {
