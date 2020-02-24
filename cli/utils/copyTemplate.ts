@@ -1,7 +1,6 @@
 import { resolve } from 'path';
 import ncp from 'ncp';
 import mkdirp from 'mkdirp';
-import ITemplateOption from '../interfaces/ITemplateOption';
 
 const copyTemplate = async (options: ITemplateOption): Promise<string> => {
   const currentDirectory = process.cwd();

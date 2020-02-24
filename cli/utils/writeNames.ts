@@ -1,9 +1,9 @@
 import fs from 'fs';
 import handelbars from 'handlebars';
 import path from 'path';
-import INames from '../interfaces/INames';
 
 const packageJson = require('../../package.json');
+
 const { version } = packageJson;
 
 interface IWriteNameOptions {

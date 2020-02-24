@@ -1,4 +1,3 @@
-import { IDireflowPlugin } from '../interfaces/IDireflowConfig';
 import { injectIntoShadowRoot, stripStyleFromHead } from './domControllers';
 
 let styles = '';

@@ -1,4 +1,3 @@
-import { IDireflowPlugin } from '../interfaces/IDireflowConfig';
 import { injectIntoShadowRoot, injectIntoHead } from './domControllers';
 
 const includeExternalSources = (element: HTMLElement, plugins: IDireflowPlugin[] | undefined) => {

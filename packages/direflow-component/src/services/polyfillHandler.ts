@@ -1,5 +1,3 @@
-import { IDireflowPlugin } from '../interfaces/IDireflowConfig';
-
 type TWcPolyfillsLoaded = Array<{ script: Element; hasLoaded: boolean }>;
 declare global {
   interface Window {
