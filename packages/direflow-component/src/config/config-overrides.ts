@@ -5,64 +5,6 @@ import fs from 'fs';
 import { resolve } from 'path';
 import { PromiseTask } from 'event-hooks-webpack-plugin/lib/tasks';
 
-interface IOptions {
-  filename?: string;
-  chunkFilename?: string;
-}
-
-interface IModule {
-  rules: {
-    oneOf: {
-      test: RegExp;
-      use: string[];
-    }[];
-  }[];
-}
-
-interface IOutput {
-  filename: string;
-  chunkFilename: string;
-}
-
-interface IOptimization {
-  minimizer: {
-    options: {
-      sourceMap: boolean;
-    };
-  }[];
-  runtimeChunk: boolean;
-  splitChunks: boolean | {
-    cacheGroups: {
-      vendor: {
-        test: RegExp;
-        chunks: string;
-        name: string;
-        enforce: boolean;
-      };
-    };
-  };
-}
-
-interface IPlugin {
-  options: {
-    inject: string;
-  };
-}
-
-interface IResolve {
-  plugins: unknown[];
-}
-
-type TConfig = {
-  [key: string]: unknown;
-  entry: string[];
-  module: IModule;
-  output: IOutput;
-  optimization: IOptimization;
-  plugins: IPlugin[];
-  resolve: IResolve;
-};
-
 export = function override(config: TConfig, env: string, options?: IOptions) {
   const filename = options?.filename || 'direflowBundle.js';
   const chunkFilename = options?.chunkFilename || 'vendor.js';
