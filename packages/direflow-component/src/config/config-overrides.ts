@@ -171,7 +171,7 @@ function overrideResolve(currentResolve: IResolve) {
   return currentResolve;
 }
 
-function copyBundleScript(env: string, { filename, chunkFilename }: IOptions) {
+async function copyBundleScript(env: string, { filename, chunkFilename }: IOptions) {
   if (env !== 'production') {
     return;
   }
