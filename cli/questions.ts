@@ -1,11 +1,8 @@
 import inquirer from 'inquirer';
 
-export const askCreateDireflowSetup = async (): Promise<IQuestionOption> => {
-  return createQuestions('Direflow Setup');
-};
-
-export const chooseLanguage = async (): Promise<ILanguageOption> => {
-  const questions = [
+export async function chooseLanguage(): Promise<ILanguageOption> {
+  console.log('');
+  return inquirer.prompt([
     {
       type: 'list',
       name: 'language',
@@ -21,20 +18,18 @@ export const chooseLanguage = async (): Promise<ILanguageOption> => {
         },
       ],
     },
-  ];
+  ]);
+}
 
-  console.log('');
-  return inquirer.prompt(questions);
-};
-
-export const chooseLinter = async (language: 'js' | 'ts'): Promise<{ linter: 'eslint' | 'tslint' }> => {
+export async function chooseLinter(language: 'js' | 'ts'): Promise<{ linter: 'eslint' | 'tslint' }> {
   if (language === 'js') {
     return {
       linter: 'eslint',
     };
   }
 
-  const questions = [
+  console.log('');
+  return inquirer.prompt([
     {
       type: 'list',
       name: 'linter',
@@ -50,18 +45,37 @@ export const chooseLinter = async (language: 'js' | 'ts'): Promise<{ linter: 'es
         },
       ],
     },
-  ];
+  ]);
+}
 
+export async function isNpmModule(): Promise<{ npmModule: boolean }> {
   console.log('');
-  return inquirer.prompt(questions);
-};
+  return inquirer.prompt([
+    {
+      type: 'list',
+      name: 'npmModule',
+      message: 'Do you want this to be an NPM module?',
+      choices: [
+        {
+          value: true,
+          name: 'yes',
+        },
+        {
+          value: false,
+          name: 'no',
+        },
+      ],
+    },
+  ]);
+}
 
-const createQuestions = (createName: string): Promise<IQuestionOption> => {
-  const questions = [
+export async function chooseName(): Promise<IQuestionOption> {
+  console.log('');
+  return inquirer.prompt([
     {
       type: 'input',
       name: 'name',
-      message: `Choose a name for your ${createName}:`,
+      message: `Choose a name for your Direflow Setup:`,
       validate: (value: string) => {
         const pass = /^[a-zA-Z0-9-_]+$/.test(value);
 
@@ -72,13 +86,16 @@ const createQuestions = (createName: string): Promise<IQuestionOption> => {
         return 'Please enter a valid name';
       },
     },
+  ]);
+}
+
+export async function chooseDescription(): Promise<IQuestionOption> {
+  console.log('');
+  return inquirer.prompt([
     {
       type: 'input',
       name: 'description',
-      message: `Give your ${createName} a description (optional)`,
+      message: `Give your Direflow Setup a description (optional)`,
     },
-  ];
-
-  console.log('');
-  return inquirer.prompt(questions);
-};
+  ]);
+}

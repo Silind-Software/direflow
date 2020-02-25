@@ -11,8 +11,8 @@ if (!arg) {
 
 const rootPackage = require('../../package.json');
 const componentPackage = require('../../packages/direflow-component/package.json');
-const componentPackageJs = require('../../templates/js/package.json');
 
+let componentPackageJs = fs.readFileSync('templates/js/package.json').toString();
 let componentPackageTs = fs.readFileSync('templates/ts/package.json').toString();
 
 const componentRegex = /"direflow-component": "(.*)"/g;
@@ -29,8 +29,8 @@ const updateLink = () => {
     componentPackage.version = `${componentPackage.version}-link`;
   }
 
-  const componentPath = path.join(currentDirectory, 'packages', 'direflow-component');
-  componentPackageJs.dependencies['direflow-component'] = componentPath;
+  const componentPath = path.join(currentDirectory, 'packages', 'direflow-component')
+  componentPackageJs = componentPackageJs.replace(componentRegex, componentReplace(componentPath));
   componentPackageTs = componentPackageTs.replace(componentRegex, componentReplace(componentPath));
 
   console.log('');
@@ -43,7 +43,7 @@ const updateVersion = (version) => {
   rootPackage.version = version;
   componentPackage.version = version;
 
-  componentPackageJs.dependencies['direflow-component'] = version;
+  componentPackageJs = componentPackageJs.replace(componentRegex, componentReplace(version));
   componentPackageTs = componentPackageTs.replace(componentRegex, componentReplace(version));
 
   console.log('');
@@ -54,16 +54,8 @@ const updateVersion = (version) => {
 
 const writeToFiles = () => {
   fs.writeFileSync('package.json', JSON.stringify(rootPackage, null, 2), 'utf-8');
-  fs.writeFileSync(
-    'packages/direflow-component/package.json',
-    JSON.stringify(componentPackage, null, 2),
-    'utf-8',
-  );
-  fs.writeFileSync(
-    'templates/js/package.json',
-    JSON.stringify(componentPackageJs, null, 2),
-    'utf-8',
-  );
+  fs.writeFileSync('packages/direflow-component/package.json', JSON.stringify(componentPackage, null, 2), 'utf-8');
+  fs.writeFileSync('templates/js/package.json', componentPackageJs, 'utf-8');
   fs.writeFileSync('templates/ts/package.json', componentPackageTs, 'utf-8');
 };
 
