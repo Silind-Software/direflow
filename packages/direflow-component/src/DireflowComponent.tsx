@@ -15,26 +15,33 @@ class DireflowComponent {
    * @param App React Component
    */
   public static create(componentConfig: IDireflowComponent): Promise<DireflowElement> {
-    const { plugins, component } = componentConfig;
+    const { component } = componentConfig;
+    const plugins = component.plugins || componentConfig.plugins;
+    const configuration = component.configuration || componentConfig.configuration;
 
-    const componentProperties = componentConfig?.properties || {};
-    const tagName = componentConfig.configuration.tagname || 'direflow-component';
-    const shadow = componentConfig.configuration.useShadow !== undefined
-      ? componentConfig.configuration.useShadow
-      : true;
+    if (!component) {
+      throw Error('Root component has not been set');
+    }
 
-    return new Promise(async (resolve, reject) => {
+    if (!configuration) {
+      throw Error('No configuration found');
+    }
+
+    const componentProperties = {
+      ...componentConfig?.properties,
+      ...component.properties,
+      ...component.defaultProps,
+    };
+
+    const tagName = configuration.tagname || 'direflow-component';
+    const shadow = configuration.useShadow !== undefined ? configuration.useShadow : true;
+
+    return new Promise(async (resolve) => {
       const callback = (element: HTMLElement) => {
         resolve(element as DireflowElement);
       };
 
-      if (!component) {
-        reject(new Error('Root Component has not been set'));
-      }
-
-      await Promise.all([
-        includePolyfills({ usesShadow: !!shadow }, plugins),
-      ]);
+      await Promise.all([includePolyfills({ usesShadow: !!shadow }, plugins)]);
 
       const WebComponent = new WebComponentFactory(
         componentProperties,

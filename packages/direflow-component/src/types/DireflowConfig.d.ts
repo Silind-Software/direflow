@@ -1,6 +1,6 @@
 interface IDireflowComponent {
-  component: React.FC<any> | React.ComponentClass<any, any>;
-  configuration: IDireflowConfig;
+  component: (React.FC<any> | React.ComponentClass<any, any>) & { [key: string]: any };
+  configuration?: IDireflowConfig;
   properties?: any;
   plugins?: IDireflowPlugin[];
 }
