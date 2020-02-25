@@ -23,6 +23,7 @@
     "event-hooks-webpack-plugin": "2.1.4",
     "lodash.clonedeep": "^4.5.0",
     "node-sass": "^4.13.0",
+    "handlebars": "^4.7.2",
     "rimraf": "3.0.0",
     "style-it": "2.1.4",
     "to-string-loader": "1.1.5",

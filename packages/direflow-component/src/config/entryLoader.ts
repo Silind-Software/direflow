@@ -24,19 +24,13 @@ const includeReact = async () => {
 
 const includeIndex = () => {
   try {
-    require('../../../../src/index.js');
+    require('{{pathIndex}}');
   } catch (error) {
-    // Ignore if file doens't exits
-  }
-
-  try {
-    require('../../../../src/index.tsx');
-  } catch (error) {
-    // Ignore if file doens't exits
+    console.warn('No index-file was found. Did you move the index-file from src?');
   }
 };
 
-(async () => {
+setTimeout(async () => {
   if (window.React && window.ReactDOM) {
     includeIndex();
     return;
@@ -44,14 +38,26 @@ const includeIndex = () => {
 
   await includeReact();
 
-  await new Promise((resolve) => {
-    const interval = setInterval(() => {
-      if (window.React && window.ReactDOM) {
-        clearInterval(interval);
-        resolve();
-      }
-    });
-  });
+  try {
+    await new Promise((resolve, reject) => {
+      let intervalCounts = 0;
 
-  includeIndex();
-})();
+      const interval = setInterval(() => {
+        if (intervalCounts >= 2500) {
+          reject(new Error('Direflow Error: React & ReactDOM was unable to load'));
+        }
+
+        if (window.React && window.ReactDOM) {
+          clearInterval(interval);
+          resolve();
+        }
+
+        intervalCounts += 1;
+      });
+    });
+
+    includeIndex();
+  } catch (error) {
+    console.error(error.message);
+  }
+});

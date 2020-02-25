@@ -12,7 +12,7 @@ import { EventProvider } from './components/EventContext';
 class WebComponentFactory {
   constructor(
     private componentProperties: { [key: string]: unknown },
-    private rootComponent: React.FC | React.ComponentClass,
+    private rootComponent: React.FC<any> | React.ComponentClass<any, any>,
     private shadow?: boolean,
     private plugins?: IDireflowPlugin[],
     private connectCallback?: (element: HTMLElement) => void,

@@ -1,6 +1,7 @@
 import EventHooksPlugin from 'event-hooks-webpack-plugin';
 import FilterWarningsPlugin from 'webpack-filter-warnings-plugin';
 import rimraf from 'rimraf';
+import handlebars from 'handlebars';
 import fs from 'fs';
 import { resolve } from 'path';
 import { PromiseTask } from 'event-hooks-webpack-plugin/lib/tasks';
@@ -30,6 +31,12 @@ function addEntries(config: TConfig, env: string) {
   }
 
   if (env === 'production') {
+    const [pathIndex] = config.entry;
+    const entryLoaderFile = fs.readFileSync(resolve(__dirname, './dist/config/entryLoader.js'), 'utf8');
+    const entryLoaderTemplate = handlebars.compile(entryLoaderFile);
+    const entryLoaderFileNew = entryLoaderTemplate({ pathIndex });
+    fs.writeFileSync(resolve(__dirname, './dist/config/entryLoader.js'), entryLoaderFileNew);
+
     entry = [resolve(__dirname, './dist/config/entryLoader.js')];
   }
 
