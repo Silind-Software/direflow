@@ -3,8 +3,8 @@ import { EventContext, Styled } from 'direflow-component';
 import styles from './App.css';
 
 interface IProps {
-  sampleList: string[];
   componentTitle: string;
+  sampleList: string[];
 }
 
 const App: FC<IProps> = (props) => {

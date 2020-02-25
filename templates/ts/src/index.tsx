@@ -1,8 +1,6 @@
 import { DireflowComponent } from 'direflow-component';
 import App from './direflow-component/App';
 
-const direflowComponent = new DireflowComponent();
-
 const direflowProperties = {
   componentTitle: '{{names.title}}',
   sampleList: [
@@ -23,11 +21,13 @@ const direflowPlugins = [
   },
 ];
 
-direflowComponent.configure({
-  name: '{{names.snake}}',
-  useShadow: true,
+const direflowConfiguration = {
+  tagname: '{{names.snake}}',
+}
+
+DireflowComponent.create({
+  component: App,
+  configuration: direflowConfiguration,
   properties: direflowProperties,
   plugins: direflowPlugins,
 });
-
-direflowComponent.create(App);

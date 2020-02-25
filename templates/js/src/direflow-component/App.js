@@ -36,8 +36,8 @@ const App = (props) => {
 };
 
 App.propTypes = {
-  sampleList: PropTypes.array,
   componentTitle: PropTypes.string,
+  sampleList: PropTypes.array,
 };
 
 export default App;

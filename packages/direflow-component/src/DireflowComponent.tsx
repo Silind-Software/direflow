@@ -2,66 +2,50 @@ import WebComponentFactory from './WebComponentFactory';
 import includePolyfills from './services/polyfillHandler';
 
 class DireflowComponent {
-  private componentProperties?: { [key: string]: unknown };
-  private rootComponent?: React.FC<any> | React.ComponentClass<any, any>;
-  private WebComponent?: typeof HTMLElement;
-  private elementName?: string;
-  private plugins?: IDireflowPlugin[];
-  private shadow = true;
-
   /**
-   * Configure Direflow Component
-   * @param config direflow configuration
+   * Create muliple Direflow Components
+   * @param App React Component
    */
-  public configure(config: IDireflowConfig) {
-    this.componentProperties = config.properties;
-    this.shadow = config.useShadow;
-    this.elementName = config.name;
-    this.plugins = config.plugins;
+  public static createAll(componentConfigs: IDireflowComponent[]): Array<Promise<DireflowElement>> {
+    return componentConfigs.map(DireflowComponent.create);
   }
 
   /**
    * Create Direflow Component
    * @param App React Component
    */
-  public create(App: React.FC<any> | React.ComponentClass<any, any>): Promise<HTMLElement> {
+  public static create(componentConfig: IDireflowComponent): Promise<DireflowElement> {
+    const { plugins, component } = componentConfig;
+
+    const componentProperties = componentConfig?.properties || {};
+    const tagName = componentConfig.configuration.tagname || 'direflow-component';
+    const shadow = componentConfig.configuration.useShadow !== undefined
+      ? componentConfig.configuration.useShadow
+      : true;
+
     return new Promise(async (resolve, reject) => {
-      this.rootComponent = App;
-
-      try {
-        this.validateDependencies();
-      } catch (error) {
-        reject(error);
-      }
-
       const callback = (element: HTMLElement) => {
-        resolve(element);
+        resolve(element as DireflowElement);
       };
 
+      if (!component) {
+        reject(new Error('Root Component has not been set'));
+      }
+
       await Promise.all([
-        includePolyfills({ usesShadow: !!this.shadow }, this.plugins),
+        includePolyfills({ usesShadow: !!shadow }, plugins),
       ]);
 
-      this.WebComponent = new WebComponentFactory(
-        this.componentProperties || {},
-        this.rootComponent,
-        this.shadow,
-        this.plugins,
+      const WebComponent = new WebComponentFactory(
+        componentProperties,
+        component,
+        shadow,
+        plugins,
         callback,
       ).create();
 
-      customElements.define(this.elementName || '', this.WebComponent);
+      customElements.define(tagName || '', WebComponent);
     });
-  }
-
-  private validateDependencies() {
-    if (!this.rootComponent) {
-      throw Error('Cannot define custom element: Root Component have not been set.');
-    }
-
-    if (!this.elementName) {
-      throw Error('Cannot define custom element: Element name has not been set.');
-    }
   }
 }
 
