@@ -1,18 +1,18 @@
 import WebComponentFactory from './WebComponentFactory';
 
 class DireflowComponent {
-  private componentProperties: any | undefined;
-  private rootComponent: React.FC<any> | React.ComponentClass<any, any> | undefined;
-  private WebComponent: any | undefined;
+  private componentProperties?: { [key: string]: unknown };
+  private rootComponent?: React.FC | React.ComponentClass;
+  private WebComponent?: typeof HTMLElement;
+  private elementName?: string;
+  private plugins?: IDireflowPlugin[];
   private shadow = true;
-  private elementName: string | undefined;
-  private plugins: IDireflowPlugin[] | undefined;
 
   /**
    * Configure Direflow Component
    * @param config direflow configuration
    */
-  public configure(config: IDireflowConfig): void {
+  public configure(config: IDireflowConfig) {
     this.componentProperties = config.properties;
     this.shadow = config.useShadow;
     this.elementName = config.name;
@@ -23,9 +23,7 @@ class DireflowComponent {
    * Create Direflow Component
    * @param App React Component
    */
-  public create(
-    App: React.FC<any> | React.ComponentClass<any, any>,
-  ): Promise<HTMLElement> {
+  public create(App: React.FC | React.ComponentClass): Promise<HTMLElement> {
     return new Promise(async (resolve, reject) => {
       this.rootComponent = App;
 
@@ -51,7 +49,7 @@ class DireflowComponent {
     });
   }
 
-  private validateDependencies(): void {
+  private validateDependencies() {
     if (!this.rootComponent) {
       throw Error('Cannot define custom element: Root Component have not been set.');
     }
