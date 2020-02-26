@@ -54,4 +54,5 @@ type TConfig = {
   optimization: IOptimization;
   plugins: IPlugin[];
   resolve: IResolve;
+  externals: { [key: string]: any };
 };

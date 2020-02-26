@@ -1,8 +1,9 @@
 import WebComponentFactory from './WebComponentFactory';
+import includePolyfills from './services/polyfillHandler';
 
 class DireflowComponent {
   private componentProperties?: { [key: string]: unknown };
-  private rootComponent?: React.FC | React.ComponentClass;
+  private rootComponent?: React.FC<any> | React.ComponentClass<any, any>;
   private WebComponent?: typeof HTMLElement;
   private elementName?: string;
   private plugins?: IDireflowPlugin[];
@@ -23,7 +24,7 @@ class DireflowComponent {
    * Create Direflow Component
    * @param App React Component
    */
-  public create(App: React.FC | React.ComponentClass): Promise<HTMLElement> {
+  public create(App: React.FC<any> | React.ComponentClass<any, any>): Promise<HTMLElement> {
     return new Promise(async (resolve, reject) => {
       this.rootComponent = App;
 
@@ -37,7 +38,11 @@ class DireflowComponent {
         resolve(element);
       };
 
-      this.WebComponent = await new WebComponentFactory(
+      await Promise.all([
+        includePolyfills({ usesShadow: !!this.shadow }, this.plugins),
+      ]);
+
+      this.WebComponent = new WebComponentFactory(
         this.componentProperties || {},
         this.rootComponent,
         this.shadow,

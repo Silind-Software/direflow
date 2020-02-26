@@ -1,6 +1,7 @@
 import EventHooksPlugin from 'event-hooks-webpack-plugin';
 import FilterWarningsPlugin from 'webpack-filter-warnings-plugin';
 import rimraf from 'rimraf';
+import handlebars from 'handlebars';
 import fs from 'fs';
 import { resolve } from 'path';
 import { PromiseTask } from 'event-hooks-webpack-plugin/lib/tasks';
@@ -10,24 +11,35 @@ export = function override(config: TConfig, env: string, options?: IOptions) {
   const chunkFilename = options?.chunkFilename || 'vendor.js';
 
   const overridenConfig = {
-    ...addWelcomeMessage(config, env),
+    ...addEntries(config, env),
     module: overrideModule(config.module),
     output: overrideOutput(config.output, { filename, chunkFilename }),
     optimization: overrideOptimization(config.optimization, env),
     resolve: overrideResolve(config.resolve),
     plugins: overridePlugins(config.plugins, env, { filename, chunkFilename }),
+    externals: overrideExternals(config.externals, env),
   };
 
   return overridenConfig;
 };
 
-function addWelcomeMessage(config: TConfig, env: string) {
-  if (env === 'production') {
-    return config;
+function addEntries(config: TConfig, env: string) {
+  let entry: string[] = [];
+
+  if (env === 'development') {
+    entry = [...config.entry, resolve(__dirname, './dist/config/welcome.js')];
   }
 
-  const entry = [...config.entry];
-  entry.push(resolve(__dirname, './dist/config/welcome.js'));
+  if (env === 'production') {
+    const [pathIndex] = config.entry;
+    const entryLoaderFile = fs.readFileSync(resolve(__dirname, './dist/config/entryLoader.js'), 'utf8');
+    const entryLoaderTemplate = handlebars.compile(entryLoaderFile);
+    const entryLoaderFileNew = entryLoaderTemplate({ pathIndex });
+    fs.writeFileSync(resolve(__dirname, './dist/config/entryLoader.js'), entryLoaderFileNew);
+
+    entry = [resolve(__dirname, './dist/config/entryLoader.js')];
+  }
+
   config.entry = entry;
 
   return config;
@@ -111,6 +123,18 @@ function overrideResolve(currentResolve: IResolve) {
   );
 
   return currentResolve;
+}
+
+function overrideExternals(externals: { [key: string]: any }, env: string) {
+  if (env === 'development') {
+    return externals;
+  }
+
+  return {
+    ...externals,
+    react: 'React',
+    'react-dom': 'ReactDOM',
+  };
 }
 
 async function copyBundleScript(env: string, { filename, chunkFilename }: IOptions) {
