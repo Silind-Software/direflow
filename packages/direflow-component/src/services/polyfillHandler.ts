@@ -1,4 +1,12 @@
 import asyncScriptLoader from './asyncScriptLoader';
+import { IDireflowPlugin } from '../types/DireflowConfig';
+
+type TWcPolyfillsLoaded = Array<{ script: Element; hasLoaded: boolean }>;
+declare global {
+  interface Window {
+    wcPolyfillsLoaded: TWcPolyfillsLoaded;
+  }
+}
 
 let didIncludeOnce = false;
 

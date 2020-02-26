@@ -1,4 +1,6 @@
 import inquirer from 'inquirer';
+import { IQuestionOption } from './types/QuestionOption';
+import { ILanguageOption } from './types/LangageOption';
 
 export const askCreateDireflowSetup = async (): Promise<IQuestionOption> => {
   return createQuestions('Direflow Setup');
