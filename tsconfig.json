@@ -9,8 +9,7 @@
     "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "skipLibCheck": true,
-    "typeRoots": ["cli/types", "node_modules/@types"]
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules",

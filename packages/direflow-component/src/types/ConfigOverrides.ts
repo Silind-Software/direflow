@@ -1,9 +1,9 @@
-interface IOptions {
+export interface IOptions {
   filename?: string;
   chunkFilename?: string;
 }
 
-interface IModule {
+export interface IModule {
   rules: {
     oneOf: {
       test: RegExp;
@@ -12,12 +12,12 @@ interface IModule {
   }[];
 }
 
-interface IOutput {
+export interface IOutput {
   filename: string;
   chunkFilename: string;
 }
 
-interface IOptimization {
+export interface IOptimization {
   minimizer: {
     options: {
       sourceMap: boolean;
@@ -36,17 +36,17 @@ interface IOptimization {
   };
 }
 
-interface IPlugin {
+export interface IPlugin {
   options: {
     inject: string;
   };
 }
 
-interface IResolve {
+export interface IResolve {
   plugins: unknown[];
 }
 
-type TConfig = {
+export type TConfig = {
   [key: string]: unknown;
   entry: string[];
   module: IModule;
@@ -54,4 +54,5 @@ type TConfig = {
   optimization: IOptimization;
   plugins: IPlugin[];
   resolve: IResolve;
+  externals: { [key: string]: any };
 };

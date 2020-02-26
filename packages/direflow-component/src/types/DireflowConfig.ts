@@ -1,11 +1,11 @@
-interface IDireflowConfig {
+export interface IDireflowConfig {
   name: string;
   useShadow: boolean;
   properties?: any;
   plugins?: IDireflowPlugin[];
 }
 
-interface IDireflowPlugin {
+export interface IDireflowPlugin {
   name: string;
   options?: any;
 }
