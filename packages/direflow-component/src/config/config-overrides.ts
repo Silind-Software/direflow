@@ -125,7 +125,7 @@ function overrideResolve(currentResolve: IResolve) {
   return currentResolve;
 }
 
-function overrideExternals(externals: any, env: string) {
+function overrideExternals(externals: { [key: string]: any }, env: string) {
   if (env === 'development') {
     return externals;
   }
