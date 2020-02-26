@@ -1,4 +1,5 @@
 import { injectIntoShadowRoot } from './domControllers';
+import { IDireflowPlugin } from '../types/DireflowConfig';
 
 const includeGoogleIcons = (element: HTMLElement, plugins: IDireflowPlugin[] | undefined) => {
   const iconLoaderPlugin = plugins?.find((plugin) => plugin.name === 'icon-loader');

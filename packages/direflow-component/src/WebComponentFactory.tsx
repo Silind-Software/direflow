@@ -8,6 +8,7 @@ import includeExternalSources from './services/externalSourceHandler';
 import loadFonts from './services/fontLoaderHandler';
 import includeGoogleIcons from './services/iconLoaderHandler';
 import { EventProvider } from './components/EventContext';
+import { IDireflowPlugin } from './types/DireflowConfig';
 
 class WebComponentFactory {
   constructor(
