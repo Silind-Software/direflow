@@ -5,6 +5,7 @@ import handlebars from 'handlebars';
 import fs from 'fs';
 import { resolve } from 'path';
 import { PromiseTask } from 'event-hooks-webpack-plugin/lib/tasks';
+import { TConfig, IOptions, IModule, IOptimization, IPlugin, IResolve } from '../types/ConfigOverrides';
 
 export = function override(config: TConfig, env: string, options?: IOptions) {
   const filename = options?.filename || 'direflowBundle.js';
@@ -125,7 +126,7 @@ function overrideResolve(currentResolve: IResolve) {
   return currentResolve;
 }
 
-function overrideExternals(externals: any, env: string) {
+function overrideExternals(externals: { [key: string]: any }, env: string) {
   if (env === 'development') {
     return externals;
   }

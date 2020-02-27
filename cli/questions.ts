@@ -1,4 +1,6 @@
 import inquirer from 'inquirer';
+import { IQuestionOption } from './types/QuestionOption';
+import { ILanguageOption } from './types/LangageOption';
 
 export async function chooseLanguage(): Promise<ILanguageOption> {
   console.log('');
