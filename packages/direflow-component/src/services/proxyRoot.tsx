@@ -16,7 +16,7 @@ interface IComponentOptions {
 }
 
 const ShadowContent: FC<IShadowContent> = (props) => {
-  const root = props.root as any;
+  const root = props.root as unknown as Element;
   return createPortal(props.children, root);
 };
 
@@ -33,11 +33,11 @@ const createProxyComponent = (options: IComponentOptions) => {
 
 const componentMap = new WeakMap<Element, React.FC<IShadowComponent>>();
 
-const createProxyRoot = (root: Element) => {
+const createProxyRoot = (root: Element): { [key in 'open' | 'closed']: React.FC<IShadowComponent> } => {
   return new Proxy<any>(
     {},
     {
-      get(_: unknown, name: 'open' | 'closed'): any {
+      get(_: unknown, name: 'open' | 'closed') {
         if (componentMap.get(root)) {
           return componentMap.get(root);
         }

@@ -1,5 +1,5 @@
-import { IDireflowPlugin } from '../interfaces/IDireflowConfig';
 import { injectIntoShadowRoot, injectIntoHead } from './domControllers';
+import { IDireflowPlugin } from '../types/DireflowConfig';
 
 const includeExternalSources = (element: HTMLElement, plugins: IDireflowPlugin[] | undefined) => {
   const externalLoaderPlugin = plugins?.find((plugin) => plugin.name === 'external-loader');

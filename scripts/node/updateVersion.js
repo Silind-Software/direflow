@@ -9,9 +9,9 @@ if (!arg) {
   return;
 }
 
-const rootPackage = require('../package.json');
-const componentPackage = require('../packages/direflow-component/package.json');
-const componentPackageJs = require('../templates/js/package.json');
+const rootPackage = require('../../package.json');
+const componentPackage = require('../../packages/direflow-component/package.json');
+const componentPackageJs = require('../../templates/js/package.json');
 
 let componentPackageTs = fs.readFileSync('templates/ts/package.json').toString();
 

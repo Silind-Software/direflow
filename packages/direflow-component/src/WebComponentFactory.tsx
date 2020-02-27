@@ -1,46 +1,32 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-classes-per-file */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import clonedeep from 'lodash.clonedeep';
-import { IDireflowPlugin } from './interfaces/IDireflowConfig';
 import createProxyRoot from './services/proxyRoot';
 import addStyledComponentStyles from './services/styledComponentsHandler';
 import includeExternalSources from './services/externalSourceHandler';
 import loadFonts from './services/fontLoaderHandler';
-import includePolyfills from './services/polyfillHandler';
 import includeGoogleIcons from './services/iconLoaderHandler';
 import { EventProvider } from './components/EventContext';
+import { IDireflowPlugin } from './types/DireflowConfig';
 
 class WebComponentFactory {
-  private componentAttributes: any;
-  private componentProperties: any;
-  private rootComponent: React.FC<any> | React.ComponentClass<any, any>;
-  private shadow: boolean | undefined;
-  private plugins: IDireflowPlugin[] | undefined;
-  private connectCallback: (element: HTMLElement) => void;
-
   constructor(
-    properties: any,
-    component: React.FC<any> | React.ComponentClass<any, any>,
-    shadowOption: boolean,
-    plugins: IDireflowPlugin[] | undefined,
-    connectCallback: (element: HTMLElement) => void,
+    private componentProperties: { [key: string]: unknown },
+    private rootComponent: React.FC<any> | React.ComponentClass<any, any>,
+    private shadow?: boolean,
+    private plugins?: IDireflowPlugin[],
+    private connectCallback?: (element: HTMLElement) => void,
   ) {
-    this.componentAttributes = {};
-    this.componentProperties = properties;
-    this.rootComponent = component;
-    this.shadow = shadowOption;
-    this.plugins = plugins;
-    this.connectCallback = connectCallback;
-
     this.reflectPropertiesToAttributes();
   }
+
+  private componentAttributes: { [key: string]: unknown } = {};
 
   /**
    * All properties with primitive values are added to attributes.
    */
-  private reflectPropertiesToAttributes(): void {
+  private reflectPropertiesToAttributes() {
     Object.entries(this.componentProperties).forEach(([key, value]) => {
       if (typeof value !== 'number' && typeof value !== 'string' && typeof value !== 'boolean') {
         return;
@@ -53,18 +39,12 @@ class WebComponentFactory {
   /**
    * Create new class that will serve as the Web Component.
    */
-  public async create(): Promise<any> {
+  public create() {
     const factory = this;
 
-    /**
-     * Wait for Web Component polyfills to be included in the host application.
-     * Polyfill scripts are loaded async.
-     */
-    await includePolyfills({ usesShadow: !!factory.shadow }, this.plugins);
-
     return class WebComponent extends HTMLElement {
-      private initialProperties = clonedeep<{ [key: string]: any }>(factory.componentProperties);
-      private properties: { [key: string]: any } = {};
+      public initialProperties = clonedeep(factory.componentProperties);
+      public properties: { [key: string]: unknown } = {};
 
       constructor() {
         super();
@@ -76,18 +56,18 @@ class WebComponentFactory {
        * Observe attributes for changes.
        * Part of the Web Component Standard.
        */
-      public static get observedAttributes(): string[] {
+      public static get observedAttributes() {
         return Object.keys(factory.componentAttributes).map((k) => k.toLowerCase());
       }
 
       /**
        * Web Component gets mounted on the DOM.
        */
-      public connectedCallback(): void {
+      public connectedCallback() {
         this.preparePlugins();
         this.mountReactApp({ initial: true });
 
-        factory.connectCallback(this);
+        factory.connectCallback?.(this);
       }
 
       /**
@@ -96,7 +76,7 @@ class WebComponentFactory {
        * @param oldValue value before change
        * @param newValue value after change
        */
-      public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
+      public attributeChangedCallback(name: string, oldValue: string, newValue: string) {
         if (oldValue === newValue) {
           return;
         }
@@ -110,7 +90,7 @@ class WebComponentFactory {
        * @param oldValue value before change
        * @param newValue value after change
        */
-      public propertyChangedCallback(name: string, oldValue: any, newValue: any): void {
+      public propertyChangedCallback(name: string, oldValue: unknown, newValue: unknown) {
         if (oldValue === newValue) {
           return;
         }
@@ -122,7 +102,7 @@ class WebComponentFactory {
       /**
        * Web Component gets unmounted from the DOM.
        */
-      public disconnectedCallback(): void {
+      public disconnectedCallback() {
         ReactDOM.unmountComponentAtNode(this);
       }
 
@@ -131,14 +111,14 @@ class WebComponentFactory {
        * Here we ensure that the 'propertyChangedCallback' will get invoked
        * when a property changes.
        */
-      private subscribeToProperties(): void {
+      public subscribeToProperties() {
         const propertyMap = {} as PropertyDescriptorMap;
         Object.keys(this.initialProperties).forEach((key: string) => {
           propertyMap[key] = {
             configurable: true,
             enumerable: true,
 
-            get: (): any => {
+            get: (): unknown => {
               const currentValue = this.properties.hasOwnProperty(key)
                 ? this.properties[key]
                 : this.initialProperties[key];
@@ -146,7 +126,7 @@ class WebComponentFactory {
               return currentValue;
             },
 
-            set: (newValue: any): any => {
+            set: (newValue: unknown) => {
               const oldValue = this.properties.hasOwnProperty(key)
                 ? this.properties[key]
                 : this.initialProperties[key];
@@ -162,7 +142,7 @@ class WebComponentFactory {
       /**
        * Syncronize all properties and attributes
        */
-      private syncronizePropertiesAndAttributes(): void {
+      public syncronizePropertiesAndAttributes() {
         Object.keys(this.initialProperties).forEach((key: string) => {
           if (this.properties.hasOwnProperty(key)) {
             return;
@@ -180,7 +160,7 @@ class WebComponentFactory {
       /**
        * Transfer initial properties from the custom element.
        */
-      private transferInitialProperties(): void {
+      public transferInitialProperties() {
         Object.keys(this.initialProperties).forEach((key: string) => {
           if (this.hasOwnProperty(key)) {
             this.properties[key] = this[key as keyof WebComponent];
@@ -191,7 +171,7 @@ class WebComponentFactory {
       /**
        * Fetch and prepare all plugins.
        */
-      private preparePlugins(): void {
+      public preparePlugins() {
         loadFonts(factory.plugins);
         includeGoogleIcons(this, factory.plugins);
         includeExternalSources(this, factory.plugins);
@@ -201,7 +181,7 @@ class WebComponentFactory {
       /**
        * Generate react props based on properties and attributes.
        */
-      private reactProps(): { [key: string]: any } {
+      public reactProps(): { [key: string]: unknown } {
         this.syncronizePropertiesAndAttributes();
         return this.properties;
       }
@@ -209,7 +189,7 @@ class WebComponentFactory {
       /**
        * Mount React App onto the Web Component
        */
-      private mountReactApp(options?: { initial: boolean }): void {
+      public mountReactApp(options?: { initial: boolean }) {
         const application = (
           <EventProvider value={this.eventDispatcher}>
             {React.createElement(factory.rootComponent, this.reactProps())}
@@ -238,7 +218,7 @@ class WebComponentFactory {
       /**
        * Dispatch an event from the Web Component
        */
-      private eventDispatcher = (event: Event) => {
+      public eventDispatcher = (event: Event) => {
         this.dispatchEvent(event);
       };
     };

@@ -1,5 +1,5 @@
-import { IDireflowPlugin } from '../interfaces/IDireflowConfig';
 import { injectIntoShadowRoot, stripStyleFromHead } from './domControllers';
+import { IDireflowPlugin } from '../types/DireflowConfig';
 
 let styles = '';
 

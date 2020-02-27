@@ -1,4 +1,4 @@
-export default interface IDireflowConfig {
+export interface IDireflowConfig {
   name: string;
   useShadow: boolean;
   properties?: any;

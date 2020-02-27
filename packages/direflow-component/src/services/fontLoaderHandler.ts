@@ -1,5 +1,5 @@
 import WebFont from 'webfontloader';
-import { IDireflowPlugin } from '../interfaces/IDireflowConfig';
+import { IDireflowPlugin } from '../types/DireflowConfig';
 
 const loadFonts = (plugins: IDireflowPlugin[] | undefined) => {
   const fontLoaderPlugin = plugins?.find((plugin) => plugin.name === 'font-loader');

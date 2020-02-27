@@ -19,6 +19,18 @@ async function installAll() {
   }
 }
 
+function installTestSetup() {
+  if (!fs.existsSync('cypress/test-setup')) {
+    return;
+  }
+
+  if (!fs.statSync('cypress/test-setup').isDirectory()) {
+    return;
+  }
+
+  install('cypress/test-setup');
+}
+
 function install(dir) {
   return new Promise(async (resolve, reject) => {
     console.log('Beginning to install: ', dir);
@@ -58,4 +70,8 @@ function install(dir) {
   });
 }
 
-installAll();
+if (process.argv[2] === '--test-setup') {
+  installTestSetup();
+} else {
+  installAll();
+}

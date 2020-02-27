@@ -8,7 +8,7 @@ const checkForUpdates = () => {
   const currentVersion = buffer.toString('utf8');
 
   if (rootPackage.version.trim() !== currentVersion.trim()) {
-    return chalk.grey(updateAvailable(rootPackage.version.trim(), currentVersion.trim()));
+    return chalk.white(updateAvailable(rootPackage.version.trim(), currentVersion.trim()));
   }
 
   return '';

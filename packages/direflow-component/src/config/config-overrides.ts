@@ -1,47 +1,54 @@
 import EventHooksPlugin from 'event-hooks-webpack-plugin';
 import FilterWarningsPlugin from 'webpack-filter-warnings-plugin';
 import rimraf from 'rimraf';
+import handlebars from 'handlebars';
 import fs from 'fs';
 import { resolve } from 'path';
 import { PromiseTask } from 'event-hooks-webpack-plugin/lib/tasks';
+import { TConfig, IOptions, IModule, IOptimization, IPlugin, IResolve } from '../types/ConfigOverrides';
 
-interface IOptions {
-  filename?: string;
-  chunkFilename?: string;
-}
-
-export = function override(config: any, env: string, options?: IOptions): any {
+export = function override(config: TConfig, env: string, options?: IOptions) {
   const filename = options?.filename || 'direflowBundle.js';
   const chunkFilename = options?.chunkFilename || 'vendor.js';
 
   const overridenConfig = {
-    ...addWelcomeMessage(config, env),
+    ...addEntries(config, env),
     module: overrideModule(config.module),
     output: overrideOutput(config.output, { filename, chunkFilename }),
     optimization: overrideOptimization(config.optimization, env),
     resolve: overrideResolve(config.resolve),
     plugins: overridePlugins(config.plugins, env, { filename, chunkFilename }),
+    externals: overrideExternals(config.externals, env),
   };
 
   return overridenConfig;
 };
 
-const addWelcomeMessage = (config: any, env: string) => {
-  if (env === 'production') {
-    return config;
+function addEntries(config: TConfig, env: string) {
+  let entry: string[] = [];
+
+  if (env === 'development') {
+    entry = [...config.entry, resolve(__dirname, './dist/config/welcome.js')];
   }
 
-  const entry = [...config.entry];
-  entry.push(resolve(__dirname, './dist/config/welcome.js'));
+  if (env === 'production') {
+    const [pathIndex] = config.entry;
+    const entryLoaderFile = fs.readFileSync(resolve(__dirname, './dist/config/entryLoader.js'), 'utf8');
+    const entryLoaderTemplate = handlebars.compile(entryLoaderFile);
+    const entryLoaderFileNew = entryLoaderTemplate({ pathIndex });
+    fs.writeFileSync(resolve(__dirname, './dist/config/entryLoader.js'), entryLoaderFileNew);
+
+    entry = [resolve(__dirname, './dist/config/entryLoader.js')];
+  }
 
   config.entry = entry;
 
   return config;
-};
+}
 
-const overrideModule = (module: any) => {
-  const cssRuleIndex = module.rules[2].oneOf.findIndex((rule: any) => '.css'.match(rule.test));
-  const scssRuleIndex = module.rules[2].oneOf.findIndex((rule: any) => '.scss'.match(rule.test));
+function overrideModule(module: IModule) {
+  const cssRuleIndex = module.rules[2].oneOf.findIndex((rule) => '.css'.match(rule.test));
+  const scssRuleIndex = module.rules[2].oneOf.findIndex((rule) => '.scss'.match(rule.test));
 
   if (cssRuleIndex !== -1) {
     module.rules[2].oneOf[cssRuleIndex].use = ['to-string-loader', 'css-loader'];
@@ -57,20 +64,19 @@ const overrideModule = (module: any) => {
   });
 
   return module;
-};
+}
 
-const overrideOutput = (output: any, { filename, chunkFilename }: IOptions) => {
-  const { checkFilename, ...newOutput } = output;
-
+function overrideOutput(output: IOptions, { filename, chunkFilename }: Required<IOptions>) {
   return {
-    ...newOutput,
+    ...output,
     filename,
     chunkFilename,
   };
-};
+}
 
-const overrideOptimization = (optimization: any, env: string) => {
-  const newOptions = optimization.minimizer[0].options;
+function overrideOptimization(optimization: IOptimization, env: string) {
+  optimization.minimizer[0].options.sourceMap = env === 'development';
+
   const vendorSplitChunks = {
     cacheGroups: {
       vendor: {
@@ -82,17 +88,14 @@ const overrideOptimization = (optimization: any, env: string) => {
     },
   };
 
-  newOptions.sourceMap = env === 'development';
-  optimization.minimizer[0].options = newOptions;
-
   return {
     ...optimization,
     splitChunks: shouldUseVendor(env) ? vendorSplitChunks : false,
     runtimeChunk: false,
   };
-};
+}
 
-const overridePlugins = (plugins: any, env: string, options: IOptions) => {
+function overridePlugins(plugins: IPlugin[], env: string, options: IOptions) {
   plugins[0].options.inject = 'head';
 
   plugins.push(
@@ -111,20 +114,31 @@ const overridePlugins = (plugins: any, env: string, options: IOptions) => {
   );
 
   return plugins;
-};
+}
 
-const overrideResolve = (currentResolve: any) => {
+function overrideResolve(currentResolve: IResolve) {
   const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
-  const filteredPlugins = currentResolve.plugins.filter(
-    (plugin: any) => !(plugin instanceof ModuleScopePlugin),
+
+  currentResolve.plugins = currentResolve.plugins.filter(
+    (plugin) => !(plugin instanceof ModuleScopePlugin),
   );
 
-  currentResolve.plugins = filteredPlugins;
-
   return currentResolve;
-};
+}
 
-const copyBundleScript = async (env: string, { filename, chunkFilename }: IOptions) => {
+function overrideExternals(externals: { [key: string]: any }, env: string) {
+  if (env === 'development') {
+    return externals;
+  }
+
+  return {
+    ...externals,
+    react: 'React',
+    'react-dom': 'ReactDOM',
+  };
+}
+
+async function copyBundleScript(env: string, { filename, chunkFilename }: IOptions) {
   if (env !== 'production') {
     return;
   }
@@ -138,9 +152,9 @@ const copyBundleScript = async (env: string, { filename, chunkFilename }: IOptio
       rimraf.sync(`build/${file}`);
     }
   });
-};
+}
 
-const shouldUseVendor = (env: string) => {
+function shouldUseVendor(env: string) {
   if (env !== 'production') {
     return false;
   }
@@ -154,4 +168,4 @@ const shouldUseVendor = (env: string) => {
   }
 
   return true;
-};
+}
