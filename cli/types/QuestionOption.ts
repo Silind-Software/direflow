@@ -1,4 +1,4 @@
-interface IQuestionOption {
+export interface IQuestionOption {
   name: string;
   description: string;
 }

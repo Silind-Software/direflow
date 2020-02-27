@@ -10,8 +10,7 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "jsx": "react",
-    "typeRoots": ["src/types"]
+    "jsx": "react"
   },
   "exclude": [
     "node_modules",
