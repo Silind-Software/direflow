@@ -7,18 +7,22 @@ const includeExternalSources = (element: HTMLElement, plugins: IDireflowPlugin[]
 
   if (paths && paths.length) {
     setTimeout(() => {
-      paths.forEach((path: string) => {
-        if (path.endsWith('.js')) {
+      paths.forEach((path: string | { src: string; async: boolean }) => {
+        const actualPath = typeof path === 'string' ? path : path.src;
+        const async = typeof path === 'string' ? false : path.async;
+
+        if (actualPath.endsWith('.js')) {
           const script = document.createElement('script');
-          script.src = path;
+          script.src = actualPath;
+          script.async = async;
 
           injectIntoHead(script);
         }
 
-        if (path.endsWith('.css')) {
+        if (actualPath.endsWith('.css')) {
           const link = document.createElement('link');
           link.rel = 'stylesheet';
-          link.href = path;
+          link.href = actualPath;
 
           injectIntoShadowRoot(element, link);
         }
