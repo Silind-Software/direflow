@@ -39,4 +39,13 @@ const App: FC<IProps> = (props) => {
   );
 };
 
+App.defaultProps = {
+  componentTitle: '{{names.title}}',
+  sampleList: [
+    'Create with React',
+    'Build as Web Component',
+    'Use it anywhere!',
+  ],
+}
+
 export default App;

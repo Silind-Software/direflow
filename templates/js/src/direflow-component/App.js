@@ -35,6 +35,15 @@ const App = (props) => {
   );
 };
 
+App.defaultProps = {
+  componentTitle: '{{names.title}}',
+  sampleList: [
+    'Create with React',
+    'Build as Web Component',
+    'Use it anywhere!',
+  ],
+}
+
 App.propTypes = {
   componentTitle: PropTypes.string,
   sampleList: PropTypes.array,

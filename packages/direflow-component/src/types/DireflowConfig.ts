@@ -1,13 +1,13 @@
 export interface IDireflowComponent {
-  component: React.FC<any> | React.ComponentClass<any, any>;
+  component: (React.FC<any> | React.ComponentClass<any, any>) & { [key: string]: any };
   configuration: IDireflowConfig;
   properties?: any;
   plugins?: IDireflowPlugin[];
 }
 
 export interface IDireflowConfig {
-  filename: string;
   tagname: string;
+  filename?: string;
   useShadow?: boolean;
 }
 
