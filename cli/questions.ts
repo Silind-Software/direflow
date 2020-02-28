@@ -60,11 +60,11 @@ export async function isNpmModule(): Promise<{ npmModule: boolean }> {
       choices: [
         {
           value: true,
-          name: 'yes',
+          name: 'Yes',
         },
         {
           value: false,
-          name: 'no',
+          name: 'No',
         },
       ],
     },
