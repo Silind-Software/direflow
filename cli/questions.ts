@@ -60,11 +60,11 @@ export async function isNpmModule(): Promise<{ npmModule: boolean }> {
       choices: [
         {
           value: true,
-          name: 'yes',
+          name: 'Yes',
         },
         {
           value: false,
-          name: 'no',
+          name: 'No',
         },
       ],
     },
@@ -77,7 +77,7 @@ export async function chooseName(): Promise<IQuestionOption> {
     {
       type: 'input',
       name: 'name',
-      message: `Choose a name for your Direflow Setup:`,
+      message: 'Choose a name for your Direflow Setup:',
       validate: (value: string) => {
         const pass = /^[a-zA-Z0-9-_]+$/.test(value);
 
@@ -97,7 +97,7 @@ export async function chooseDescription(): Promise<IQuestionOption> {
     {
       type: 'input',
       name: 'description',
-      message: `Give your Direflow Setup a description (optional)`,
+      message: 'Give your Direflow Setup a description (optional)',
     },
   ]);
 }
