@@ -1,4 +1,4 @@
-import asyncScriptLoader from '../services/asyncScriptLoader';
+const asyncScriptLoader = require('./services/asyncScriptLoader.js').default;
 
 let didIncludeReactOnce = false;
 
@@ -10,11 +10,11 @@ const includeReact = async () => {
   try {
     await asyncScriptLoader(
       'https://unpkg.com/react@16/umd/react.production.min.js',
-      window.reactBundleLoaded,
+      'reactBundleLoaded',
     );
     await asyncScriptLoader(
       'https://unpkg.com/react-dom@16/umd/react-dom.production.min.js',
-      window.reactBundleLoaded,
+      'reactBundleLoaded',
     );
     didIncludeReactOnce = true;
   } catch (error) {
@@ -26,7 +26,7 @@ const includeIndex = () => {
   try {
     require('{{pathIndex}}');
   } catch (error) {
-    console.warn('No index-file was found. Did you move the index-file from src?');
+    console.warn('File is not found: {{pathIndex}}');
   }
 };
 

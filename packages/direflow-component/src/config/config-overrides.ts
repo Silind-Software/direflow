@@ -1,7 +1,6 @@
 import EventHooksPlugin from 'event-hooks-webpack-plugin';
 import FilterWarningsPlugin from 'webpack-filter-warnings-plugin';
 import rimraf from 'rimraf';
-import handlebars from 'handlebars';
 import fs from 'fs';
 import { resolve } from 'path';
 import { PromiseTask } from 'event-hooks-webpack-plugin/lib/tasks';
@@ -12,7 +11,7 @@ export = function override(config: TConfig, env: string, options?: IOptions) {
   const chunkFilename = options?.chunkFilename || 'vendor.js';
 
   const overridenConfig = {
-    ...addEntries(config, env),
+    entry: addEntries(config, env),
     module: overrideModule(config.module),
     output: overrideOutput(config.output, { filename, chunkFilename }),
     optimization: overrideOptimization(config.optimization, env),
@@ -25,25 +24,18 @@ export = function override(config: TConfig, env: string, options?: IOptions) {
 };
 
 function addEntries(config: TConfig, env: string) {
-  let entry: string[] = [];
+  const entryResolver = require('./dist/services/entryResolver').default;
+  const originalEntry = [...config.entry];
+
+  const [pathIndex] = env === 'development' ? originalEntry.splice(1, 1) : originalEntry.splice(0, 1);
+  const resolvedEntries = entryResolver(pathIndex);
+  let entry: string[] = resolvedEntries;
 
   if (env === 'development') {
-    entry = [...config.entry, resolve(__dirname, './dist/config/welcome.js')];
+    entry = [...originalEntry, ...entry, resolve(__dirname, './dist/config/welcome.js')];
   }
 
-  if (env === 'production') {
-    const [pathIndex] = config.entry;
-    const entryLoaderFile = fs.readFileSync(resolve(__dirname, './dist/config/entryLoader.js'), 'utf8');
-    const entryLoaderTemplate = handlebars.compile(entryLoaderFile);
-    const entryLoaderFileNew = entryLoaderTemplate({ pathIndex });
-    fs.writeFileSync(resolve(__dirname, './dist/config/entryLoader.js'), entryLoaderFileNew);
-
-    entry = [resolve(__dirname, './dist/config/entryLoader.js')];
-  }
-
-  config.entry = entry;
-
-  return config;
+  return entry;
 }
 
 function overrideModule(module: IModule) {

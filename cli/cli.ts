@@ -41,7 +41,7 @@ export default function cli() {
   }
 
   if (['-v', '--version'].includes(simpleArg)) {
-    return console.log(checkForUpdates());
+    console.log(checkForUpdates());
   }
 
   commander.parse(process.argv);
