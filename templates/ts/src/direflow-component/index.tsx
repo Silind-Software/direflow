@@ -1,7 +1,7 @@
 import { DireflowComponent } from 'direflow-component';
 import App from './App';
 
-DireflowComponent.create({
+export default DireflowComponent.create({
   component: App,
   configuration: {
     tagname: '{{names.snake}}',

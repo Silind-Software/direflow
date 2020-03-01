@@ -4,38 +4,65 @@ import rimraf from 'rimraf';
 import fs from 'fs';
 import { resolve } from 'path';
 import { PromiseTask } from 'event-hooks-webpack-plugin/lib/tasks';
-import { TConfig, IOptions, IModule, IOptimization, IPlugin, IResolve } from '../types/ConfigOverrides';
+import {
+  TConfig,
+  IOptions,
+  IModule,
+  IOptimization,
+  IResolve,
+  TEntry,
+  IPlugin,
+} from '../types/ConfigOverrides';
 
 export = function override(config: TConfig, env: string, options?: IOptions) {
   const filename = options?.filename || 'direflowBundle.js';
   const chunkFilename = options?.chunkFilename || 'vendor.js';
+  const entries = addEntries(config.entry, env);
 
   const overridenConfig = {
-    entry: addEntries(config, env),
+    ...config,
+    entry: entries,
     module: overrideModule(config.module),
-    output: overrideOutput(config.output, { filename, chunkFilename }),
+    output: overrideOutput(config.output, env, { filename, chunkFilename }),
     optimization: overrideOptimization(config.optimization, env),
     resolve: overrideResolve(config.resolve),
-    plugins: overridePlugins(config.plugins, env, { filename, chunkFilename }),
+    plugins: overridePlugins(config.plugins, entries, env, { filename, chunkFilename }),
     externals: overrideExternals(config.externals, env),
   };
 
   return overridenConfig;
 };
 
-function addEntries(config: TConfig, env: string) {
+function addEntries(entry: TEntry, env: string) {
   const entryResolver = require('./dist/services/entryResolver').default;
-  const originalEntry = [...config.entry];
+  const originalEntry = [...(entry as string[])];
 
   const [pathIndex] = env === 'development' ? originalEntry.splice(1, 1) : originalEntry.splice(0, 1);
   const resolvedEntries = entryResolver(pathIndex);
-  let entry: string[] = resolvedEntries;
+
+  const newEntry: { [key: string]: string } = { main: pathIndex };
+
+  originalEntry.forEach((path, index) => {
+    newEntry[`path-${index}`] = path;
+  });
+
+  resolvedEntries.forEach((entries: { [key: string]: string }) => {
+    Object.keys(entries).forEach((key) => {
+      newEntry[key] = entries[key];
+    });
+  });
+
+  const flatList = Object.values(newEntry);
 
   if (env === 'development') {
-    entry = [...originalEntry, ...entry, resolve(__dirname, './dist/config/welcome.js')];
+    return [...flatList, resolve(__dirname, './dist/config/welcome.js')];
   }
 
-  return entry;
+  if (hasOptions('split', env)) {
+    return newEntry;
+  }
+
+  return flatList;
 }
 
 function overrideModule(module: IModule) {
@@ -58,10 +85,16 @@ function overrideModule(module: IModule) {
   return module;
 }
 
-function overrideOutput(output: IOptions, { filename, chunkFilename }: Required<IOptions>) {
+function overrideOutput(
+  output: IOptions,
+  env: string,
+  { filename, chunkFilename }: Required<IOptions>,
+) {
+  const outputFilename = hasOptions('split', env) ? '[name].js' : filename;
+
   return {
     ...output,
-    filename,
+    filename: outputFilename,
     chunkFilename,
   };
 }
@@ -82,17 +115,17 @@ function overrideOptimization(optimization: IOptimization, env: string) {
 
   return {
     ...optimization,
-    splitChunks: shouldUseVendor(env) ? vendorSplitChunks : false,
+    splitChunks: hasOptions('vendor', env) ? vendorSplitChunks : false,
     runtimeChunk: false,
   };
 }
 
-function overridePlugins(plugins: IPlugin[], env: string, options: IOptions) {
+function overridePlugins(plugins: IPlugin[], entry: TEntry, env: string, options: IOptions) {
   plugins[0].options.inject = 'head';
 
   plugins.push(
     new EventHooksPlugin({
-      done: new PromiseTask(() => copyBundleScript(env, options)),
+      done: new PromiseTask(() => copyBundleScript(env, entry, options)),
     }),
   );
 
@@ -130,7 +163,7 @@ function overrideExternals(externals: { [key: string]: any }, env: string) {
   };
 }
 
-async function copyBundleScript(env: string, { filename, chunkFilename }: IOptions) {
+async function copyBundleScript(env: string, entry: TEntry, { filename, chunkFilename }: IOptions) {
   if (env !== 'production') {
     return;
   }
@@ -140,13 +173,23 @@ async function copyBundleScript(env: string, { filename, chunkFilename }: IOptio
   }
 
   fs.readdirSync('build').forEach((file: string) => {
-    if (file !== filename && file !== chunkFilename) {
-      rimraf.sync(`build/${file}`);
+    if (file === filename) {
+      return;
     }
+
+    if (file === chunkFilename) {
+      return;
+    }
+
+    if (!Array.isArray(entry) && Object.keys(entry).some((path) => `${path}.js` === file)) {
+      return;
+    }
+
+    rimraf.sync(`build/${file}`);
   });
 }
 
-function shouldUseVendor(env: string) {
+function hasOptions(flag: string, env: string) {
   if (env !== 'production') {
     return false;
   }
@@ -155,7 +198,7 @@ function shouldUseVendor(env: string) {
     return false;
   }
 
-  if (!process.argv.some((arg: string) => arg === '--vendor')) {
+  if (!process.argv.some((arg: string) => arg === `--${flag}` || arg === `-${flag[0]}`)) {
     return false;
   }
 

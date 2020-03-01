@@ -10,13 +10,3 @@
  * It can be left blank if not needed.
  * *******************************************************
  */
-
-import {{names.pascal}} from "./{{names.snake}}";
-
-{{names.pascal}}.then((element) => {
-
-  /**
-   * Access DOM node when it's mounted
-   */
-  console.log('{{names.snake}} is mounted on the DOM', element);
-});

@@ -21,7 +21,7 @@ function entryResolver(indexPath: string) {
     const entryLoaderPath = resolve(__dirname, `../${folder}.js`);
 
     fs.writeFileSync(entryLoaderPath, entryFile);
-    return entryLoaderPath;
+    return { [folder]: entryLoaderPath };
   }).filter((path) => !!path);
 
   return entryList;

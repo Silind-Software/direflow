@@ -7,7 +7,6 @@ export interface IDireflowComponent {
 
 export interface IDireflowConfig {
   tagname: string;
-  filename?: string;
   useShadow?: boolean;
 }
 
