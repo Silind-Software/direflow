@@ -6,17 +6,17 @@ declare global {
   }
 }
 
-const asyncScriptLoader = (src: string, bundleList: TBundle[] | undefined): Promise<void> => {
+const asyncScriptLoader = (src: string, bundleListKey: 'wcPolyfillsLoaded' | 'reactBundleLoaded'): Promise<void> => {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
     script.async = true;
     script.src = src;
 
-    if (!bundleList) {
-      bundleList = [];
+    if (!window[bundleListKey]) {
+      window[bundleListKey] = [];
     }
 
-    const existingPolyfill = bundleList.find((loadedScript) => {
+    const existingPolyfill = window[bundleListKey].find((loadedScript) => {
       return loadedScript.script.isEqualNode(script);
     });
 
@@ -34,7 +34,7 @@ const asyncScriptLoader = (src: string, bundleList: TBundle[] | undefined): Prom
       hasLoaded: false,
     };
 
-    bundleList.push(scriptEntry);
+    window[bundleListKey].push(scriptEntry);
 
     script.addEventListener('load', () => {
       scriptEntry.hasLoaded = true;

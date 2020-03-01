@@ -10,11 +10,11 @@ const includeReact = async () => {
   try {
     await asyncScriptLoader(
       'https://unpkg.com/react@16/umd/react.production.min.js',
-      window.reactBundleLoaded,
+      'reactBundleLoaded',
     );
     await asyncScriptLoader(
       'https://unpkg.com/react-dom@16/umd/react-dom.production.min.js',
-      window.reactBundleLoaded,
+      'reactBundleLoaded',
     );
     didIncludeReactOnce = true;
   } catch (error) {
