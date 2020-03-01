@@ -52,7 +52,7 @@ const includePolyfills = async (
     scriptsList.push(
       asyncScriptLoader(
         useSD || DEFAULT_SD,
-        window.wcPolyfillsLoaded,
+        'wcPolyfillsLoaded',
       ),
     );
   }
@@ -60,14 +60,14 @@ const includePolyfills = async (
   scriptsList.push(
     asyncScriptLoader(
       useCE || DEFAULT_CE,
-      window.wcPolyfillsLoaded,
+      'wcPolyfillsLoaded',
     ),
   );
 
   scriptsList.push(
     asyncScriptLoader(
       useAD || DEFAULT_AD,
-      window.wcPolyfillsLoaded,
+      'wcPolyfillsLoaded',
     ),
   );
 
