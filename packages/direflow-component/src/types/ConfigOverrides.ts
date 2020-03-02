@@ -46,9 +46,11 @@ export interface IResolve {
   plugins: unknown[];
 }
 
+export type TEntry = string[] | { [key: string]: string };
+
 export type TConfig = {
   [key: string]: unknown;
-  entry: string[];
+  entry: TEntry;
   module: IModule;
   output: IOutput;
   optimization: IOptimization;

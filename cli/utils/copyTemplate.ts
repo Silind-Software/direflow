@@ -1,4 +1,5 @@
 import { resolve } from 'path';
+import fs from 'fs';
 import ncp from 'ncp';
 import mkdirp from 'mkdirp';
 import { ITemplateOption } from '../types/TemplateOption';
@@ -27,6 +28,17 @@ const copyTemplate = async (options: ITemplateOption): Promise<string> => {
       }
 
       ncpResolve();
+    });
+  });
+
+  await new Promise((renameResolve, reject) => {
+    fs.rename(`${projectDirectory}/src/direflow-component`, `${projectDirectory}/src/${options.projectName}`, (err) => {
+      if (err) {
+        console.log(err);
+        reject(new Error('Could not rename component folder'));
+      }
+
+      renameResolve();
     });
   });
 
