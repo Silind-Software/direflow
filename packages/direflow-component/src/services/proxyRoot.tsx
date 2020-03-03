@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { createPortal } from 'react-dom';
 
 interface IShadowContent {
-  root: ShadowRoot;
+  root: ShadowRoot | Element;
   children: React.ReactNode;
 }
 
@@ -13,6 +13,7 @@ interface IShadowComponent {
 interface IComponentOptions {
   root: Element;
   mode: 'open' | 'closed';
+  mountPoint?: Element;
 }
 
 const ShadowContent: FC<IShadowContent> = (props) => {
@@ -22,8 +23,12 @@ const ShadowContent: FC<IShadowContent> = (props) => {
 
 const createProxyComponent = (options: IComponentOptions) => {
   const ShadowRoot: FC<IShadowComponent> = (props) => {
-    const shadowedRoot = options.root.shadowRoot
+    let shadowedRoot: ShadowRoot | Element = options.root.shadowRoot
     || options.root.attachShadow({ mode: options.mode });
+
+    if (options.mountPoint) {
+      shadowedRoot = shadowedRoot.appendChild(options.mountPoint);
+    }
 
     return <ShadowContent root={shadowedRoot}>{props.children}</ShadowContent>;
   };
@@ -33,7 +38,10 @@ const createProxyComponent = (options: IComponentOptions) => {
 
 const componentMap = new WeakMap<Element, React.FC<IShadowComponent>>();
 
-const createProxyRoot = (root: Element): { [key in 'open' | 'closed']: React.FC<IShadowComponent> } => {
+const createProxyRoot = (
+  root: Element,
+  mountPoint?: Element,
+): { [key in 'open' | 'closed']: React.FC<IShadowComponent> } => {
   return new Proxy<any>(
     {},
     {
@@ -42,7 +50,7 @@ const createProxyRoot = (root: Element): { [key in 'open' | 'closed']: React.FC<
           return componentMap.get(root);
         }
 
-        const proxyComponent = createProxyComponent({ root, mode: name });
+        const proxyComponent = createProxyComponent({ root, mode: name , mountPoint});
         componentMap.set(root, proxyComponent);
         return proxyComponent;
       },
