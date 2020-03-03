@@ -17,17 +17,17 @@ interface IComponentOptions {
 }
 
 const ShadowContent: FC<IShadowContent> = (props) => {
-  const root = props.root as unknown as Element;
+  const root = (props.root as unknown) as Element;
   return createPortal(props.children, root);
 };
 
 const createProxyComponent = (options: IComponentOptions) => {
   const ShadowRoot: FC<IShadowComponent> = (props) => {
-    let shadowedRoot: ShadowRoot | Element = options.root.shadowRoot
-    || options.root.attachShadow({ mode: options.mode });
+    const shadowedRoot: ShadowRoot | Element = options.root.shadowRoot
+      || options.root.attachShadow({ mode: options.mode });
 
     if (options.mountPoint) {
-      shadowedRoot = shadowedRoot.appendChild(options.mountPoint);
+      shadowedRoot.appendChild(options.mountPoint);
     }
 
     return <ShadowContent root={shadowedRoot}>{props.children}</ShadowContent>;
@@ -50,7 +50,7 @@ const createProxyRoot = (
           return componentMap.get(root);
         }
 
-        const proxyComponent = createProxyComponent({ root, mode: name , mountPoint});
+        const proxyComponent = createProxyComponent({ root, mode: name, mountPoint });
         componentMap.set(root, proxyComponent);
         return proxyComponent;
       },

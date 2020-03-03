@@ -30,3 +30,16 @@ export const existsIdenticalElement = (element: Element, host: Element | ShadowR
   const exists = Array.from(allChildren).some((child) => element.isEqualNode(child));
   return exists;
 };
+
+export const unwrapToParent = (element: Element) => {
+  const child = element.firstChild;
+  const parent = element.parentNode;
+
+  if (child) {
+    parent?.appendChild(child);
+  }
+
+  if (parent) {
+    parent.removeChild(element);
+  }
+};

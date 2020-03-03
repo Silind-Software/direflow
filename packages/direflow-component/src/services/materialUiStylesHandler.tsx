@@ -1,5 +1,6 @@
 import React from 'react';
 import { IDireflowPlugin } from '../types/DireflowConfig';
+import { unwrapToParent } from './domControllers';
 
 const handleMaterialUiStyle = (
   app: JSX.Element,
@@ -18,6 +19,10 @@ const handleMaterialUiStyle = (
       const jss = create({
         ...jssPreset(),
         insertionPoint: mountPoint,
+      });
+
+      setTimeout(() => {
+        unwrapToParent(mountPoint);
       });
 
       return { mountPoint, app: (<StylesProvider jss={jss}>{app}</StylesProvider>) };
