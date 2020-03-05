@@ -9,6 +9,7 @@ import loadFonts from './services/fontLoaderHandler';
 import includeGoogleIcons from './services/iconLoaderHandler';
 import { EventProvider } from './components/EventContext';
 import { IDireflowPlugin } from './types/DireflowConfig';
+import handleMaterialUiStyle from './services/materialUiStylesHandler';
 
 class WebComponentFactory {
   constructor(
@@ -207,8 +208,9 @@ class WebComponentFactory {
           currentChildren = Array.from(this.children).map((child: Node) => child.cloneNode(true));
         }
 
-        const root = createProxyRoot(this);
-        ReactDOM.render(<root.open>{application}</root.open>, this);
+        const wrappedAppAndMountPoint = handleMaterialUiStyle(application, factory.plugins);
+        const root = createProxyRoot(this, wrappedAppAndMountPoint.mountPoint);
+        ReactDOM.render(<root.open>{wrappedAppAndMountPoint.app}</root.open>, this);
 
         if (currentChildren) {
           currentChildren.forEach((child: Node) => this.append(child));
