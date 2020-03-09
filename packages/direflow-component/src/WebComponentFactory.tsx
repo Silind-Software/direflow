@@ -208,7 +208,7 @@ class WebComponentFactory {
           currentChildren = Array.from(this.children).map((child: Node) => child.cloneNode(true));
         }
 
-        const wrappedAppAndMountPoint = handleMaterialUiStyle(application, factory.plugins);
+        const wrappedAppAndMountPoint = handleMaterialUiStyle(this, application, factory.plugins);
         const root = createProxyRoot(this, wrappedAppAndMountPoint.mountPoint);
         ReactDOM.render(<root.open>{wrappedAppAndMountPoint.app}</root.open>, this);
 

@@ -1,38 +1,35 @@
 import React from 'react';
 import { IDireflowPlugin } from '../types/DireflowConfig';
-import { unwrapToParent } from './domControllers';
+
+const jssCache = new WeakMap<Element, any>();
 
 const handleMaterialUiStyle = (
+  webcomponent: Element,
   app: JSX.Element,
   plugins: IDireflowPlugin[] | undefined,
 ): { mountPoint?: Element; app: JSX.Element } => {
   if (plugins?.find((plugin) => plugin.name === 'material-ui')) {
     try {
-      const jssLib = require('jss');
-      const materialUiStyles = require('@material-ui/core/styles');
-      const { create } = jssLib;
-      const { jssPreset } = materialUiStyles;
-      const { StylesProvider } = materialUiStyles;
+      const { create } = require('jss');
+      const { jssPreset, StylesProvider } = require('@material-ui/core/styles');
 
-      const mountPoint = document.createElement('span');
+      let jss: any; 
+      if (jssCache.has(webcomponent)) {
+        jss = jssCache.get(webcomponent);
+      } else {
+        jss = create({
+          ...jssPreset(),
+          insertionPoint: document.createElement('span'),
+        });
+        jssCache.set(webcomponent, jss);
+      }
 
-      const jss = create({
-        ...jssPreset(),
-        insertionPoint: mountPoint,
-      });
-
-      setTimeout(() => {
-        unwrapToParent(mountPoint);
-      });
-
-      return { mountPoint, app: (<StylesProvider jss={jss}>{app}</StylesProvider>) };
+      return { mountPoint: jss.options.insertionPoint, app: (<StylesProvider jss={jss}>{app}</StylesProvider>) };
     } catch (err) {
       console.error('Could not load Material-UI', err);
-      return { app };
     }
-  } else {
-    return { app };
   }
+  return { app };
 };
 
 export default handleMaterialUiStyle;
