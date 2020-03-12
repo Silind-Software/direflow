@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { createPortal } from 'react-dom';
 
-interface IShadowContent {
-  root: ShadowRoot;
+interface IPortal {
+  targetElement: ShadowRoot;
   children: React.ReactNode;
 }
 
@@ -11,21 +11,26 @@ interface IShadowComponent {
 }
 
 interface IComponentOptions {
-  root: Element;
+  webcomponent: Element;
   mode: 'open' | 'closed';
+  stylesContainer?: Element;
 }
 
-const ShadowContent: FC<IShadowContent> = (props) => {
-  const root = props.root as unknown as Element;
-  return createPortal(props.children, root);
+const Portal: FC<IPortal> = (props) => {
+  const targetElement = (props.targetElement as unknown) as Element;
+  return createPortal(props.children, targetElement);
 };
 
 const createProxyComponent = (options: IComponentOptions) => {
   const ShadowRoot: FC<IShadowComponent> = (props) => {
-    const shadowedRoot = options.root.shadowRoot
-    || options.root.attachShadow({ mode: options.mode });
+    const shadowedRoot: ShadowRoot = options.webcomponent.shadowRoot
+      || options.webcomponent.attachShadow({ mode: options.mode });
 
-    return <ShadowContent root={shadowedRoot}>{props.children}</ShadowContent>;
+    if (options.stylesContainer) {
+      shadowedRoot.appendChild(options.stylesContainer);
+    }
+
+    return <Portal targetElement={shadowedRoot}>{props.children}</Portal>;
   };
 
   return ShadowRoot;
@@ -33,17 +38,20 @@ const createProxyComponent = (options: IComponentOptions) => {
 
 const componentMap = new WeakMap<Element, React.FC<IShadowComponent>>();
 
-const createProxyRoot = (root: Element): { [key in 'open' | 'closed']: React.FC<IShadowComponent> } => {
+const createProxyRoot = (
+  webcomponent: Element,
+  stylesContainer?: Element,
+): { [key in 'open' | 'closed']: React.FC<IShadowComponent> } => {
   return new Proxy<any>(
     {},
     {
-      get(_: unknown, name: 'open' | 'closed') {
-        if (componentMap.get(root)) {
-          return componentMap.get(root);
+      get(_: unknown, mode: 'open' | 'closed') {
+        if (componentMap.get(webcomponent)) {
+          return componentMap.get(webcomponent);
         }
 
-        const proxyComponent = createProxyComponent({ root, mode: name });
-        componentMap.set(root, proxyComponent);
+        const proxyComponent = createProxyComponent({ webcomponent, mode, stylesContainer });
+        componentMap.set(webcomponent, proxyComponent);
         return proxyComponent;
       },
     },
