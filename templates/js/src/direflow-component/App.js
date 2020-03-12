@@ -27,7 +27,7 @@ const App = (props) => {
           <div className='header-title'>{props.componentTitle}</div>
           <div>{renderSampleList}</div>
           <button className='button' onClick={handleClick}>
-            Let&apos;s go!
+            Click me!
           </button>
         </div>
       </div>
