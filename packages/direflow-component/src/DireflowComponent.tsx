@@ -1,68 +1,60 @@
 import WebComponentFactory from './WebComponentFactory';
-import { IDireflowPlugin, IDireflowConfig } from './types/DireflowConfig';
+import { IDireflowComponent } from './types/DireflowConfig';
+import { DireflowElement } from './types/DireflowElement';
 import includePolyfills from './services/polyfillHandler';
 
 class DireflowComponent {
-  private componentProperties?: { [key: string]: unknown };
-  private rootComponent?: React.FC<any> | React.ComponentClass<any, any>;
-  private WebComponent?: typeof HTMLElement;
-  private elementName?: string;
-  private plugins?: IDireflowPlugin[];
-  private shadow = true;
-
   /**
-   * Configure Direflow Component
-   * @param config direflow configuration
+   * Create muliple Direflow Components
+   * @param App React Component
    */
-  public configure(config: IDireflowConfig) {
-    this.componentProperties = config.properties;
-    this.shadow = config.useShadow;
-    this.elementName = config.name;
-    this.plugins = config.plugins;
+  public static createAll(componentConfigs: IDireflowComponent[]): Array<Promise<DireflowElement>> {
+    return componentConfigs.map(DireflowComponent.create);
   }
 
   /**
    * Create Direflow Component
    * @param App React Component
    */
-  public create(App: React.FC<any> | React.ComponentClass<any, any>): Promise<HTMLElement> {
-    return new Promise(async (resolve, reject) => {
-      this.rootComponent = App;
+  public static create(componentConfig: IDireflowComponent): Promise<DireflowElement> {
+    const { component } = componentConfig;
+    const plugins = component.plugins || componentConfig.plugins;
+    const configuration = component.configuration || componentConfig.configuration;
 
-      try {
-        this.validateDependencies();
-      } catch (error) {
-        reject(error);
-      }
+    if (!component) {
+      throw Error('Root component has not been set');
+    }
 
+    if (!configuration) {
+      throw Error('No configuration found');
+    }
+
+    const componentProperties = {
+      ...componentConfig?.properties,
+      ...component.properties,
+      ...component.defaultProps,
+    };
+
+    const tagName = configuration.tagname || 'direflow-component';
+    const shadow = configuration.useShadow !== undefined ? configuration.useShadow : true;
+
+    return new Promise(async (resolve) => {
       const callback = (element: HTMLElement) => {
-        resolve(element);
+        resolve(element as DireflowElement);
       };
 
-      await Promise.all([
-        includePolyfills({ usesShadow: !!this.shadow }, this.plugins),
-      ]);
+      await Promise.all([includePolyfills({ usesShadow: !!shadow }, plugins)]);
 
-      this.WebComponent = new WebComponentFactory(
-        this.componentProperties || {},
-        this.rootComponent,
-        this.shadow,
-        this.plugins,
+      const WebComponent = new WebComponentFactory(
+        componentProperties,
+        component,
+        shadow,
+        plugins,
         callback,
       ).create();
 
-      customElements.define(this.elementName || '', this.WebComponent);
+      customElements.define(tagName || '', WebComponent);
     });
-  }
-
-  private validateDependencies() {
-    if (!this.rootComponent) {
-      throw Error('Cannot define custom element: Root Component have not been set.');
-    }
-
-    if (!this.elementName) {
-      throw Error('Cannot define custom element: Element name has not been set.');
-    }
   }
 }
 

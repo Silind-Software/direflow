@@ -1,33 +1,22 @@
-import { DireflowComponent } from 'direflow-component';
-import App from './direflow-component/App';
+/**
+ * *******************************************************
+ * This is the entry file of the Direflow setup.
+ *
+ * You can add any additional functionality here.
+ * For example, this is a good place to hook into your
+ * Web Component once it's mounted on the DOM.
+ *
+ * !This file cannot be removed.
+ * It can be left blank if not needed.
+ * *******************************************************
+ */
 
-const direflowComponent = new DireflowComponent();
+import {{names.pascal}} from "./{{names.snake}}";
 
-const direflowProperties = {
-  componentTitle: '{{names.title}}',
-  sampleList: [
-    'Create with React',
-    'Build as Web Component',
-    'Use it anywhere!',
-  ],
-};
+{{names.pascal}}.then((element) => {
 
-const direflowPlugins = [
-  {
-    name: 'font-loader',
-    options: {
-      google: {
-        families: ['Advent Pro', 'Noto Sans JP'],
-      },
-    },
-  },
-];
-
-direflowComponent.configure({
-  name: '{{names.snake}}',
-  useShadow: true,
-  properties: direflowProperties,
-  plugins: direflowPlugins,
+  /**
+   * Access DOM node when it's mounted
+   */
+  console.log('{{names.snake}} is mounted on the DOM', element);
 });
-
-direflowComponent.create(App);
