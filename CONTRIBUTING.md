@@ -1,9 +1,9 @@
 # Contributing
 
 ## Issues
-In the case of a bug report, a suggestions, or if you just need help, please feel very free to open an issue.  
-  
-For general issues, please use the following labels:  
+In the case of a bug report, a suggestions, or if you just need help, please feel very free to open an issue.
+
+For general issues, please use the following labels:
 - Something is not working as intended: `Bug`
 - Need help with something: `Help wanted`
 - Have a question: `Question`
@@ -12,10 +12,10 @@ For general issues, please use the following labels:
 - Does the question regard direflow-cli: `Direflow CLI`
 
 ## Pull request
-Pull requests are really welcome!  
-  
+Pull requests are really welcome!
+
 ### Version
-When doing a pull request, please make sure to include an new version in your PR.  
+When doing a pull request, please make sure to include an new version in your PR.
 There are multiple packages that needs to be in sync, so in order to update the version of Direflow, please use the script:
 ```console
 yarn update-version <new-version>
@@ -27,8 +27,8 @@ yarn update-version patch
 ```
 
 ## Developing on Direflow
-Start by making a fork of the direflow repository, and clone it down.  
-  
+Start by making a fork of the direflow repository, and clone it down.
+
 ### Install
 Now cd into the project folder and run the command:
 ```console
@@ -68,10 +68,10 @@ This should give you the latest version with a '-link' appended:
   Current version of direflow-cli:
   2.0.2-link
 ```
-In this way you know that the command `direflow` is using your local setup.  
-  
+In this way you know that the command `direflow` is using your local setup.
+
 Now, test your new functionality.
-> Note: After you have build the project using build-link, you may want to run install:all again before continuing to develop.
+> Note: After you have build the project using build:full, you may want to run install:all again before continuing to develop.
 
 ### Commit the changes
 Before committing your new changes, remember to change the version using the command:
@@ -80,7 +80,7 @@ yarn update-version <new-version>
 ```
 
 ### Create the PR
-Create a branch for your changes called 'feature/name-of-the-changes'.  
+Create a branch for your changes called 'feature/name-of-the-changes'.
 Make a PR into the 'development' branch on the direflow repository.
 
 ## Updating the docs

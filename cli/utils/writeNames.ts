@@ -12,18 +12,29 @@ interface IWriteNameOptions {
   linter: 'eslint' | 'tslint';
   packageVersion?: string;
   description: string;
+  npmModule: boolean;
   names: INames;
   type: string;
 }
 
-const writeProjectNames = async ({
-  type,
-  names,
-  description,
-  linter,
+type TWriteNameExtendable = Required<Pick<IWriteNameOptions,
+| 'names'
+| 'type'
+| 'packageVersion'
+| 'npmModule'
+>>;
+
+interface IHandelbarData extends TWriteNameExtendable {
+  defaultDescription: string;
+  eslint: boolean;
+  tslint: boolean;
+}
+
+export async function writeProjectNames({
+  type, names, description, linter, npmModule,
   projectDirectoryPath,
   packageVersion = version,
-}: IWriteNameOptions): Promise<void> => {
+}: IWriteNameOptions): Promise<void> {
   const projectDirectory = fs.readdirSync(projectDirectoryPath);
   const defaultDescription = description || 'This project is created using Direflow';
 
@@ -32,11 +43,7 @@ const writeProjectNames = async ({
 
     if (fs.statSync(filePath).isDirectory()) {
       return writeProjectNames({
-        names,
-        description,
-        type,
-        linter,
-        projectDirectoryPath: filePath,
+        names, description, type, linter, npmModule, projectDirectoryPath: filePath,
       });
     }
 
@@ -52,20 +59,21 @@ const writeProjectNames = async ({
       }
     }
 
-    await changeNameInfile(filePath, {
+    return changeNameInfile(filePath, {
       names,
       defaultDescription,
       type,
       packageVersion,
+      npmModule,
       eslint: linter === 'eslint',
       tslint: linter === 'tslint',
     });
   });
 
   await Promise.all(writeNames).catch(() => console.log('Failed to write files'));
-};
+}
 
-const changeNameInfile = async (filePath: string, data: {}): Promise<void> => {
+async function changeNameInfile(filePath: string, data: IHandelbarData): Promise<void> {
   const changedFile = await new Promise((resolve, reject) => {
     fs.readFile(filePath, 'utf-8', (err, content) => {
       if (err) {
@@ -88,6 +96,6 @@ const changeNameInfile = async (filePath: string, data: {}): Promise<void> => {
       resolve();
     });
   });
-};
+}
 
 export default writeProjectNames;

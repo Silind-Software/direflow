@@ -1,4 +1,4 @@
-import asyncScriptLoader from '../services/asyncScriptLoader';
+const asyncScriptLoader = require('./services/asyncScriptLoader.js').default;
 
 let didIncludeReactOnce = false;
 
@@ -26,7 +26,7 @@ const includeIndex = () => {
   try {
     require('{{pathIndex}}');
   } catch (error) {
-    console.warn('No index-file was found. Did you move the index-file from src?');
+    console.warn('File is not found: {{pathIndex}}');
   }
 };
 

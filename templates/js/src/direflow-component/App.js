@@ -27,7 +27,7 @@ const App = (props) => {
           <div className='header-title'>{props.componentTitle}</div>
           <div>{renderSampleList}</div>
           <button className='button' onClick={handleClick}>
-            Let&apos;s go!
+            Click me!
           </button>
         </div>
       </div>
@@ -35,9 +35,18 @@ const App = (props) => {
   );
 };
 
+App.defaultProps = {
+  componentTitle: '{{names.title}}',
+  sampleList: [
+    'Create with React',
+    'Build as Web Component',
+    'Use it anywhere!',
+  ],
+}
+
 App.propTypes = {
-  sampleList: PropTypes.array,
   componentTitle: PropTypes.string,
+  sampleList: PropTypes.array,
 };
 
 export default App;

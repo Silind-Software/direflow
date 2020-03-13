@@ -2,7 +2,30 @@
   "name": "{{names.snake}}",
   "description": "{{defaultDescription}}",
   "version": "1.0.0",
+  {{#if npmModule}}
+  "author": "",
+  "license": "MIT",
+  "keywords": [
+    "direflow",
+    "react",
+    "webcomponent"
+  ],
+  "homepage": "https://direflow.io/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Silind-Software/direflow"
+  },
+  "bugs": {
+    "email": "direflow@silind.com",
+    "url": "https://github.com/Silind-Software/direflow/issues/new"
+  },
+  "main": "build/direflowBundle.js",
+  "files": [
+    "build"
+  ],
+  {{else}}
   "private": true,
+  {{/if}}
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
@@ -12,7 +35,7 @@
     "react": "16.10.2",
     "react-dom": "16.10.2",
     "react-scripts": "3.2.0",
-    "direflow-component": "3.3.3"
+    "direflow-component": "3.4.0"
   },
   "devDependencies": {
     "eslint-plugin-node": "^11.0.0",
