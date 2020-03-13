@@ -1,7 +1,7 @@
 import fileMock from 'mock-fs';
 import { promisify } from 'util';
 import fs from 'fs';
-import writeProjectNames from '../cli/utils/writeNames';
+import writeProjectNames from '../cli/helpers/writeNames';
 
 const readFile = promisify(fs.readFile);
 

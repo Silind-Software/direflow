@@ -1,4 +1,4 @@
-import { getNameFormats, createDefaultName } from '../cli/utils/nameFormat';
+import { getNameFormats, createDefaultName } from '../cli/helpers/nameFormat';
 
 describe('Get correct name formats', () => {
   it('should create name formats from slug', () => {

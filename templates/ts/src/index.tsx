@@ -11,7 +11,7 @@
  * *******************************************************
  */
 
-import {{names.pascal}} from "./{{names.snake}}";
+import {{names.pascal}} from "./direflow-components/{{names.snake}}";
 
 {{names.pascal}}.then((element) => {
 

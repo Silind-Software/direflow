@@ -13,7 +13,7 @@ const handleMaterialUiStyle = (
       const { create } = require('jss');
       const { jssPreset, StylesProvider } = require('@material-ui/core/styles');
 
-      let jss: any; 
+      let jss: any;
       if (jssCache.has(webcomponent)) {
         jss = jssCache.get(webcomponent);
       } else {

@@ -1,4 +1,4 @@
-const asyncScriptLoader = require('./services/asyncScriptLoader.js').default;
+const asyncScriptLoader = require('./helpers/asyncScriptLoader.js').default;
 
 let didIncludeReactOnce = false;
 

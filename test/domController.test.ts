@@ -4,7 +4,7 @@ import {
   injectIntoHead,
   stripStyleFromHead,
   existsIdenticalElement,
-} from '../packages/direflow-component/src/services/domControllers';
+} from '../packages/direflow-component/src/helpers/domControllers';
 
 const dom = new JSDOM();
 (global as any).document = dom.window.document;

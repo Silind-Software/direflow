@@ -2,14 +2,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import clonedeep from 'lodash.clonedeep';
-import createProxyRoot from './services/proxyRoot';
-import addStyledComponentStyles from './services/styledComponentsHandler';
-import includeExternalSources from './services/externalSourceHandler';
-import loadFonts from './services/fontLoaderHandler';
-import includeGoogleIcons from './services/iconLoaderHandler';
+import createProxyRoot from './helpers/proxyRoot';
+import addStyledComponentStyles from './helpers/styledComponentsHandler';
+import includeExternalSources from './helpers/externalSourceHandler';
+import loadFonts from './helpers/fontLoaderHandler';
+import includeGoogleIcons from './helpers/iconLoaderHandler';
 import { EventProvider } from './components/EventContext';
 import { IDireflowPlugin } from './types/DireflowConfig';
-import handleMaterialUiStyle from './services/materialUiStylesHandler';
+import handleMaterialUiStyle from './helpers/materialUiStylesHandler';
 
 class WebComponentFactory {
   constructor(

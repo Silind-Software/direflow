@@ -34,7 +34,7 @@ export = function override(config: TConfig, env: string, options?: IOptions) {
 };
 
 function addEntries(entry: TEntry, env: string) {
-  const entryResolver = require('./dist/services/entryResolver').default;
+  const entryResolver = require('./dist/helpers/entryResolver').default;
   const originalEntry = [...(entry as string[])];
 
   const [pathIndex] = env === 'development' ? originalEntry.splice(1, 1) : originalEntry.splice(0, 1);
