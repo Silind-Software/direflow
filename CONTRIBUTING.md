@@ -66,7 +66,7 @@ direflow -v
 This should give you the latest version with a '-link' appended:
 ```console
   Current version of direflow-cli:
-  2.0.2-link
+  3.4.3-link
 ```
 In this way you know that the command `direflow` is using your local setup.
 
@@ -85,3 +85,6 @@ Make a PR into the 'development' branch on the direflow repository.
 
 ## Updating the docs
 If you introduced user-facing changes, please update the [direflow-docs](https://github.com/Silind-Software/direflow-docs) accordingly.
+
+## Additional resources
+Check out the [Direflow Wiki](https://github.com/Silind-Software/direflow/wiki). Here you can find guides and know-how that will help you developing on Direflow.

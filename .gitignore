@@ -10,6 +10,7 @@ config-overrides.d.ts
 # Cypress
 cypress/fixtures
 cypress/plugins
+cypress/screenshots
 
 # User-specific stuff
 .idea/**/workspace.xml

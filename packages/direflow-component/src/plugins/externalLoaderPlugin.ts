@@ -1,9 +1,9 @@
-import { injectIntoShadowRoot, injectIntoHead } from './domControllers';
+import { injectIntoShadowRoot, injectIntoHead } from '../helpers/domControllers';
 import { IDireflowPlugin } from '../types/DireflowConfig';
 
-const includeExternalSources = (element: HTMLElement, plugins: IDireflowPlugin[] | undefined) => {
-  const externalLoaderPlugin = plugins?.find((plugin) => plugin.name === 'external-loader');
-  const paths = externalLoaderPlugin?.options?.paths;
+const externalLoaderPlugin = (element: HTMLElement, plugins: IDireflowPlugin[] | undefined) => {
+  const plugin = plugins?.find((p) => p.name === 'external-loader');
+  const paths = plugin?.options?.paths;
 
   if (paths && paths.length) {
     setTimeout(() => {
@@ -31,4 +31,4 @@ const includeExternalSources = (element: HTMLElement, plugins: IDireflowPlugin[]
   }
 };
 
-export default includeExternalSources;
+export default externalLoaderPlugin;
