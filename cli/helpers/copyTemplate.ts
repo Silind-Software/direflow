@@ -32,14 +32,18 @@ const copyTemplate = async (options: ITemplateOption): Promise<string> => {
   });
 
   await new Promise((renameResolve, reject) => {
-    fs.rename(`${projectDirectory}/src/direflow-component`, `${projectDirectory}/src/${options.projectName}`, (err) => {
-      if (err) {
-        console.log(err);
-        reject(new Error('Could not rename component folder'));
-      }
+    fs.rename(
+      `${projectDirectory}/src/direflow-components/direflow-component`,
+      `${projectDirectory}/src/direflow-components/${options.projectName}`,
+      (err) => {
+        if (err) {
+          console.log(err);
+          reject(new Error('Could not rename component folder'));
+        }
 
-      renameResolve();
-    });
+        renameResolve();
+      },
+    );
   });
 
   return projectDirectory;

@@ -4,7 +4,7 @@ import {
   injectIntoHead,
   stripStyleFromHead,
   existsIdenticalElement,
-} from '../packages/direflow-component/src/services/domControllers';
+} from '../packages/direflow-component/src/helpers/domControllers';
 
 const dom = new JSDOM();
 (global as any).document = dom.window.document;
@@ -91,7 +91,7 @@ describe('Inject into head', () => {
 
 describe('Strip style from head', () => {
   it('should correctly strip style from head', () => {
-    stripStyleFromHead();
+    stripStyleFromHead('direflow-style');
     expect(document.head.children.length).toBe(0);
     expect(document.head.children[0]).toBeUndefined();
   });

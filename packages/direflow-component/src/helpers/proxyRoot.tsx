@@ -11,9 +11,8 @@ interface IShadowComponent {
 }
 
 interface IComponentOptions {
-  webcomponent: Element;
+  webComponent: Element;
   mode: 'open' | 'closed';
-  stylesContainer?: Element;
 }
 
 const Portal: FC<IPortal> = (props) => {
@@ -23,12 +22,8 @@ const Portal: FC<IPortal> = (props) => {
 
 const createProxyComponent = (options: IComponentOptions) => {
   const ShadowRoot: FC<IShadowComponent> = (props) => {
-    const shadowedRoot: ShadowRoot = options.webcomponent.shadowRoot
-      || options.webcomponent.attachShadow({ mode: options.mode });
-
-    if (options.stylesContainer) {
-      shadowedRoot.appendChild(options.stylesContainer);
-    }
+    const shadowedRoot = options.webComponent.shadowRoot
+      || options.webComponent.attachShadow({ mode: options.mode });
 
     return <Portal targetElement={shadowedRoot}>{props.children}</Portal>;
   };
@@ -39,19 +34,18 @@ const createProxyComponent = (options: IComponentOptions) => {
 const componentMap = new WeakMap<Element, React.FC<IShadowComponent>>();
 
 const createProxyRoot = (
-  webcomponent: Element,
-  stylesContainer?: Element,
+  webComponent: Element,
 ): { [key in 'open' | 'closed']: React.FC<IShadowComponent> } => {
   return new Proxy<any>(
     {},
     {
       get(_: unknown, mode: 'open' | 'closed') {
-        if (componentMap.get(webcomponent)) {
-          return componentMap.get(webcomponent);
+        if (componentMap.get(webComponent)) {
+          return componentMap.get(webComponent);
         }
 
-        const proxyComponent = createProxyComponent({ webcomponent, mode, stylesContainer });
-        componentMap.set(webcomponent, proxyComponent);
+        const proxyComponent = createProxyComponent({ webComponent, mode });
+        componentMap.set(webComponent, proxyComponent);
         return proxyComponent;
       },
     },

@@ -1,7 +1,7 @@
 import WebComponentFactory from './WebComponentFactory';
 import { IDireflowComponent } from './types/DireflowConfig';
 import { DireflowElement } from './types/DireflowElement';
-import includePolyfills from './services/polyfillHandler';
+import includePolyfills from './helpers/polyfillHandler';
 
 class DireflowComponent {
   /**

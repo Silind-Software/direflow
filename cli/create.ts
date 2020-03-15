@@ -1,10 +1,10 @@
 import fs from 'fs';
 import chalk from 'chalk';
 import { chooseName, chooseDescription, chooseLanguage, chooseLinter, isNpmModule } from './questions';
-import copyTemplate from './utils/copyTemplate';
-import { getNameFormats, createDefaultName } from './utils/nameFormat';
-import isDireflowSetup from './utils/detectDireflowSetup';
-import { writeProjectNames } from './utils/writeNames';
+import copyTemplate from './helpers/copyTemplate';
+import { getNameFormats, createDefaultName } from './helpers/nameFormat';
+import isDireflowSetup from './helpers/detectDireflowSetup';
+import { writeProjectNames } from './helpers/writeNames';
 import { moreInfoMessage, componentFinishedMessage } from './messages';
 
 interface ISetupPresets {

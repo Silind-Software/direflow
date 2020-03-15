@@ -1,5 +1,5 @@
 import { DireflowComponent } from 'direflow-component';
-import App from './test-component/App';
+import App from './direflow-components/test-component/App';
 
 DireflowComponent.createAll([
   {

@@ -2,14 +2,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import clonedeep from 'lodash.clonedeep';
-import createProxyRoot from './services/proxyRoot';
-import addStyledComponentStyles from './services/styledComponentsHandler';
-import includeExternalSources from './services/externalSourceHandler';
-import loadFonts from './services/fontLoaderHandler';
-import includeGoogleIcons from './services/iconLoaderHandler';
-import { EventProvider } from './components/EventContext';
+import createProxyRoot from './helpers/proxyRoot';
 import { IDireflowPlugin } from './types/DireflowConfig';
-import handleMaterialUiStyle from './services/materialUiStylesHandler';
+import { EventProvider } from './components/EventContext';
+import styledComponentsPlugin from './plugins/styledComponentsPlugin';
+import externalLoaderPlugin from './plugins/externalLoaderPlugin';
+import fontLoaderPlugin from './plugins/fontLoaderPlugin';
+import iconLoaderPlugin from './plugins/iconLoaderPlugin';
+import materialUiPlugin from './plugins/materialUiPlugin';
 
 class WebComponentFactory {
   constructor(
@@ -65,7 +65,7 @@ class WebComponentFactory {
        * Web Component gets mounted on the DOM.
        */
       public connectedCallback() {
-        this.preparePlugins();
+        this.applyPlugins();
         this.mountReactApp({ initial: true });
 
         factory.connectCallback?.(this);
@@ -82,6 +82,7 @@ class WebComponentFactory {
           return;
         }
 
+        this.properties[name] = newValue;
         this.mountReactApp();
       }
 
@@ -170,13 +171,14 @@ class WebComponentFactory {
       }
 
       /**
-       * Fetch and prepare all plugins.
+       * Apply plugins
        */
-      public preparePlugins() {
-        loadFonts(factory.plugins);
-        includeGoogleIcons(this, factory.plugins);
-        includeExternalSources(this, factory.plugins);
-        addStyledComponentStyles(this, factory.plugins);
+      public applyPlugins() {
+        fontLoaderPlugin(factory.plugins);
+        iconLoaderPlugin(this, factory.plugins);
+        externalLoaderPlugin(this, factory.plugins);
+        styledComponentsPlugin(this, factory.plugins);
+        materialUiPlugin(this, factory.plugins);
       }
 
       /**
@@ -208,9 +210,8 @@ class WebComponentFactory {
           currentChildren = Array.from(this.children).map((child: Node) => child.cloneNode(true));
         }
 
-        const wrappedAppAndMountPoint = handleMaterialUiStyle(this, application, factory.plugins);
-        const root = createProxyRoot(this, wrappedAppAndMountPoint.mountPoint);
-        ReactDOM.render(<root.open>{wrappedAppAndMountPoint.app}</root.open>, this);
+        const root = createProxyRoot(this);
+        ReactDOM.render(<root.open>{application}</root.open>, this);
 
         if (currentChildren) {
           currentChildren.forEach((child: Node) => this.append(child));
