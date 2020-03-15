@@ -16,9 +16,9 @@ export const injectIntoHead = (element: Element) => {
   document.head.append(element);
 };
 
-export const stripStyleFromHead = () => {
+export const stripStyleFromHead = (styleId: string) => {
   const allChildren = document.head.children;
-  const style = Array.from(allChildren).find((child) => child.id === 'direflow-style');
+  const style = Array.from(allChildren).find((child) => child.id === styleId);
 
   if (style) {
     document.head.removeChild(style);
@@ -29,17 +29,4 @@ export const existsIdenticalElement = (element: Element, host: Element | ShadowR
   const allChildren = host.children;
   const exists = Array.from(allChildren).some((child) => element.isEqualNode(child));
   return exists;
-};
-
-export const unwrapToParent = (element: Element) => {
-  const child = element.firstChild;
-  const parent = element.parentNode;
-
-  if (child) {
-    parent?.appendChild(child);
-  }
-
-  if (parent) {
-    parent.removeChild(element);
-  }
 };

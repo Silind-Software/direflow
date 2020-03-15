@@ -91,7 +91,7 @@ describe('Inject into head', () => {
 
 describe('Strip style from head', () => {
   it('should correctly strip style from head', () => {
-    stripStyleFromHead();
+    stripStyleFromHead('direflow-style');
     expect(document.head.children.length).toBe(0);
     expect(document.head.children[0]).toBeUndefined();
   });
