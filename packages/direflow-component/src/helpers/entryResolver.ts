@@ -11,6 +11,10 @@ function entryResolver(indexPath: string) {
 
   const entryLoaderTemplate = handlebars.compile(entryLoaderFile);
 
+  const mainEntryFile = entryLoaderTemplate({ pathIndex: `${folderPath}/${paths[paths.length - 1]}` });
+  const mainEntryLoaderPath = resolve(__dirname, `../main.js`);
+  fs.writeFileSync(mainEntryLoaderPath, mainEntryFile);
+
   const entryList = componentFolders.map((folder) => {
     if (!fs.statSync(`${folderPath}/direflow-components/${folder}`).isDirectory()) {
       return null;
@@ -28,6 +32,8 @@ function entryResolver(indexPath: string) {
     fs.writeFileSync(entryLoaderPath, entryFile);
     return { [folder]: entryLoaderPath };
   }).filter(Boolean);
+
+  entryList.unshift({ main: mainEntryLoaderPath });
 
   return entryList;
 }
