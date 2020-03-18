@@ -35,7 +35,7 @@
     "react": "16.10.2",
     "react-dom": "16.10.2",
     "react-scripts": "3.2.0",
-    "direflow-component": "3.4.3"
+    "direflow-component": "3.4.4"
   },
   "devDependencies": {
     "eslint-plugin-node": "^11.0.0",

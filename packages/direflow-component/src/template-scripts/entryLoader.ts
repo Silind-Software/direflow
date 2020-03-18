@@ -1,12 +1,6 @@
 const asyncScriptLoader = require('./helpers/asyncScriptLoader.js').default;
 
-let didIncludeReactOnce = false;
-
 const includeReact = async () => {
-  if (didIncludeReactOnce) {
-    return;
-  }
-
   try {
     await asyncScriptLoader(
       'https://unpkg.com/react@16/umd/react.production.min.js',
@@ -16,7 +10,6 @@ const includeReact = async () => {
       'https://unpkg.com/react-dom@16/umd/react-dom.production.min.js',
       'reactBundleLoaded',
     );
-    didIncludeReactOnce = true;
   } catch (error) {
     console.error(error);
   }
@@ -31,7 +24,7 @@ const includeIndex = () => {
 };
 
 setTimeout(async () => {
-  if (window.React && window.ReactDOM) {
+  if (process.env.NODE_ENV === 'development' || (window.React && window.ReactDOM)) {
     includeIndex();
     return;
   }
