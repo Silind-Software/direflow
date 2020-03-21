@@ -17,7 +17,7 @@ DireflowComponent.createAll([
   {
     component: App,
     configuration: {
-      tagname: 'props-test',
+      tagname: 'event-test',
     },
   },
   {

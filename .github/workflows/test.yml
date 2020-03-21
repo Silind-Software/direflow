@@ -18,23 +18,21 @@ jobs:
     - name: Prepare
       run: |
         sudo apt-get install lsof
-        npm install yarn -g
-        npm install typescript -g
 
     - name: Install
       run: |
-        yarn clean:all
-        yarn install:all
+        npm run clean:all
+        npm run install:all
         
     - name: Build
       run: |
-        yarn build:all
+        npm run build:all
 
     - name: Test
       run: |
-        yarn test
+        npm run test
 
     - name: Integration Test
       run: |
-        yarn cypress:prepare
-        yarn cypress:test
+        npm run cypress:prepare
+        npm run cypress:test

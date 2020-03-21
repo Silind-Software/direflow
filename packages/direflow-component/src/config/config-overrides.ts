@@ -142,11 +142,15 @@ function overridePlugins(plugins: IPlugin[], entry: TEntry, env: string, options
 }
 
 function overrideResolve(currentResolve: IResolve) {
-  const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
+  try {
+    const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 
-  currentResolve.plugins = currentResolve.plugins.filter(
-    (plugin) => !(plugin instanceof ModuleScopePlugin),
-  );
+    currentResolve.plugins = currentResolve.plugins.filter(
+      (plugin) => !(plugin instanceof ModuleScopePlugin),
+    );
+  } catch (error) {
+    // supress error
+  }
 
   return currentResolve;
 }

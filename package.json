@@ -1,6 +1,6 @@
 {
   "name": "direflow-cli",
-  "version": "3.4.4",
+  "version": "3.4.5",
   "description": "Official CLI for Direflow",
   "main": "dist/index.js",
   "scripts": {
@@ -10,8 +10,8 @@
     "setup-local": "./scripts/bash/setupLocal.sh",
     "clean:all": "node ./scripts/node/cleanupAll.js",
     "install:all": "node ./scripts/node/installAll.js",
-    "build:all": "node ./scripts/node/buildAll.js && yarn install:all --no-deps",
-    "build:full": "yarn clean:all && yarn install:all && yarn build:all",
+    "build:all": "node ./scripts/node/buildAll.js && npm run install:all -- --no-deps",
+    "build:full": "npm run clean:all && npm run install:all && npm run build:all && npm run clean:all -- --modules",
     "cypress:prepare": "node ./scripts/node/installAll.js --test-setup",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",

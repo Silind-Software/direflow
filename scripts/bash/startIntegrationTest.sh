@@ -1,8 +1,8 @@
 cd cypress/test-setup
-yarn start & wait-on http://localhost:3000
+npm start & wait-on http://localhost:3000
 
 cd .. && cd ..
-yarn cypress:run
+npm run cypress:run
 
 sleep 2
 

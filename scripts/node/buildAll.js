@@ -19,7 +19,7 @@ for (const directory of widgetsDirectory) {
 function build(dir) {
   console.log('Beginning to build:', dir);
 
-  exec(`cd ${dir} && yarn build`, (err) => {
+  exec(`cd ${dir} && npm run build`, (err) => {
     if (err) {
       console.log(`✗ ${dir} could not build`);
       console.log(err);

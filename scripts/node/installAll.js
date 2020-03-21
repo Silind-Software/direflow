@@ -36,7 +36,7 @@ function install(dir) {
     console.log('Beginning to install: ', dir);
 
     await new Promise((subResolve) => {
-      exec(`cd ${dir} && yarn`, (err) => {
+      exec(`cd ${dir} && npm install`, (err) => {
         if (err) {
           console.log(`✗ ${dir} could not install`);
           console.log(err);
@@ -59,7 +59,7 @@ function install(dir) {
     if (peerDeps) {
       // eslint-disable-next-line no-restricted-syntax
       for (const [package, version] of Object.entries(peerDeps)) {
-        execSync(`cd ${dir} && yarn add ${package}@${version}`);
+        execSync(`cd ${dir} && npm install ${package}@${version}`);
         console.log(`✓ ${package}@${version} peer dependency installed succesfully`);
       }
 
