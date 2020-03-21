@@ -4,4 +4,4 @@ export type PluginRegistrator = (
   element: HTMLElement,
   plugins: IDireflowPlugin[] | undefined,
   app?: JSX.Element,
-) => [JSX.Element, Element] | void;
+) => [JSX.Element, Element?] | void;

@@ -7,12 +7,7 @@ import createProxyRoot from './helpers/proxyRoot';
 import { IDireflowPlugin } from './types/DireflowConfig';
 import { EventProvider } from './components/EventContext';
 import { PluginRegistrator } from './types/PluginRegistrator';
-import registerPlugin from './helpers/registerPlugin';
-import styledComponentsPlugin from './plugins/styledComponentsPlugin';
-import externalLoaderPlugin from './plugins/externalLoaderPlugin';
-import fontLoaderPlugin from './plugins/fontLoaderPlugin';
-import iconLoaderPlugin from './plugins/iconLoaderPlugin';
-import materialUiPlugin from './plugins/materialUiPlugin';
+import registeredPlugins from './plugins/plugins';
 
 class WebComponentFactory {
   constructor(
@@ -174,14 +169,29 @@ class WebComponentFactory {
       /**
        * Apply plugins
        */
-      public applyPlugins() {
-        return [
-          registerPlugin(fontLoaderPlugin),
-          registerPlugin(iconLoaderPlugin),
-          registerPlugin(externalLoaderPlugin),
-          registerPlugin(styledComponentsPlugin),
-          registerPlugin(materialUiPlugin),
-        ];
+      public applyPlugins(application: JSX.Element): [JSX.Element, Element[]] {
+        const shadowChildren: Element[] = [];
+
+        const applicationWithPlugins = registeredPlugins.reduce(
+          (app: JSX.Element, currentPlugin: PluginRegistrator) => {
+            const pluginResult = currentPlugin(this, factory.plugins, app);
+
+            if (!pluginResult) {
+              return app;
+            }
+
+            const [wrapper, shadowChild] = pluginResult;
+
+            if (shadowChild) {
+              shadowChildren.push(shadowChild);
+            }
+
+            return wrapper;
+          },
+          application,
+        );
+
+        return [applicationWithPlugins, shadowChildren];
       }
 
       /**
@@ -202,29 +212,10 @@ class WebComponentFactory {
           </EventProvider>
         );
 
-        const shadowChildren: Element[] = [];
-
-        const applicationWithPlugins = this.applyPlugins().reduce(
-          (app: JSX.Element, currentPlugin: PluginRegistrator) => {
-            const pluginResult = currentPlugin(this, factory.plugins, app);
-
-            if (!pluginResult) {
-              return app;
-            }
-
-            const [wrapper, shadowChild] = pluginResult;
-
-            if (shadowChild) {
-              shadowChildren.push(shadowChild);
-            }
-
-            return wrapper;
-          },
-          application,
-        );
+        const [applicationWithPlugins, shadowChildren] = this.applyPlugins(application);
 
         if (!factory.shadow) {
-          ReactDOM.render(application, this);
+          ReactDOM.render(applicationWithPlugins, this);
           return;
         }
 
