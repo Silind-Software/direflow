@@ -3,7 +3,7 @@ console.log(
 %cDireflow Components running in development.
 
 %cTo build your components
-%c- Run 'yarn build'
+%c- Run 'npm run build'
 %c- Your build will be found in %cbuild/direflowBundle.js
 
 %cNeed help?

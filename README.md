@@ -35,8 +35,8 @@ This will bootstrap a new Direflow Component for you.
 Now use the following commands:
 ```console
 cd <project-folder>
-yarn install
-yarn start
+npm install
+npm start
 ```
 
 Your Direflow Component will start running on `localhost:3000` and your browser opens a new window  
