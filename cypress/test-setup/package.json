@@ -4,15 +4,17 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "react-app-rewired start"
+    "start": "serve ./public",
+    "build": "react-app-rewired build"
   },
   "dependencies": {
-    "direflow-component": "../../packages/direflow-component"
-  },
-  "peerDependencies": {
+    "direflow-component": "../../packages/direflow-component",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "^3.4.1",
+    "serve": "^11.3.0"
+  },
+  "peerDependencies": {
     "react-app-rewired": "2.1.3",
     "to-string-loader": "1.1.5"
   },

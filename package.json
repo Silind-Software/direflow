@@ -12,7 +12,6 @@
     "install:all": "node ./scripts/node/installAll.js",
     "build:all": "node ./scripts/node/buildAll.js && npm run install:all -- --no-deps",
     "build:full": "npm run clean:all && npm run install:all && npm run build:all && npm run clean:all -- --modules",
-    "cypress:prepare": "node ./scripts/node/installAll.js --test-setup",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "cypress:test": "./scripts/bash/startIntegrationTest.sh"
