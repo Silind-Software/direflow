@@ -1,6 +1,8 @@
 export interface IOptions {
   filename?: string;
   chunkFilename?: string;
+  react?: string | boolean;
+  reactDOM?: string | boolean;
 }
 
 export interface IModule {

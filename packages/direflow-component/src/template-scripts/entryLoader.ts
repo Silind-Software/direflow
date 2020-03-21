@@ -1,15 +1,18 @@
 const asyncScriptLoader = require('./helpers/asyncScriptLoader.js').default;
 
+const reactResource: any = '{{reactResource}}';
+const reactDOMResource: any = '{{reactDOMResource}}';
+
+
 const includeReact = async () => {
   try {
-    await asyncScriptLoader(
-      'https://unpkg.com/react@16/umd/react.production.min.js',
-      'reactBundleLoaded',
-    );
-    await asyncScriptLoader(
-      'https://unpkg.com/react-dom@16/umd/react-dom.production.min.js',
-      'reactBundleLoaded',
-    );
+    if (reactResource !== 'none') {
+      await asyncScriptLoader(reactResource, 'reactBundleLoaded');
+    }
+
+    if (reactDOMResource !== 'none') {
+      await asyncScriptLoader(reactDOMResource, 'reactBundleLoaded');
+    }
   } catch (error) {
     console.error(error);
   }

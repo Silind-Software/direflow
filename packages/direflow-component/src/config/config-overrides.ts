@@ -17,7 +17,10 @@ import {
 export = function override(config: TConfig, env: string, options?: IOptions) {
   const filename = options?.filename || 'direflowBundle.js';
   const chunkFilename = options?.chunkFilename || 'vendor.js';
-  const entries = addEntries(config.entry, env);
+  const react = options?.react;
+  const reactDOM = options?.reactDOM;
+
+  const entries = addEntries(config.entry, env, { react, reactDOM });
 
   const overridenConfig = {
     ...config,
@@ -27,18 +30,18 @@ export = function override(config: TConfig, env: string, options?: IOptions) {
     optimization: overrideOptimization(config.optimization, env),
     resolve: overrideResolve(config.resolve),
     plugins: overridePlugins(config.plugins, entries, env, { filename, chunkFilename }),
-    externals: overrideExternals(config.externals, env),
+    externals: overrideExternals(config.externals, env, { react, reactDOM }),
   };
 
   return overridenConfig;
 };
 
-function addEntries(entry: TEntry, env: string) {
+function addEntries(entry: TEntry, env: string, { react, reactDOM }: IOptions) {
   const entryResolver = require('./dist/helpers/entryResolver').default;
   const originalEntry = [...(entry as string[])];
 
   const [pathIndex] = env === 'development' ? originalEntry.splice(1, 1) : originalEntry.splice(0, 1);
-  const resolvedEntries = entryResolver(pathIndex);
+  const resolvedEntries = entryResolver(pathIndex, { react, reactDOM });
 
   const newEntry: { [key: string]: string } = { main: pathIndex };
 
@@ -88,7 +91,7 @@ function overrideModule(module: IModule) {
 function overrideOutput(
   output: IOptions,
   env: string,
-  { filename, chunkFilename }: Required<IOptions>,
+  { filename, chunkFilename }: IOptions,
 ) {
   const outputFilename = hasOptions('split', env) ? '[name].js' : filename;
 
@@ -155,16 +158,22 @@ function overrideResolve(currentResolve: IResolve) {
   return currentResolve;
 }
 
-function overrideExternals(externals: { [key: string]: any }, env: string) {
+function overrideExternals(externals: { [key: string]: any }, env: string, { react, reactDOM }: IOptions) {
   if (env === 'development') {
     return externals;
   }
 
-  return {
-    ...externals,
-    react: 'React',
-    'react-dom': 'ReactDOM',
-  };
+  const extraExternals: any = { ...externals };
+
+  if (react !== false) {
+    extraExternals.react = 'React';
+  }
+
+  if (reactDOM !== false) {
+    extraExternals['react-dom'] = 'ReactDOM';
+  }
+
+  return extraExternals;
 }
 
 async function copyBundleScript(env: string, entry: TEntry, { filename, chunkFilename }: IOptions) {
