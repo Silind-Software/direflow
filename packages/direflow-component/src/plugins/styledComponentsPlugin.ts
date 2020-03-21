@@ -1,10 +1,15 @@
 import { injectIntoShadowRoot, stripStyleFromHead } from '../helpers/domControllers';
 import { IDireflowPlugin } from '../types/DireflowConfig';
 import createUniqueString from '../utils/createUniqueString';
+import { PluginRegistrator } from '../types/PluginRegistrator';
+
 
 let styles = '';
 
-const styledComponentsPlugin = (element: HTMLElement, plugins: IDireflowPlugin[] | undefined) => {
+const styledComponentsPlugin: PluginRegistrator = (
+  element: HTMLElement,
+  plugins: IDireflowPlugin[] | undefined,
+) => {
   if (plugins?.find((plugin) => plugin.name === 'styled-components')) {
     setTimeout(() => {
       try {

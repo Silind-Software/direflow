@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable max-classes-per-file */
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -5,6 +6,8 @@ import clonedeep from 'lodash.clonedeep';
 import createProxyRoot from './helpers/proxyRoot';
 import { IDireflowPlugin } from './types/DireflowConfig';
 import { EventProvider } from './components/EventContext';
+import { PluginRegistrator } from './types/PluginRegistrator';
+import registerPlugin from './helpers/registerPlugin';
 import styledComponentsPlugin from './plugins/styledComponentsPlugin';
 import externalLoaderPlugin from './plugins/externalLoaderPlugin';
 import fontLoaderPlugin from './plugins/fontLoaderPlugin';
@@ -65,9 +68,7 @@ class WebComponentFactory {
        * Web Component gets mounted on the DOM.
        */
       public connectedCallback() {
-        this.applyPlugins();
         this.mountReactApp({ initial: true });
-
         factory.connectCallback?.(this);
       }
 
@@ -174,11 +175,13 @@ class WebComponentFactory {
        * Apply plugins
        */
       public applyPlugins() {
-        fontLoaderPlugin(factory.plugins);
-        iconLoaderPlugin(this, factory.plugins);
-        externalLoaderPlugin(this, factory.plugins);
-        styledComponentsPlugin(this, factory.plugins);
-        materialUiPlugin(this, factory.plugins);
+        return [
+          registerPlugin(fontLoaderPlugin),
+          registerPlugin(iconLoaderPlugin),
+          registerPlugin(externalLoaderPlugin),
+          registerPlugin(styledComponentsPlugin),
+          registerPlugin(materialUiPlugin),
+        ];
       }
 
       /**
@@ -199,6 +202,27 @@ class WebComponentFactory {
           </EventProvider>
         );
 
+        const shadowChildren: Element[] = [];
+
+        const applicationWithPlugins = this.applyPlugins().reduce(
+          (app: JSX.Element, currentPlugin: PluginRegistrator) => {
+            const pluginResult = currentPlugin(this, factory.plugins, app);
+
+            if (!pluginResult) {
+              return app;
+            }
+
+            const [wrapper, shadowChild] = pluginResult;
+
+            if (shadowChild) {
+              shadowChildren.push(shadowChild);
+            }
+
+            return wrapper;
+          },
+          application,
+        );
+
         if (!factory.shadow) {
           ReactDOM.render(application, this);
           return;
@@ -210,8 +234,8 @@ class WebComponentFactory {
           currentChildren = Array.from(this.children).map((child: Node) => child.cloneNode(true));
         }
 
-        const root = createProxyRoot(this);
-        ReactDOM.render(<root.open>{application}</root.open>, this);
+        const root = createProxyRoot(this, shadowChildren);
+        ReactDOM.render(<root.open>{applicationWithPlugins}</root.open>, this);
 
         if (currentChildren) {
           currentChildren.forEach((child: Node) => this.append(child));

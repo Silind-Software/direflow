@@ -1,7 +1,17 @@
 import { injectIntoShadowRoot, injectIntoHead } from '../helpers/domControllers';
 import { IDireflowPlugin } from '../types/DireflowConfig';
+import { PluginRegistrator } from '../types/PluginRegistrator';
 
-const externalLoaderPlugin = (element: HTMLElement, plugins: IDireflowPlugin[] | undefined) => {
+let didInclude = false;
+
+const externalLoaderPlugin: PluginRegistrator = (
+  element: HTMLElement,
+  plugins: IDireflowPlugin[] | undefined,
+) => {
+  if (didInclude) {
+    return;
+  }
+
   const plugin = plugins?.find((p) => p.name === 'external-loader');
   const paths = plugin?.options?.paths;
 
@@ -17,6 +27,7 @@ const externalLoaderPlugin = (element: HTMLElement, plugins: IDireflowPlugin[] |
           script.async = async;
 
           injectIntoHead(script);
+          didInclude = true;
         }
 
         if (actualPath.endsWith('.css')) {
