@@ -13,6 +13,7 @@ interface IShadowComponent {
 interface IComponentOptions {
   webComponent: Element;
   mode: 'open' | 'closed';
+  shadowChildren: Element[];
 }
 
 const Portal: FC<IPortal> = (props) => {
@@ -25,6 +26,10 @@ const createProxyComponent = (options: IComponentOptions) => {
     const shadowedRoot = options.webComponent.shadowRoot
       || options.webComponent.attachShadow({ mode: options.mode });
 
+    options.shadowChildren.forEach((child) => {
+      shadowedRoot.appendChild(child);
+    });
+
     return <Portal targetElement={shadowedRoot}>{props.children}</Portal>;
   };
 
@@ -35,6 +40,7 @@ const componentMap = new WeakMap<Element, React.FC<IShadowComponent>>();
 
 const createProxyRoot = (
   webComponent: Element,
+  shadowChildren: Element[],
 ): { [key in 'open' | 'closed']: React.FC<IShadowComponent> } => {
   return new Proxy<any>(
     {},
@@ -44,7 +50,7 @@ const createProxyRoot = (
           return componentMap.get(webComponent);
         }
 
-        const proxyComponent = createProxyComponent({ webComponent, mode });
+        const proxyComponent = createProxyComponent({ webComponent, mode, shadowChildren });
         componentMap.set(webComponent, proxyComponent);
         return proxyComponent;
       },
