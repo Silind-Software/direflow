@@ -14,6 +14,7 @@ npm start & wait-on http://localhost:5000
 cd .. && cd ..
 npm run cypress:run
 
+rm public/direflowBundle.js
 sleep 2
 
 echo "Cypress has finished testing"
