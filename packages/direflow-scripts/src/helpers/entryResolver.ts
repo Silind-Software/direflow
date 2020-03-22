@@ -40,13 +40,13 @@ function entryResolver(indexPath: string, { react, reactDOM }: IOptions) {
   const entryList = componentFolders
     .map((folder) => {
       if (!fs.statSync(`${folderPath}/direflow-components/${folder}`).isDirectory()) {
-        return null;
+        return;
       }
 
       const pathIndex = `${folderPath}/direflow-components/${folder}/${paths[paths.length - 1]}`;
 
       if (!fs.existsSync(pathIndex)) {
-        return null;
+        return;
       }
 
       const entryFile = entryLoaderTemplate({ pathIndex, reactResource, reactDOMResource });
@@ -59,7 +59,7 @@ function entryResolver(indexPath: string, { react, reactDOM }: IOptions) {
 
   entryList.unshift({ main: mainEntryLoaderPath });
 
-  return entryList;
+  return entryList as Array<{ [key: string]: string }>;
 }
 
 export default entryResolver;

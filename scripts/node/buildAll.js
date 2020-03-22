@@ -26,28 +26,6 @@ function build(dir) {
       return;
     }
 
-    if (dir === 'packages/direflow-component') {
-      exec(`mv ${dir}/dist/config/config-overrides.js ${dir}/config-overrides.js`, (subErr) => {
-        if (subErr) {
-          console.log('✗ failed to move config-overrides.js');
-          console.log(subErr);
-          return;
-        }
-
-        console.log('✓ config-overrides.js moved succesfully');
-      });
-
-      exec(`mv ${dir}/dist/config/config-overrides.d.ts ${dir}/config-overrides.d.ts`, (subErr) => {
-        if (subErr) {
-          console.log('✗ failed to move config-overrides.d.ts');
-          console.log(subErr);
-          return;
-        }
-
-        console.log('✓ config-overrides.d.ts moved succesfully');
-      });
-    }
-
     console.log(`✓ ${dir} build succesfully`);
   });
 }

@@ -1,5 +1,6 @@
-import asyncScriptLoader from './asyncScriptLoader';
 import { IDireflowPlugin } from '../types/DireflowConfig';
+
+const asyncScriptLoader = require('direflow-scripts/dist/helpers/asyncScriptLoader').default;
 
 type TWcPolyfillsLoaded = Array<{ script: Element; hasLoaded: boolean }>;
 declare global {

@@ -4,6 +4,7 @@ import rimraf from 'rimraf';
 import fs from 'fs';
 import { resolve } from 'path';
 import { PromiseTask } from 'event-hooks-webpack-plugin/lib/tasks';
+import entryResolver from '../helpers/entryResolver';
 import {
   TConfig,
   IOptions,
@@ -37,7 +38,6 @@ export = function override(config: TConfig, env: string, options?: IOptions) {
 };
 
 function addEntries(entry: TEntry, env: string, { react, reactDOM }: IOptions) {
-  const entryResolver = require('./dist/helpers/entryResolver').default;
   const originalEntry = [...(entry as string[])];
 
   const [pathIndex] = env === 'development' ? originalEntry.splice(1, 1) : originalEntry.splice(0, 1);
@@ -58,7 +58,7 @@ function addEntries(entry: TEntry, env: string, { react, reactDOM }: IOptions) {
   const flatList = Object.values(newEntry);
 
   if (env === 'development') {
-    return [...flatList, resolve(__dirname, './dist/config/welcome.js')];
+    return [...flatList, resolve(__dirname, '../template-scripts/welcome.js')];
   }
 
   if (hasOptions('split', env)) {
