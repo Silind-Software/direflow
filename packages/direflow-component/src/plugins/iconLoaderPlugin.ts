@@ -1,17 +1,27 @@
-import { injectIntoShadowRoot } from '../helpers/domControllers';
 import { IDireflowPlugin } from '../types/DireflowConfig';
+import { PluginRegistrator } from '../types/PluginRegistrator';
 
-const iconLoaderPlugin = (element: HTMLElement, plugins: IDireflowPlugin[] | undefined) => {
+const iconLoaderPlugin: PluginRegistrator = (
+  element: HTMLElement,
+  plugins: IDireflowPlugin[] | undefined,
+  app?: JSX.Element,
+) => {
   const plugin = plugins?.find((p) => p.name === 'icon-loader');
 
-  if (plugin?.options?.packs.includes('material-icons')) {
-    setTimeout(() => {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = 'https://fonts.googleapis.com/icon?family=Material+Icons';
+  if (!app) {
+    return;
+  }
 
-      injectIntoShadowRoot(element, link);
-    });
+  if (plugin?.options?.packs.includes('material-icons')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/icon?family=Material+Icons';
+
+    const insertionPoint = document.createElement('span');
+    insertionPoint.id = 'direflow_material-icons';
+    insertionPoint.appendChild(link);
+
+    return [app, insertionPoint];
   }
 };
 

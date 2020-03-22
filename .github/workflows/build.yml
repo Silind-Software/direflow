@@ -18,33 +18,30 @@ jobs:
     - name: Prepare
       run: |
         sudo apt-get install lsof
-        npm install yarn -g
         npm install codecov -g
-        npm install typescript -g
 
     - name: Install
       run: |
-        yarn clean:all
-        yarn install:all
+        npm run clean:all
+        npm run install:all
 
     - name: Codecov
       run: codecov -t ${{ secrets.CODECOV_TOKEN }}
 
     - name: Build
       run: |
-        yarn build:all
+        npm run build:all
 
     - name: Test
       run: |
-        yarn test
+        npm run test
 
     - name: Integration Test
       run: |
-        yarn cypress:prepare
-        yarn cypress:test
+        npm run cypress:test
 
     - name: Create version patch
-      run: yarn update-version patch
+      run: npm run update-version patch
 
     - name: Publish direflow-cli to NPM
       run: npm publish

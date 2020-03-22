@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Styled, EventConsumer } from 'direflow-component';
 import styles from './App.css';
 
@@ -16,6 +15,7 @@ const App = (props) => {
   ));
 
   const title = props.showTitle ? props.componentTitle : 'no-title';
+
 
   return (
     <Styled styles={styles}>
@@ -36,11 +36,6 @@ const App = (props) => {
       </div>
     </Styled>
   );
-};
-
-App.propTypes = {
-  sampleList: PropTypes.array,
-  componentTitle: PropTypes.string,
 };
 
 App.defaultProps = {

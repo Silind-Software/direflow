@@ -18,12 +18,12 @@ Pull requests are really welcome!
 When doing a pull request, please make sure to include an new version in your PR.
 There are multiple packages that needs to be in sync, so in order to update the version of Direflow, please use the script:
 ```console
-yarn update-version <new-version>
+npm run update-version <new-version>
 ```
 
 In order to create a version patch, use the command:
 ```console
-yarn update-version patch
+npm run update-version patch
 ```
 
 ## Developing on Direflow
@@ -32,7 +32,7 @@ Start by making a fork of the direflow repository, and clone it down.
 ### Install
 Now cd into the project folder and run the command:
 ```console
-yarn install:all
+npm run install:all
 ```
 This command will install the project, the packages and all peer dependencies.
 
@@ -44,18 +44,18 @@ npm link
 
 Now, in order to make sure all version-references are pointed to your local version of the project, use the command:
 ```console
-yarn update-version link
+npm run update-version link
 ```
 
 _NB: To do all of this in one command, you can use:_
 ```console
-yarn setup-local
+npm run setup-local
 ```
 
 ### Build
 After applying your changes, build the project using the command:
 ```console
-yarn build:full
+npm run build:full
 ```
 
 Now, test that the project is working by using the command:
@@ -76,7 +76,7 @@ Now, test your new functionality.
 ### Commit the changes
 Before committing your new changes, remember to change the version using the command:
 ```console
-yarn update-version <new-version>
+npm run update-version <new-version>
 ```
 
 ### Create the PR

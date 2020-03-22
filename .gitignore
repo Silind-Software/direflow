@@ -1,11 +1,11 @@
 # Project setup specifics
 
 dist
+build
 package-lock.json
 yarn.lock
 config-overrides.js
 config-overrides.d.ts
-
 
 # Cypress
 cypress/fixtures
@@ -142,7 +142,7 @@ typings/
 # Output of 'npm pack'
 *.tgz
 
-# Yarn Integrity file
+# yarn Integrity file
 .yarn-integrity
 
 # dotenv environment variables file

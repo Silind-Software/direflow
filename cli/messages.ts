@@ -7,8 +7,8 @@ export const componentFinishedMessage = (componentName: string) => `
   To get started:
 
     cd ${componentName}
-    yarn install
-    yarn start
+    npm install
+    npm start
 
   The Direflow Component will be running at: ${chalk.magenta('localhost:3000')}
 `;

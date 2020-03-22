@@ -6,7 +6,7 @@ const package = require('../packages/direflow-component/package.json');
 const peerDeps = package.peerDependencies;
 
 Object.entries(peerDeps).forEach(([peerPackage, version]) => {
-  const cmd = `cd packages/direflow-component && yarn add ${peerPackage}@${version}`;
+  const cmd = `cd packages/direflow-component && npm install ${peerPackage}@${version}`;
   execSync(cmd);
 });
 

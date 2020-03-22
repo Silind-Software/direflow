@@ -1,4 +1,4 @@
-describe('Running basic component without Shadow DOM', () => {
+describe('Running basic component', () => {
   before(() => {
     cy.visit('/');
   });
