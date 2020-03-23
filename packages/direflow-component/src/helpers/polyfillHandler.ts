@@ -1,6 +1,5 @@
 import { IDireflowPlugin } from '../types/DireflowConfig';
-
-const asyncScriptLoader = require('direflow-scripts/dist/helpers/asyncScriptLoader').default;
+import asyncScriptLoader from './asyncScriptLoader';
 
 type TWcPolyfillsLoaded = Array<{ script: Element; hasLoaded: boolean }>;
 declare global {
@@ -22,7 +21,6 @@ const includePolyfills = async (
   if (didIncludeOnce) {
     return;
   }
-
   const scriptsList = [];
 
   let useSD = '';
@@ -50,28 +48,12 @@ const includePolyfills = async (
   }
 
   if (options.usesShadow) {
-    scriptsList.push(
-      asyncScriptLoader(
-        useSD || DEFAULT_SD,
-        'wcPolyfillsLoaded',
-      ),
-    );
+    scriptsList.push(asyncScriptLoader(useSD || DEFAULT_SD, 'wcPolyfillsLoaded'));
   }
 
-  scriptsList.push(
-    asyncScriptLoader(
-      useCE || DEFAULT_CE,
-      'wcPolyfillsLoaded',
-    ),
-  );
+  scriptsList.push(asyncScriptLoader(useCE || DEFAULT_CE, 'wcPolyfillsLoaded'));
 
-  scriptsList.push(
-    asyncScriptLoader(
-      useAD || DEFAULT_AD,
-      'wcPolyfillsLoaded',
-    ),
-  );
-
+  scriptsList.push(asyncScriptLoader(useAD || DEFAULT_AD, 'wcPolyfillsLoaded'));
   try {
     await Promise.all(scriptsList);
     didIncludeOnce = true;

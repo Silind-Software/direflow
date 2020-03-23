@@ -81,6 +81,18 @@ function cleanDeps(dir) {
     });
   }
 
+  if (fs.existsSync(`${dir}/tsconfig.lib.json`)) {
+    exec(`rm ${dir}/tsconfig.lib.json`, (err) => {
+      if (err) {
+        console.log(`✗ ${dir}/tsconfig.lib.json FAILED to remove`);
+        console.log(err);
+        return;
+      }
+
+      console.log(`✓ ${dir}/tsconfig.lib.json is REMOVED`);
+    });
+  }
+
   if (fs.existsSync(`${dir}/dist`)) {
     exec(`rm -rf ${dir}/dist`, (err) => {
       if (err) {

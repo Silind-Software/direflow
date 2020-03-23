@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+
+require = require('esm')(module);
+const cli = require('../dist/cli');
+const [,, ...args] = process.argv;
+cli.default(args);
