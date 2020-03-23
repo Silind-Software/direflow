@@ -1,5 +1,4 @@
 /**
- * *******************************************************
  * In this file you can export components that will
  * be build as a pure React component library.
  * 
@@ -8,7 +7,6 @@
  *
  * If you're not using a React component library,
  * this file can be safely deleted.
- * *******************************************************
  */
 
 import App from "./direflow-components/{{names.snake}}/App";

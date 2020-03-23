@@ -66,7 +66,7 @@ module.exports = {
   },
   output: {
     path: `${srcPath}/lib`,
-    filename: 'index.js',
+    filename: 'component-exports.js',
     library: 'direflow-library',
     libraryTarget: 'commonjs2',
   },

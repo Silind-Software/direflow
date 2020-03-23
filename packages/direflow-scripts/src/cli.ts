@@ -1,6 +1,7 @@
-import { spawn } from 'child_process';
+import { spawn, ChildProcess } from 'child_process';
 import { resolve } from 'path';
 import chalk from 'chalk';
+import { interupted, succeeded } from './helpers/messages';
 
 type TCommand = 'start' | 'test' | 'build' | 'build:lib';
 
@@ -41,14 +42,19 @@ function build(args: string[]) {
 }
 
 function buildLib(args: string[]) {
-  const options: any = args[0] === '--verbose'
-    ? { shell: true, stdio: 'inherit' }
-    : undefined;
-
   console.log('Building React component library...');
-  const webpack = spawn('webpack', ['--config', resolve(__dirname, '../webpack.config.js')], options);
+  let webpack: ChildProcess | undefined;
 
-  webpack.stdout.on('data', (data) => {
+  if (args[0] === '--verbose') {
+    webpack = spawn('webpack', ['--config', resolve(__dirname, '../webpack.config.js')], {
+      shell: true,
+      stdio: 'inherit',
+    });
+  } else {
+    webpack = spawn('webpack', ['--config', resolve(__dirname, '../webpack.config.js')]);
+  }
+
+  webpack.stdout?.on('data', (data) => {
     if (data.toString().includes('ERROR')) {
       console.log(chalk.red('An error occured during the build!'));
       console.log(chalk.red(data.toString()));
@@ -57,26 +63,10 @@ function buildLib(args: string[]) {
 
   webpack.on('exit', (code: number) => {
     if (code !== 0) {
-      console.log('');
-      console.log(chalk.red('Build got interrupted.'));
-      console.log(`Did you remove the ${chalk.blue('src/component-exports')} file?`);
-      console.log('');
-      console.log(`Try building with the command ${chalk.blue('build:lib --verbose')}`);
-      console.log('');
+      console.log(interupted());
       return;
     }
 
-    console.log('');
-    console.log(chalk.greenBright('Succesfully create React component library'));
-    console.log('');
-    console.log(`The ${chalk.blue('library')} folder can be found at ${chalk.green('/lib')}`);
-    console.log('');
-    console.log(
-      `Alter your ${chalk.blue('package.json')} file by adding the field: ${chalk.green(
-        '{ "main": "lib/index.js" }',
-      )}`,
-    );
-    console.log(`You may publish the React component library with: ${chalk.blue('npm publish')}`);
-    console.log('');
+    console.log(succeeded());
   });
 }
