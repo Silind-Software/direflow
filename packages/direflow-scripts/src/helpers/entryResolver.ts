@@ -8,7 +8,9 @@ const DEFAULT_REACT_DOM = 'https://unpkg.com/react-dom@16/umd/react-dom.producti
 
 function entryResolver(indexPath: string, { react, reactDOM }: IOptions) {
   const paths = indexPath.split(sep);
-  const folderPath = [...paths].slice(0, paths.length - 1).join(sep);
+  const folderPath = [...paths]
+    .slice(0, paths.length - 1)
+    .reduce((path: string, current: string) => join(path, current), sep);
 
   let reactResource: any = 'none';
   let reactDOMResource: any = 'none';
