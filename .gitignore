@@ -6,6 +6,7 @@ package-lock.json
 yarn.lock
 config-overrides.js
 config-overrides.d.ts
+tsconfig.lib.json
 
 # Cypress
 cypress/fixtures

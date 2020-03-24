@@ -81,6 +81,18 @@ function cleanDeps(dir) {
     });
   }
 
+  if (fs.existsSync(`${dir}/tsconfig.lib.json`)) {
+    exec(`rm ${dir}/tsconfig.lib.json`, (err) => {
+      if (err) {
+        console.log(`✗ ${dir}/tsconfig.lib.json FAILED to remove`);
+        console.log(err);
+        return;
+      }
+
+      console.log(`✓ ${dir}/tsconfig.lib.json is REMOVED`);
+    });
+  }
+
   if (fs.existsSync(`${dir}/dist`)) {
     exec(`rm -rf ${dir}/dist`, (err) => {
       if (err) {
@@ -91,30 +103,5 @@ function cleanDeps(dir) {
 
       console.log(`✓ ${dir}/dist is REMOVED`);
     });
-  }
-
-  if (dir === 'packages/direflow-component') {
-    if (fs.existsSync(`${dir}/config-overrides.js`)) {
-      exec(`rm ${dir}/config-overrides.js`, (err) => {
-        if (err) {
-          console.log(`✗ ${dir}/config-overrides.js FAILED to remove`);
-          console.log(err);
-          return;
-        }
-
-        console.log(`✓ ${dir}/config-overrides.js is REMOVED`);
-      });
-    }
-    if (fs.existsSync(`${dir}/config-overrides.d.ts`)) {
-      exec(`rm ${dir}/config-overrides.d.ts`, (err) => {
-        if (err) {
-          console.log(`✗ ${dir}/config-overrides.d.ts FAILED to remove`);
-          console.log(err);
-          return;
-        }
-
-        console.log(`✓ ${dir}/config-overrides.d.ts is REMOVED`);
-      });
-    }
   }
 }

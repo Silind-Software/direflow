@@ -1,20 +1,4 @@
-describe('Using attributes', () => {
-  before(() => {
-    cy.visit('/');
-  });
-
-  it('should contain a custom element', () => {
-    cy.get('props-test').should('exist');
-  });
-
-  it('should have default componentTitle', () => {
-    cy.shadowGet('props-test')
-      .shadowFind('.app .header-title')
-      .shadowContains('Props Title');
-  });
-});
-
-describe('Using properties', () => {
+describe('Using properties and attributes', () => {
   before(() => {
     cy.visit('/');
   });
@@ -44,6 +28,16 @@ describe('Using properties', () => {
       .shadowEq(2)
       .shadowContains(assertions[2]);
   };
+
+  it('should contain a custom element', () => {
+    cy.get('props-test').should('exist');
+  });
+
+  it('should have default componentTitle', () => {
+    cy.shadowGet('props-test')
+      .shadowFind('.app .header-title')
+      .shadowContains('Props Title');
+  });
 
   it('should contain a custom element', () => {
     cy.get('props-test').should('exist');

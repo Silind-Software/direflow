@@ -1,5 +1,4 @@
 /**
- * *******************************************************
  * This is the entry file of the Direflow setup.
  *
  * You can add any additional functionality here.
@@ -8,7 +7,6 @@
  *
  * !This file cannot be removed.
  * It can be left blank if not needed.
- * *******************************************************
  */
 
 import {{names.pascal}} from "./direflow-components/{{names.snake}}";

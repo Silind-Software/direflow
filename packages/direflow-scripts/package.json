@@ -1,0 +1,47 @@
+{
+  "name": "direflow-scripts",
+  "version": "3.4.6",
+  "description": "Create Web Components using React",
+  "main": "dist/index.js",
+  "author": "Silind Software",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "bin": {
+    "direflow-scripts": "bin/direflow-scripts"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "webpack.config.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Silind-Software/direflow.git"
+  },
+  "homepage": "https://direflow.io",
+  "dependencies": {
+    "@svgr/webpack": "4.3.2",
+    "esm": "3.2.25",
+    "event-hooks-webpack-plugin": "2.1.4",
+    "handlebars": "^4.7.2",
+    "rimraf": "3.0.0",
+    "style-it": "2.1.4",
+    "ts-loader": "^6.2.1",
+    "webfontloader": "^1.6.28",
+    "webpack-filter-warnings-plugin": "^1.2.1",
+    "webpack": "^4.42.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-react": "^7.9.1",
+    "@types/react": "^16.9.25",
+    "@types/react-dom": "^16.9.5",
+    "@types/webfontloader": "^1.6.29",
+    "babel-loader": "^8.1.0",
+    "terser-webpack-plugin": "^2.3.5",
+    "typescript": "3.7.2"
+  }
+}

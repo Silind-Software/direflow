@@ -1,6 +1,6 @@
 {
   "name": "direflow-component",
-  "version": "3.4.5",
+  "version": "3.4.6",
   "description": "Create Web Components using React",
   "main": "dist/index.js",
   "author": "Silind Software",
@@ -9,9 +9,7 @@
     "build": "tsc"
   },
   "files": [
-    "dist",
-    "config-overrides.js",
-    "config-overrides.d.ts"
+    "dist"
   ],
   "repository": {
     "type": "git",
@@ -19,16 +17,12 @@
   },
   "homepage": "https://direflow.io",
   "dependencies": {
-    "@svgr/webpack": "4.3.2",
-    "event-hooks-webpack-plugin": "2.1.4",
-    "handlebars": "^4.7.2",
+    "chalk": "2.4.2",
     "lodash.clonedeep": "^4.5.0",
     "node-sass": "^4.13.0",
-    "rimraf": "3.0.0",
+    "react": "^16.13.1",
     "style-it": "2.1.4",
-    "to-string-loader": "1.1.5",
-    "webfontloader": "^1.6.28",
-    "webpack-filter-warnings-plugin": "^1.2.1"
+    "webfontloader": "^1.6.28"
   },
   "devDependencies": {
     "@types/lodash.clonedeep": "^4.5.6",
