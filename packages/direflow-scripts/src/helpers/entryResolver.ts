@@ -8,9 +8,7 @@ const DEFAULT_REACT_DOM = 'https://unpkg.com/react-dom@16/umd/react-dom.producti
 
 function entryResolver(indexPath: string, { react, reactDOM }: IOptions) {
   const paths = indexPath.split(sep);
-  const folderPath = [...paths]
-    .slice(0, paths.length - 1)
-    .reduce((path: string, current: string) => join(path, current), sep);
+  const folderPath = [...paths].slice(0, paths.length - 1).join(sep);
 
   let reactResource: any = 'none';
   let reactDOMResource: any = 'none';
@@ -50,8 +48,10 @@ function entryResolver(indexPath: string, { react, reactDOM }: IOptions) {
       if (!fs.existsSync(pathIndex)) {
         return;
       }
+      
+      const escapedPathIndex = pathIndex.replace(/\\/g, '\\\\');
 
-      const entryFile = entryLoaderTemplate({ pathIndex, reactResource, reactDOMResource });
+      const entryFile = entryLoaderTemplate({ pathIndex: escapedPathIndex, reactResource, reactDOMResource });
       const entryLoaderPath = resolve(__dirname, `../${folder}.js`);
 
       fs.writeFileSync(entryLoaderPath, entryFile);
