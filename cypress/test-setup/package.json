@@ -5,10 +5,11 @@
   "private": true,
   "scripts": {
     "start": "serve ./public",
-    "build": "react-app-rewired build"
+    "build": "direflow-scripts build"
   },
   "dependencies": {
     "direflow-component": "../../packages/direflow-component",
+    "direflow-scripts": "../../packages/direflow-scripts",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "^3.4.1",

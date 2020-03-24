@@ -5,7 +5,7 @@ import { createDireflowSetup } from './create';
 import checkForUpdates from './checkForUpdate';
 import { showVersion } from './messages';
 
-type IOptions =
+type TOptions =
   | 'small'
   | 'js'
   | 'ts'
@@ -13,7 +13,7 @@ type IOptions =
   | 'eslint'
   | 'npm';
 
-type TParsed = Command & { [key in IOptions]?: true } & { desc: string };
+type TParsed = Command & { [key in TOptions]?: true } & { desc: string };
 
 export default function cli() {
   commander
