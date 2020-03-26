@@ -44,6 +44,7 @@ class WebComponentFactory {
     return class WebComponent extends HTMLElement {
       public initialProperties = clonedeep(factory.componentProperties);
       public properties: { [key: string]: unknown } = {};
+      public hasConnected = false;
 
       constructor() {
         super();
@@ -64,6 +65,7 @@ class WebComponentFactory {
        */
       public connectedCallback() {
         this.mountReactApp({ initial: true });
+        this.hasConnected = true;
         factory.connectCallback?.(this);
       }
 
@@ -74,6 +76,10 @@ class WebComponentFactory {
        * @param newValue value after change
        */
       public attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+        if (!this.hasConnected) {
+          return;
+        }
+
         if (oldValue === newValue) {
           return;
         }
@@ -89,6 +95,10 @@ class WebComponentFactory {
        * @param newValue value after change
        */
       public propertyChangedCallback(name: string, oldValue: unknown, newValue: unknown) {
+        if (!this.hasConnected) {
+          return;
+        }
+
         if (oldValue === newValue) {
           return;
         }
