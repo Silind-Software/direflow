@@ -5,6 +5,9 @@ import { interupted, succeeded } from './helpers/messages';
 
 type TCommand = 'start' | 'test' | 'build' | 'build:lib';
 
+const env = { ...process.env };
+env.SKIP_PREFLIGHT_CHECK = 'true';
+
 export default function cli(args: Array<TCommand | string>) {
   const [command, ...restArgs] = args;
 
@@ -27,18 +30,27 @@ export default function cli(args: Array<TCommand | string>) {
 }
 
 function start() {
-  spawn('react-app-rewired', ['start'], { shell: true, stdio: 'inherit' });
+  spawn('react-app-rewired', ['start'], {
+    shell: true,
+    stdio: 'inherit',
+    env,
+  });
 }
 
 function test() {
   spawn('react-app-rewired', ['test', '--env=jest-environment-jsdom-fourteen'], {
     shell: true,
     stdio: 'inherit',
+    env,
   });
 }
 
 function build(args: string[]) {
-  spawn('react-app-rewired', ['build', ...args], { shell: true, stdio: 'inherit' });
+  spawn('react-app-rewired', ['build', ...args], {
+    shell: true,
+    stdio: 'inherit',
+    env,
+  });
 }
 
 function buildLib(args: string[]) {
@@ -49,6 +61,7 @@ function buildLib(args: string[]) {
     webpack = spawn('webpack', ['--config', resolve(__dirname, '../webpack.config.js')], {
       shell: true,
       stdio: 'inherit',
+      env,
     });
   } else {
     webpack = spawn('webpack', ['--config', resolve(__dirname, '../webpack.config.js')]);

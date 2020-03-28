@@ -48,11 +48,15 @@
     "no-underscore-dangle": "off",
     "global-require": "off",
     "arrow-body-style": "off",
+    "implicit-arrow-linebreak": "off",
     "object-curly-newline": "off",
     "lines-between-class-members": "off",
+    "function-paren-newline": "off",
     "linebreak-style": "off",
+    "operator-linebreak": "off",
+    "jsx-quotes": "off",
     "no-prototype-builtins": "off",
     "consistent-return": "off",
-    "max-len": ["warn",{ "code": 120 }]
+    "max-len": ["warn", { "code": 120 }]
   }
 }
