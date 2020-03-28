@@ -1,10 +1,11 @@
 import React, { FC, Component, ReactNode, ComponentClass, CSSProperties } from 'react';
-import Style from 'style-it';
+import Style from '../helpers/styleInjector';
 
 type TStyles = string | string[] | CSSProperties | CSSProperties[];
 
 interface IStyled {
   styles: TStyles;
+  scoped?: boolean;
   children: ReactNode | ReactNode[];
 }
 
@@ -19,7 +20,12 @@ const Styled: FC<IStyled> = (props): JSX.Element => {
     );
   }
 
-  return Style.it(styles, props.children);
+  return (
+    <Style scoped={props.scoped}>
+      {styles}
+      {props.children}
+    </Style>
+  );
 };
 
 const withStyles = (styles: TStyles) => <P, S>(WrappedComponent: ComponentClass<P, S> | FC<P>) => {
