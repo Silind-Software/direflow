@@ -27,7 +27,9 @@ const includeIndex = () => {
 };
 
 setTimeout(async () => {
-  if (process.env.NODE_ENV === 'development' || (window.React && window.ReactDOM)) {
+  if (process.env.NODE_ENV === 'development'
+      || (window.React && window.ReactDOM)
+      || (reactResource === 'none' && reactDOMResource === 'none')) {
     includeIndex();
     return;
   }
