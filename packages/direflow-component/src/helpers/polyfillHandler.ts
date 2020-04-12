@@ -28,9 +28,9 @@ const includePolyfills = async (
   let useAD = '';
   const polyfillLoaderPlugin = plugins?.find((plugin) => plugin.name === 'polyfill-loader');
 
-  const disableSD = typeof polyfillLoaderPlugin?.options?.use.sd === 'boolean' && !polyfillLoaderPlugin?.options?.use.sd;
-  const disableCE = typeof polyfillLoaderPlugin?.options?.use.ce === 'boolean' && !polyfillLoaderPlugin?.options?.use.ce;
-  const disableAD = typeof polyfillLoaderPlugin?.options?.use.adapter === 'boolean' && !polyfillLoaderPlugin?.options?.use.adapter;
+  const disableSD = polyfillLoaderPlugin?.options?.use.sd === false;
+  const disableCE = polyfillLoaderPlugin?.options?.use.ce === false;
+  const disableAD = polyfillLoaderPlugin?.options?.use.adapter === false;
 
   if (polyfillLoaderPlugin?.options?.use.sd) {
     useSD = typeof polyfillLoaderPlugin.options?.use.sd === 'string'
