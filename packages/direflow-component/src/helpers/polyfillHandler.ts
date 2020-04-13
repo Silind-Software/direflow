@@ -26,8 +26,11 @@ const includePolyfills = async (
   let useSD = '';
   let useCE = '';
   let useAD = '';
-
   const polyfillLoaderPlugin = plugins?.find((plugin) => plugin.name === 'polyfill-loader');
+
+  const disableSD = polyfillLoaderPlugin?.options?.use.sd === false;
+  const disableCE = polyfillLoaderPlugin?.options?.use.ce === false;
+  const disableAD = polyfillLoaderPlugin?.options?.use.adapter === false;
 
   if (polyfillLoaderPlugin?.options?.use.sd) {
     useSD = typeof polyfillLoaderPlugin.options?.use.sd === 'string'
@@ -47,13 +50,18 @@ const includePolyfills = async (
       : DEFAULT_AD;
   }
 
-  if (options.usesShadow) {
+  if (options.usesShadow && !disableSD) {
     scriptsList.push(asyncScriptLoader(useSD || DEFAULT_SD, 'wcPolyfillsLoaded'));
   }
 
-  scriptsList.push(asyncScriptLoader(useCE || DEFAULT_CE, 'wcPolyfillsLoaded'));
+  if (!disableCE) {
+    scriptsList.push(asyncScriptLoader(useCE || DEFAULT_CE, 'wcPolyfillsLoaded'));
+  }
 
-  scriptsList.push(asyncScriptLoader(useAD || DEFAULT_AD, 'wcPolyfillsLoaded'));
+  if (!disableAD) {
+    scriptsList.push(asyncScriptLoader(useAD || DEFAULT_AD, 'wcPolyfillsLoaded'));
+  }
+
   try {
     await Promise.all(scriptsList);
     didIncludeOnce = true;

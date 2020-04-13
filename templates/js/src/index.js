@@ -9,7 +9,7 @@
  * It can be left blank if not needed.
  */
 
-import {{names.pascal}} from "./direflow-components/{{names.snake}}";
+import {{names.pascal}} from './direflow-components/{{names.snake}}';
 
 {{names.pascal}}.then((element) => {
 

@@ -80,8 +80,8 @@ npm run update-version <new-version>
 ```
 
 ### Create the PR
-Create a branch for your changes called 'feature/name-of-the-changes'.
-Make a PR into the 'development' branch on the direflow repository.
+Create a branch for your changes called '_feature/name-of-the-changes_'.
+Make a PR into the **development** branch on the direflow repository.
 
 ## Updating the docs
 If you introduced user-facing changes, please update the [direflow-docs](https://github.com/Silind-Software/direflow-docs) accordingly.

@@ -9,7 +9,7 @@
  * this file can be safely deleted.
  */
 
-import App from "./direflow-components/{{names.snake}}/App";
+import App from './direflow-components/{{names.snake}}/App';
 
 export { 
   App 
