@@ -39,8 +39,8 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-scripts": "3.4.1",
-    "direflow-component": "3.4.9",
-    "direflow-scripts": "3.4.9"
+    "direflow-component": "3.4.10",
+    "direflow-scripts": "3.4.10"
   },
   "devDependencies": {
     {{#if eslint}}

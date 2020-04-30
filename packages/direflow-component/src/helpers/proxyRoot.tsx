@@ -43,7 +43,7 @@ const createProxyRoot = (
   shadowChildren: Element[],
 ): { [key in 'open' | 'closed']: React.FC<IShadowComponent> } => {
   return new Proxy<any>(
-    {},
+    { open: null, closed: null },
     {
       get(_: unknown, mode: 'open' | 'closed') {
         if (componentMap.get(webComponent)) {
