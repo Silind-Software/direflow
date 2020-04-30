@@ -16,7 +16,7 @@ export default function cli(args: Array<TCommand | string>) {
       start();
       break;
     case 'test':
-      test();
+      test(restArgs);
       break;
     case 'build':
       build(restArgs);
@@ -37,8 +37,8 @@ function start() {
   });
 }
 
-function test() {
-  spawn('react-app-rewired', ['test', '--env=jest-environment-jsdom-fourteen'], {
+function test(args: string[]) {
+  spawn('react-app-rewired', ['test', '--env=jest-environment-jsdom-fourteen', ...args], {
     shell: true,
     stdio: 'inherit',
     env,
