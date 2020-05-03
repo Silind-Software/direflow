@@ -1,6 +1,6 @@
 {
   "name": "direflow-scripts",
-  "version": "3.4.10",
+  "version": "3.4.12",
   "description": "Create Web Components using React",
   "main": "dist/index.js",
   "author": "Silind Software",
@@ -14,7 +14,8 @@
   "files": [
     "dist",
     "bin",
-    "webpack.config.js"
+    "webpack.config.js",
+    "direflow-jest.config.js"
   ],
   "repository": {
     "type": "git",
