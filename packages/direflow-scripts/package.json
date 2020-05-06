@@ -1,6 +1,6 @@
 {
   "name": "direflow-scripts",
-  "version": "3.4.12",
+  "version": "3.4.13",
   "description": "Create Web Components using React",
   "main": "dist/index.js",
   "author": "Silind Software",
