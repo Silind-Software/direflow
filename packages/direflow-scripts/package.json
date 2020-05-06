@@ -14,7 +14,8 @@
   "files": [
     "dist",
     "bin",
-    "webpack.config.js"
+    "webpack.config.js",
+    "direflow-jest.config.js"
   ],
   "repository": {
     "type": "git",
