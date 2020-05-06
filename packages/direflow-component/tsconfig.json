@@ -2,7 +2,12 @@
   "compilerOptions": {
     "target": "es2015",
     "module": "esNext",
-    "lib": ["es2017", "es7", "es6", "dom"],
+    "lib": [
+      "es2017",
+      "es7",
+      "es6",
+      "dom"
+    ],
     "declaration": true,
     "outDir": "./dist",
     "rootDir": "src",
@@ -10,7 +15,10 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "jsx": "react"
+    "jsx": "react",
+    "types": [
+      "node"
+    ]
   },
   "exclude": [
     "node_modules",
