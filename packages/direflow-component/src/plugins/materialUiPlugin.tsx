@@ -13,7 +13,6 @@ const materialUiPlugin: PluginRegistrator = (
     try {
       const { create } = require('jss');
       const { jssPreset, StylesProvider } = require('@material-ui/core/styles');
-
       const insertionPoint = document.createElement('span');
       insertionPoint.id = 'direflow_material-ui-styles';
 
@@ -28,7 +27,7 @@ const materialUiPlugin: PluginRegistrator = (
         jssCache.set(element, jss);
       }
 
-      return [<StylesProvider jss={jss}>{app}</StylesProvider>, insertionPoint];
+      return [<StylesProvider jss={jss} sheetsManager={new Map()}>{app}</StylesProvider>, insertionPoint];
     } catch (err) {
       console.error('Could not load Material-UI. Did you remember to install @material-ui/core?');
     }
