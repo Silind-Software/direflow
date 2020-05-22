@@ -2,6 +2,19 @@ import { injectIntoHead } from '../helpers/domControllers';
 import { IDireflowPlugin } from '../types/DireflowConfig';
 import { PluginRegistrator } from '../types/PluginRegistrator';
 
+type TSource = {
+  [key: string]: {
+    state: 'loading' | 'completed';
+    callback?: Function | null;
+  };
+};
+
+declare global {
+  interface Window {
+    externalSourcesLoaded: TSource;
+  }
+}
+
 const externalLoaderPlugin: PluginRegistrator = (
   element: HTMLElement,
   plugins: IDireflowPlugin[] | undefined,
@@ -38,12 +51,36 @@ const externalLoaderPlugin: PluginRegistrator = (
     }
   });
 
-  scriptTags.forEach(injectIntoHead);
+  if (!window.externalSourcesLoaded) {
+    window.externalSourcesLoaded = {};
+  }
+
+  scriptTags.forEach((script) => {
+    injectIntoHead(script);
+    window.externalSourcesLoaded[script.src] = {
+      state: 'loading',
+    };
+
+    script.addEventListener('load', () => {
+      window.externalSourcesLoaded[script.src].state = 'completed';
+      window.externalSourcesLoaded[script.src].callback?.();
+    });
+  });
 
   const insertionPoint = document.createElement('span');
   insertionPoint.id = 'direflow_external-styles';
 
-  styleTags.forEach((link) => insertionPoint.appendChild(link));
+  styleTags.forEach((link) => {
+    insertionPoint.appendChild(link);
+    window.externalSourcesLoaded[link.href] = {
+      state: 'loading',
+    };
+
+    link.addEventListener('load', () => {
+      window.externalSourcesLoaded[link.href].state = 'completed';
+      window.externalSourcesLoaded[link.href].callback?.();
+    });
+  });
 
   return [app, insertionPoint];
 };

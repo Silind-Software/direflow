@@ -1,6 +1,6 @@
 {
   "name": "direflow-scripts",
-  "version": "3.4.13",
+  "version": "3.4.14",
   "description": "Create Web Components using React",
   "main": "dist/index.js",
   "author": "Silind Software",
@@ -42,6 +42,6 @@
     "@types/webfontloader": "1.6.29",
     "babel-loader": "8.1.0",
     "terser-webpack-plugin": "2.3.5",
-    "typescript": "3.7.2"
+    "typescript": "3.9.3"
   }
 }
