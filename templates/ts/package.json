@@ -39,8 +39,8 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-scripts": "3.4.1",
-    "direflow-component": "3.4.13",
-    "direflow-scripts": "3.4.13"
+    "direflow-component": "3.4.14",
+    "direflow-scripts": "3.4.14"
   },
   "devDependencies": {
     {{#if eslint}}
@@ -61,7 +61,7 @@
     "tslint-react": "4.1.0",
     "tslint": "5.20.0",
     {{/if}}
-    "typescript": "^3.7.0",
+    "typescript": "^3.9.3",
     "webpack-cli": "^3.3.11",
     "ts-loader": "^6.2.2"
   },
