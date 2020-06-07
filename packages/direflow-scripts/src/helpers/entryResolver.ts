@@ -30,7 +30,7 @@ function entryResolver(indexPath: string, { react, reactDOM }: IOptions) {
   const entryLoaderTemplate = handlebars.compile(entryLoaderFile);
 
   const mainEntryFile = entryLoaderTemplate({
-    pathIndex: join(folderPath, paths[paths.length - 1]),
+    pathIndex: join(folderPath, paths[paths.length - 1]).replace(/\\/g, '\\\\'),
     reactResource,
     reactDOMResource,
   });
