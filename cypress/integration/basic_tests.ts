@@ -9,7 +9,8 @@ describe('Running basic component', () => {
 
   it('should have default componentTitle', () => {
     cy.shadowGet('basic-test')
-      .shadowFind('.app .header-title')
+      .shadowFind('.app')
+      .shadowFind('.header-title')
       .shadowContains('Test Setup');
   });
 

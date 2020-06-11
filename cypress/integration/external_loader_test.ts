@@ -19,7 +19,7 @@ describe('Applying external resources', () => {
 
   it('should contain external styles', () => {
     cy.shadowGet('external-loader-test')
-      .shadowFind('#direflow_external-styles')
+      .shadowFind('#direflow_external-sources')
       .then((elem) => {
         const [element] = elem;
         const [link] = element.children;
