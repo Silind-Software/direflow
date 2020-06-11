@@ -35,7 +35,8 @@ describe('Using properties and attributes', () => {
 
   it('should have default componentTitle', () => {
     cy.shadowGet('props-test')
-      .shadowFind('.app .header-title')
+      .shadowFind('.app')
+      .shadowFind('.header-title')
       .shadowContains('Props Title');
   });
 
@@ -49,14 +50,16 @@ describe('Using properties and attributes', () => {
       component.componentTitle = 'Update Title';
 
       cy.shadowGet('props-test')
-        .shadowFind('.app .header-title')
+        .shadowFind('.app')
+        .shadowFind('.header-title')
         .shadowContains('Update Title');
     });
   });
 
   it('should update componentTitle with delay', () => {
     cy.shadowGet('props-test')
-      .shadowFind('.app .header-title')
+      .shadowFind('.app')
+      .shadowFind('.header-title')
       .shadowContains('Update Title');
 
     cy.wait(500);
@@ -66,7 +69,8 @@ describe('Using properties and attributes', () => {
       component.componentTitle = 'Delay Title';
 
       cy.shadowGet('props-test')
-        .shadowFind('.app .header-title')
+        .shadowFind('.app')
+        .shadowFind('.header-title')
         .shadowContains('Delay Title');
     });
   });
@@ -98,7 +102,8 @@ describe('Using properties and attributes', () => {
 
   it('should update based on falsy value', () => {
     cy.shadowGet('props-test')
-      .shadowFind('.app .header-title')
+      .shadowFind('.app')
+      .shadowFind('.header-title')
       .shadowContains('Delay Title');
 
     cy.shadowGet('props-test').then((element) => {
@@ -106,7 +111,8 @@ describe('Using properties and attributes', () => {
       component.showTitle = false;
 
       cy.shadowGet('props-test')
-        .shadowFind('.app .header-title')
+        .shadowFind('.app')
+        .shadowFind('.header-title')
         .shadowContains('no-title');
     });
   });

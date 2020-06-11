@@ -9,7 +9,8 @@ describe('Running basic component without Shadow DOM', () => {
 
   it('should contain a slotted element', () => {
     cy.shadowGet('slot-test')
-      .shadowFind('.app .slotted-elements')
+      .shadowFind('.app')
+      .shadowFind('.slotted-elements')
       .shadowFind('slot')
       .shadowEq(0)
       .then((element) => {
@@ -29,7 +30,8 @@ describe('Running basic component without Shadow DOM', () => {
       component.appendChild(newSlotted);
 
       cy.shadowGet('slot-test')
-        .shadowFind('.app .slotted-elements')
+        .shadowFind('.app')
+        .shadowFind('.slotted-elements')
         .shadowFind('slot')
         .shadowEq(1)
         .then((element) => {
