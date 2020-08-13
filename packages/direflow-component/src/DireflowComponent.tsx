@@ -2,13 +2,14 @@ import WebComponentFactory from './WebComponentFactory';
 import { IDireflowComponent } from './types/DireflowConfig';
 import { DireflowElement } from './types/DireflowElement';
 import includePolyfills from './helpers/polyfillHandler';
+import DireflowPromiseAlike from './types/DireflowPromiseAlike';
 
 class DireflowComponent {
   /**
    * Create muliple Direflow Components
    * @param App React Component
    */
-  public static createAll(componentConfigs: IDireflowComponent[]): Array<Promise<DireflowElement>> {
+  public static createAll(componentConfigs: IDireflowComponent[]): Array<DireflowPromiseAlike> {
     return componentConfigs.map(DireflowComponent.create);
   }
 
@@ -16,7 +17,7 @@ class DireflowComponent {
    * Create Direflow Component
    * @param App React Component
    */
-  public static create(componentConfig: IDireflowComponent): Promise<DireflowElement> {
+  public static create(componentConfig: IDireflowComponent): DireflowPromiseAlike {
     const { component } = componentConfig;
     const plugins = component.plugins || componentConfig.plugins;
     const configuration = component.configuration || componentConfig.configuration;
@@ -38,23 +39,25 @@ class DireflowComponent {
     const tagName = configuration.tagname || 'direflow-component';
     const shadow = configuration.useShadow !== undefined ? configuration.useShadow : true;
 
-    return new Promise(async (resolve) => {
-      const callback = (element: HTMLElement) => {
-        resolve(element as DireflowElement);
-      };
+    return {
+      then: async (resolve: (element: HTMLElement) => void) => {
+        const callback = (element: HTMLElement) => {
+          resolve(element as DireflowElement);
+        };
 
-      await Promise.all([includePolyfills({ usesShadow: !!shadow }, plugins)]);
+        await Promise.all([includePolyfills({ usesShadow: !!shadow }, plugins)]);
 
-      const WebComponent = new WebComponentFactory(
-        componentProperties,
-        component,
-        shadow,
-        plugins,
-        callback,
-      ).create();
+        const WebComponent = new WebComponentFactory(
+          componentProperties,
+          component,
+          shadow,
+          plugins,
+          callback,
+        ).create();
 
-      customElements.define(tagName || '', WebComponent);
-    });
+        customElements.define(tagName, WebComponent);
+      },
+    };
   }
 }
 
