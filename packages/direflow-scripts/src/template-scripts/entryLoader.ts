@@ -3,7 +3,6 @@ const asyncScriptLoader = require('./helpers/asyncScriptLoader.js').default;
 const reactResource: any = '{{reactResource}}';
 const reactDOMResource: any = '{{reactDOMResource}}';
 
-
 const includeReact = async () => {
   try {
     if (reactResource !== 'none') {
