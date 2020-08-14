@@ -17,14 +17,20 @@ import {
 import getDireflowConfig from '../helpers/getDireflowConfig';
 import IDireflowConfig from '../types/DireflowConfig';
 
-export = function override(config: TConfig, env: string) {
+export = function override(config: TConfig, env: string, options?: IOptions) {
   const originalEntry = [...(config.entry as string[])];
   const [pathIndex] =
     env === 'development' ? originalEntry.splice(1, 1) : originalEntry.splice(0, 1);
 
-  const direflowConfig = getDireflowConfig(pathIndex);
-
-  const useVendor = !!direflowConfig?.build?.vendor;
+  /**
+   * TODO: Remove deprecated options
+   */
+  const direflowConfig = setDeprecatedOptions(
+    // Set deprecated options on config
+    env,
+    getDireflowConfig(pathIndex),
+    options,
+  );
 
   const entries = addEntries(config.entry, pathIndex, env, direflowConfig);
 
@@ -33,7 +39,7 @@ export = function override(config: TConfig, env: string) {
     entry: entries,
     module: overrideModule(config.module),
     output: overrideOutput(config.output, direflowConfig),
-    optimization: overrideOptimization(config.optimization, env, useVendor),
+    optimization: overrideOptimization(config.optimization, env, direflowConfig),
     resolve: overrideResolve(config.resolve),
     plugins: overridePlugins(config.plugins, entries, env, direflowConfig),
     externals: overrideExternals(config.externals, env, direflowConfig),
@@ -110,8 +116,9 @@ function overrideOutput(output: IOptions, config?: IDireflowConfig) {
   };
 }
 
-function overrideOptimization(optimization: IOptimization, env: string, useVendor: boolean) {
+function overrideOptimization(optimization: IOptimization, env: string, config?: IDireflowConfig) {
   optimization.minimizer[0].options.sourceMap = env === 'development';
+  const useVendor = config?.build?.vendor;
 
   const vendorSplitChunks = {
     cacheGroups: {
@@ -232,4 +239,94 @@ async function copyBundleScript(env: string, entry: TEntry, config?: IDireflowCo
 
     rimraf.sync(`build/${file}`);
   });
+}
+
+/**
+ * TODO: This function should be removed in next minor version
+ * @deprecated
+ * @param flag
+ * @param env
+ */
+function hasOptions(flag: string, env: string) {
+  if (env !== 'production') {
+    return false;
+  }
+
+  if (process.argv.length < 3) {
+    return false;
+  }
+
+  if (!process.argv.some((arg: string) => arg === `--${flag}` || arg === `-${flag[0]}`)) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * TODO: This function should be removed in next minor version
+ * @deprecated
+ * @param config
+ * @param options
+ */
+function setDeprecatedOptions(env: string, config?: IDireflowConfig, options?: IOptions) {
+  if (!options) {
+    return config;
+  }
+
+  const newObj = config ? (JSON.parse(JSON.stringify(config)) as IDireflowConfig) : {};
+  const { filename, chunkFilename, react, reactDOM } = options;
+
+  const useSplit = hasOptions('split', env);
+  const useVendor = hasOptions('vendor', env);
+
+  if (filename && !newObj.build?.filename) {
+    if (!newObj.build) {
+      newObj.build = { filename };
+    } else {
+      newObj.build.filename = filename;
+    }
+  }
+
+  if (chunkFilename && !newObj.build?.chunkFilename) {
+    if (!newObj.build) {
+      newObj.build = { chunkFilename };
+    } else {
+      newObj.build.chunkFilename = chunkFilename;
+    }
+  }
+
+  if (useSplit && !newObj.build?.split) {
+    if (!newObj.build) {
+      newObj.build = { split: useSplit };
+    } else {
+      newObj.build.split = useSplit;
+    }
+  }
+
+  if (useVendor && !newObj.build?.vendor) {
+    if (!newObj.build) {
+      newObj.build = { vendor: useVendor };
+    } else {
+      newObj.build.vendor = useVendor;
+    }
+  }
+
+  if (react && !newObj.modules?.react) {
+    if (!newObj.modules) {
+      newObj.modules = { react } as { react: string };
+    } else {
+      newObj.modules.react = react as string;
+    }
+  }
+
+  if (reactDOM && !newObj.modules?.reactDOM) {
+    if (!newObj.modules) {
+      newObj.modules = { reactDOM } as { reactDOM: string };
+    } else {
+      newObj.modules.reactDOM = reactDOM as string;
+    }
+  }
+
+  return newObj;
 }
