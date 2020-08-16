@@ -31,7 +31,8 @@ export default function cli() {
   commander
     .description(chalk.magenta(headline))
     .version(showVersion())
-    .helpOption('-h, --help', 'Show how to use direflow-cli');
+    .helpOption('-h, --help', 'Show how to use direflow-cli')
+    .option('-v, --version', 'Show the current version');
 
   const [, , simpleArg] = process.argv;
 

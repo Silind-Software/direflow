@@ -42,6 +42,7 @@ export interface IPlugin {
   options: {
     inject: string;
   };
+  [key: string]: any;
 }
 
 export interface IResolve {

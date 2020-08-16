@@ -12,4 +12,9 @@ export default interface IDireflowConfig {
     react?: string;
     reactDOM?: string;
   };
+  polyfills?: {
+    sd?: string | boolean;
+    ce?: string | boolean;
+    adapter: string | boolean;
+  };
 }

@@ -1,5 +1,6 @@
 import EventHooksPlugin from 'event-hooks-webpack-plugin';
 import FilterWarningsPlugin from 'webpack-filter-warnings-plugin';
+import { EnvironmentPlugin } from 'webpack';
 import rimraf from 'rimraf';
 import fs from 'fs';
 import { resolve } from 'path';
@@ -155,6 +156,24 @@ function overridePlugins(plugins: IPlugin[], entry: TEntry, env: string, config?
       ],
     }),
   );
+
+  if (config?.polyfills) {
+    plugins.push(
+      new EnvironmentPlugin(
+        Object.fromEntries(
+          Object.entries(config.polyfills).map(([key, value]) => {
+            const envKey = `DIREFLOW_${key.toUpperCase()}`;
+
+            if (value === 'true' || value === 'false') {
+              return [envKey, value === 'true'];
+            }
+
+            return [envKey, value];
+          }),
+        ),
+      ) as any,
+    );
+  }
 
   return plugins;
 }

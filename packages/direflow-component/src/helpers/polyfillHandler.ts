@@ -26,27 +26,39 @@ const includePolyfills = async (
   let useSD = '';
   let useCE = '';
   let useAD = '';
+
   const polyfillLoaderPlugin = plugins?.find((plugin) => plugin.name === 'polyfill-loader');
 
-  const disableSD = polyfillLoaderPlugin?.options?.use.sd === false;
-  const disableCE = polyfillLoaderPlugin?.options?.use.ce === false;
-  const disableAD = polyfillLoaderPlugin?.options?.use.adapter === false;
+  if (polyfillLoaderPlugin) {
+    console.warn(
+      'polyfill-loader plugin is deprecated. Use direflow-config.json instead.' + '\n' +
+      'See more: https://direflow.io/configuration',
+    );
+  }
 
-  if (polyfillLoaderPlugin?.options?.use.sd) {
-    useSD = typeof polyfillLoaderPlugin.options?.use.sd === 'string'
-      ? polyfillLoaderPlugin.options?.use.sd
+  const polyfillSD = process.env.DIREFLOW_SD ?? polyfillLoaderPlugin?.options?.use.sd;
+  const polyfillCE = process.env.DIREFLOW_CE ?? polyfillLoaderPlugin?.options?.use.ce;
+  const polyfillAdapter = process.env.DIREFLOW_ADAPTER ?? polyfillLoaderPlugin?.options?.use.adapter;
+
+  const disableSD = polyfillSD === false;
+  const disableCE = polyfillCE === false;
+  const disableAD = polyfillAdapter === false;
+
+  if (polyfillSD) {
+    useSD = typeof polyfillSD === 'string'
+      ? polyfillSD
       : DEFAULT_SD;
   }
 
-  if (polyfillLoaderPlugin?.options?.use.ce) {
-    useCE = typeof polyfillLoaderPlugin.options?.use.ce === 'string'
-      ? polyfillLoaderPlugin.options?.use.ce
+  if (polyfillCE) {
+    useCE = typeof polyfillCE === 'string'
+      ? polyfillCE
       : DEFAULT_CE;
   }
 
-  if (polyfillLoaderPlugin?.options?.use.adapter) {
-    useAD = typeof polyfillLoaderPlugin.options?.use.adapter === 'string'
-      ? polyfillLoaderPlugin.options.use.adapter
+  if (polyfillAdapter) {
+    useAD = typeof polyfillAdapter === 'string'
+      ? polyfillAdapter
       : DEFAULT_AD;
   }
 

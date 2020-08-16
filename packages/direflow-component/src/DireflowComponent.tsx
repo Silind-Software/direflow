@@ -45,6 +45,9 @@ class DireflowComponent {
           resolve(element as DireflowElement);
         };
 
+        /**
+         * TODO: This part should be removed in next minor version
+         */
         await Promise.all([includePolyfills({ usesShadow: !!shadow }, plugins)]);
 
         const WebComponent = new WebComponentFactory(
