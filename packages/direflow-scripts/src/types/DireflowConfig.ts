@@ -1,5 +1,6 @@
 export default interface IDireflowConfig {
   build?: {
+    componentPath?: string;
     filename?: string;
     chunkFilename?: string;
     emitSourceMap?: boolean;

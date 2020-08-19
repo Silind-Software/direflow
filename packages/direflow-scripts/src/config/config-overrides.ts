@@ -55,8 +55,9 @@ function addEntries(entry: TEntry, pathIndex: string, env: string, config?: IDir
   const react = config?.modules?.react;
   const reactDOM = config?.modules?.reactDOM;
   const useSplit = !!config?.build?.split;
+  const componentPath = config?.build?.componentPath || 'direflow-components';
 
-  const resolvedEntries = entryResolver(pathIndex, { react, reactDOM });
+  const resolvedEntries = entryResolver(pathIndex, componentPath, { react, reactDOM });
 
   const newEntry: { [key: string]: string } = { main: pathIndex };
 
