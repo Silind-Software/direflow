@@ -141,7 +141,9 @@ function overrideOptimization(optimization: IOptimization, env: string, config?:
 }
 
 function overridePlugins(plugins: IPlugin[], entry: TEntry, env: string, config?: IDireflowConfig) {
-  plugins[0].options.inject = 'head';
+  if (plugins[0].options) {
+    plugins[0].options.inject = 'head';
+  }
 
   plugins.push(
     new EventHooksPlugin({
@@ -172,7 +174,7 @@ function overridePlugins(plugins: IPlugin[], entry: TEntry, env: string, config?
             return [envKey, value];
           }),
         ),
-      ) as any,
+      ),
     );
   }
 
