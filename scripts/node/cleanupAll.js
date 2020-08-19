@@ -69,18 +69,6 @@ function cleanDeps(dir) {
     });
   }
 
-  if (fs.existsSync(`${dir}/package-lock.json`)) {
-    exec(`rm ${dir}/package-lock.json`, (err) => {
-      if (err) {
-        console.log(`✗ ${dir}/package-lock.json FAILED to remove`);
-        console.log(err);
-        return;
-      }
-
-      console.log(`✓ ${dir}/package-lock.json is REMOVED`);
-    });
-  }
-
   if (fs.existsSync(`${dir}/tsconfig.lib.json`)) {
     exec(`rm ${dir}/tsconfig.lib.json`, (err) => {
       if (err) {

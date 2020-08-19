@@ -8,7 +8,7 @@ npm run build
 
 cp build/direflowBundle.js public/direflowBundle.js
 
-npm start & wait-on http://localhost:5000
+npm run serve & wait-on http://localhost:5000
 
 cd .. && cd ..
 npm run cypress:run

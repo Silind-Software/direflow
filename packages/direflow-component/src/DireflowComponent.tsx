@@ -4,6 +4,12 @@ import { DireflowElement } from './types/DireflowElement';
 import includePolyfills from './helpers/polyfillHandler';
 import DireflowPromiseAlike from './types/DireflowPromiseAlike';
 
+let _resolve: Function;
+
+const callback = (element: HTMLElement) => {
+  _resolve?.(element as DireflowElement);
+};
+
 class DireflowComponent {
   /**
    * Create muliple Direflow Components
@@ -39,26 +45,28 @@ class DireflowComponent {
     const tagName = configuration.tagname || 'direflow-component';
     const shadow = configuration.useShadow !== undefined ? configuration.useShadow : true;
 
+    (async () => {
+      /**
+       * TODO: This part should be removed in next minor version
+       */
+      await Promise.all([includePolyfills({ usesShadow: !!shadow }, plugins)]);
+
+      const WebComponent = new WebComponentFactory(
+        componentProperties,
+        component,
+        shadow,
+        plugins,
+        callback,
+      ).create();
+
+      customElements.define(tagName, WebComponent);
+    })();
+
     return {
-      then: async (resolve: (element: HTMLElement) => void) => {
-        const callback = (element: HTMLElement) => {
-          resolve(element as DireflowElement);
-        };
-
-        /**
-         * TODO: This part should be removed in next minor version
-         */
-        await Promise.all([includePolyfills({ usesShadow: !!shadow }, plugins)]);
-
-        const WebComponent = new WebComponentFactory(
-          componentProperties,
-          component,
-          shadow,
-          plugins,
-          callback,
-        ).create();
-
-        customElements.define(tagName, WebComponent);
+      then: async (resolve?: (element: HTMLElement) => void) => {
+        if (resolve) {
+          _resolve = resolve;
+        }
       },
     };
   }

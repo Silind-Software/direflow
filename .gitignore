@@ -2,7 +2,6 @@
 
 dist
 build
-package-lock.json
 yarn.lock
 config-overrides.js
 config-overrides.d.ts
