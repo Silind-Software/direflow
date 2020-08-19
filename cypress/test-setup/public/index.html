@@ -6,7 +6,10 @@
   </head>
   <body>
     <basic-test></basic-test>
-    <props-test componentTitle="Props Title"></props-test>
+    <props-test id="props-test-1" componentTitle="Props Title"></props-test>
+    <props-test id="props-test-2" componentTitle="Props Title" showHidden ></props-test>
+    <props-test id="props-test-3" componentTitle="Props Title" showTitle="false" ></props-test>
+    <props-test id="props-test-4" componentTitle="Props Title" sampleList="['test-1', 'test-2', 'test-3']"></props-test>
     <event-test></event-test>
     <slot-test componentTitle="Props Title">
       <div slot="slotted-item-1">Slot Item 1</div>
