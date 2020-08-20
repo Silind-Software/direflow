@@ -39,9 +39,10 @@ export interface IOptimization {
 }
 
 export interface IPlugin {
-  options: {
+  options?: {
     inject: string;
   };
+  [key: string]: any;
 }
 
 export interface IResolve {

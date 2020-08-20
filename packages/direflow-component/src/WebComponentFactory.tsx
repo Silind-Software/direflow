@@ -8,6 +8,7 @@ import { IDireflowPlugin } from './types/DireflowConfig';
 import { EventProvider } from './components/EventContext';
 import { PluginRegistrator } from './types/PluginRegistrator';
 import registeredPlugins from './plugins/plugins';
+import getSerialized from './helpers/getSerialized';
 
 class WebComponentFactory {
   constructor(
@@ -84,7 +85,7 @@ class WebComponentFactory {
           return;
         }
 
-        this.properties[name] = newValue;
+        this.properties[name] = getSerialized(newValue);
         this.mountReactApp();
       }
 
@@ -156,8 +157,8 @@ class WebComponentFactory {
             return;
           }
 
-          if (this.getAttribute(key)) {
-            this.properties[key] = this.getAttribute(key);
+          if (this.getAttribute(key) !== null) {
+            this.properties[key] = getSerialized(this.getAttribute(key) as string);
             return;
           }
 
