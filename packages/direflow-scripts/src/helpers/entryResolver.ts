@@ -6,9 +6,9 @@ import { IOptions } from '../types/ConfigOverrides';
 const DEFAULT_REACT = 'https://unpkg.com/react@16/umd/react.production.min.js';
 const DEFAULT_REACT_DOM = 'https://unpkg.com/react-dom@16/umd/react-dom.production.min.js';
 
-function entryResolver(indexPath: string, { react, reactDOM }: IOptions) {
+function entryResolver(indexPath: string, componentPath: string, { react, reactDOM }: IOptions) {
   const paths = indexPath.split(sep);
-  const folderPath = [...paths].slice(0, paths.length - 1).join(sep);
+  const srcPath = [...paths].slice(0, paths.length - 1).join(sep);
 
   let reactResource: any = 'none';
   let reactDOMResource: any = 'none';
@@ -25,12 +25,12 @@ function entryResolver(indexPath: string, { react, reactDOM }: IOptions) {
     resolve(__dirname, '../template-scripts/entryLoader.js'),
     'utf8',
   );
-  const componentFolders = fs.readdirSync(join(folderPath, 'direflow-components'));
+  const componentFolders = fs.readdirSync(join(srcPath, componentPath));
 
   const entryLoaderTemplate = handlebars.compile(entryLoaderFile);
 
   const mainEntryFile = entryLoaderTemplate({
-    pathIndex: join(folderPath, paths[paths.length - 1]).replace(/\\/g, '\\\\'),
+    pathIndex: join(srcPath, paths[paths.length - 1]).replace(/\\/g, '\\\\'),
     reactResource,
     reactDOMResource,
   });
@@ -39,16 +39,16 @@ function entryResolver(indexPath: string, { react, reactDOM }: IOptions) {
 
   const entryList = componentFolders
     .map((folder) => {
-      if (!fs.statSync(join(folderPath, 'direflow-components', folder)).isDirectory()) {
+      if (!fs.statSync(join(srcPath, componentPath, folder)).isDirectory()) {
         return;
       }
 
-      const pathIndex = join(folderPath, 'direflow-components', folder, paths[paths.length - 1]);
+      const pathIndex = join(srcPath, componentPath, folder, paths[paths.length - 1]);
 
       if (!fs.existsSync(pathIndex)) {
         return;
       }
-      
+
       const escapedPathIndex = pathIndex.replace(/\\/g, '\\\\');
 
       const entryFile = entryLoaderTemplate({ pathIndex: escapedPathIndex, reactResource, reactDOMResource });

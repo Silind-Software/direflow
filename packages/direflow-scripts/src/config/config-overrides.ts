@@ -1,5 +1,6 @@
 import EventHooksPlugin from 'event-hooks-webpack-plugin';
 import FilterWarningsPlugin from 'webpack-filter-warnings-plugin';
+import { EnvironmentPlugin } from 'webpack';
 import rimraf from 'rimraf';
 import fs from 'fs';
 import { resolve } from 'path';
@@ -14,34 +15,49 @@ import {
   TEntry,
   IPlugin,
 } from '../types/ConfigOverrides';
+import getDireflowConfig from '../helpers/getDireflowConfig';
+import IDireflowConfig from '../types/DireflowConfig';
 
 export = function override(config: TConfig, env: string, options?: IOptions) {
-  const filename = options?.filename || 'direflowBundle.js';
-  const chunkFilename = options?.chunkFilename || 'vendor.js';
-  const react = options?.react;
-  const reactDOM = options?.reactDOM;
+  const originalEntry = [...(config.entry as string[])];
+  const [pathIndex] =
+    env === 'development' ? originalEntry.splice(1, 1) : originalEntry.splice(0, 1);
 
-  const entries = addEntries(config.entry, env, { react, reactDOM });
+  /**
+   * TODO: Remove deprecated options
+   */
+  const direflowConfig = setDeprecatedOptions(
+    // Set deprecated options on config
+    env,
+    getDireflowConfig(pathIndex),
+    options,
+  );
+
+  const entries = addEntries(config.entry, pathIndex, env, direflowConfig);
 
   const overridenConfig = {
     ...config,
     entry: entries,
     module: overrideModule(config.module),
-    output: overrideOutput(config.output, env, { filename, chunkFilename }),
-    optimization: overrideOptimization(config.optimization, env),
+    output: overrideOutput(config.output, direflowConfig),
+    optimization: overrideOptimization(config.optimization, env, direflowConfig),
     resolve: overrideResolve(config.resolve),
-    plugins: overridePlugins(config.plugins, entries, env, { filename, chunkFilename }),
-    externals: overrideExternals(config.externals, env, { react, reactDOM }),
+    plugins: overridePlugins(config.plugins, entries, env, direflowConfig),
+    externals: overrideExternals(config.externals, env, direflowConfig),
   };
 
   return overridenConfig;
 };
 
-function addEntries(entry: TEntry, env: string, { react, reactDOM }: IOptions) {
+function addEntries(entry: TEntry, pathIndex: string, env: string, config?: IDireflowConfig) {
   const originalEntry = [...(entry as string[])];
 
-  const [pathIndex] = env === 'development' ? originalEntry.splice(1, 1) : originalEntry.splice(0, 1);
-  const resolvedEntries = entryResolver(pathIndex, { react, reactDOM });
+  const react = config?.modules?.react;
+  const reactDOM = config?.modules?.reactDOM;
+  const useSplit = !!config?.build?.split;
+  const componentPath = config?.build?.componentPath || 'direflow-components';
+
+  const resolvedEntries = entryResolver(pathIndex, componentPath, { react, reactDOM });
 
   const newEntry: { [key: string]: string } = { main: pathIndex };
 
@@ -61,7 +77,7 @@ function addEntries(entry: TEntry, env: string, { react, reactDOM }: IOptions) {
     return [...flatList, resolve(__dirname, '../template-scripts/welcome.js')];
   }
 
-  if (hasOptions('split', env)) {
+  if (useSplit) {
     return newEntry;
   }
 
@@ -88,12 +104,12 @@ function overrideModule(module: IModule) {
   return module;
 }
 
-function overrideOutput(
-  output: IOptions,
-  env: string,
-  { filename, chunkFilename }: IOptions,
-) {
-  const outputFilename = hasOptions('split', env) ? '[name].js' : filename;
+function overrideOutput(output: IOptions, config?: IDireflowConfig) {
+  const useSplit = config?.build?.split;
+  const filename = config?.build?.filename || 'direflowBundle.js';
+  const chunkFilename = config?.build?.chunkFilename || 'vendor.js';
+
+  const outputFilename = useSplit ? '[name].js' : filename;
 
   return {
     ...output,
@@ -102,8 +118,9 @@ function overrideOutput(
   };
 }
 
-function overrideOptimization(optimization: IOptimization, env: string) {
+function overrideOptimization(optimization: IOptimization, env: string, config?: IDireflowConfig) {
   optimization.minimizer[0].options.sourceMap = env === 'development';
+  const useVendor = config?.build?.vendor;
 
   const vendorSplitChunks = {
     cacheGroups: {
@@ -118,17 +135,19 @@ function overrideOptimization(optimization: IOptimization, env: string) {
 
   return {
     ...optimization,
-    splitChunks: hasOptions('vendor', env) ? vendorSplitChunks : false,
+    splitChunks: useVendor ? vendorSplitChunks : false,
     runtimeChunk: false,
   };
 }
 
-function overridePlugins(plugins: IPlugin[], entry: TEntry, env: string, options: IOptions) {
-  plugins[0].options.inject = 'head';
+function overridePlugins(plugins: IPlugin[], entry: TEntry, env: string, config?: IDireflowConfig) {
+  if (plugins[0].options) {
+    plugins[0].options.inject = 'head';
+  }
 
   plugins.push(
     new EventHooksPlugin({
-      done: new PromiseTask(() => copyBundleScript(env, entry, options)),
+      done: new PromiseTask(() => copyBundleScript(env, entry, config)),
     }),
   );
 
@@ -140,6 +159,24 @@ function overridePlugins(plugins: IPlugin[], entry: TEntry, env: string, options
       ],
     }),
   );
+
+  if (config?.polyfills) {
+    plugins.push(
+      new EnvironmentPlugin(
+        Object.fromEntries(
+          Object.entries(config.polyfills).map(([key, value]) => {
+            const envKey = `DIREFLOW_${key.toUpperCase()}`;
+
+            if (value === 'true' || value === 'false') {
+              return [envKey, value === 'true'];
+            }
+
+            return [envKey, value];
+          }),
+        ),
+      ),
+    );
+  }
 
   return plugins;
 }
@@ -158,30 +195,46 @@ function overrideResolve(currentResolve: IResolve) {
   return currentResolve;
 }
 
-function overrideExternals(externals: { [key: string]: any }, env: string, { react, reactDOM }: IOptions) {
+function overrideExternals(
+  externals: { [key: string]: any },
+  env: string,
+  config?: IDireflowConfig,
+) {
   if (env === 'development') {
     return externals;
   }
 
   const extraExternals: any = { ...externals };
+  const react = config?.modules?.react;
+  const reactDOM = config?.modules?.reactDOM;
 
-  if (react !== false) {
+  if (react) {
     extraExternals.react = 'React';
   }
 
-  if (reactDOM !== false) {
+  if (reactDOM) {
     extraExternals['react-dom'] = 'ReactDOM';
   }
 
   return extraExternals;
 }
 
-async function copyBundleScript(env: string, entry: TEntry, { filename, chunkFilename }: IOptions) {
+async function copyBundleScript(env: string, entry: TEntry, config?: IDireflowConfig) {
   if (env !== 'production') {
     return;
   }
 
   if (!fs.existsSync('build')) {
+    return;
+  }
+
+  const filename = config?.build?.filename || 'direflowBundle.js';
+  const chunkFilename = config?.build?.chunkFilename || 'vendor.js';
+  const emitAll = config?.build?.emitAll;
+  const emitSourceMaps = config?.build?.emitSourceMap;
+  const emitIndexHTML = config?.build?.emitIndexHTML;
+
+  if (emitAll) {
     return;
   }
 
@@ -198,10 +251,24 @@ async function copyBundleScript(env: string, entry: TEntry, { filename, chunkFil
       return;
     }
 
+    if (emitSourceMaps && file.endsWith('.map')) {
+      return;
+    }
+
+    if (emitIndexHTML && file.endsWith('.html')) {
+      return;
+    }
+
     rimraf.sync(`build/${file}`);
   });
 }
 
+/**
+ * TODO: This function should be removed in next minor version
+ * @deprecated
+ * @param flag
+ * @param env
+ */
 function hasOptions(flag: string, env: string) {
   if (env !== 'production') {
     return false;
@@ -216,4 +283,72 @@ function hasOptions(flag: string, env: string) {
   }
 
   return true;
+}
+
+/**
+ * TODO: This function should be removed in next minor version
+ * @deprecated
+ * @param config
+ * @param options
+ */
+function setDeprecatedOptions(env: string, config?: IDireflowConfig, options?: IOptions) {
+  if (!options) {
+    return config;
+  }
+
+  const newObj = config ? (JSON.parse(JSON.stringify(config)) as IDireflowConfig) : {};
+  const { filename, chunkFilename, react, reactDOM } = options;
+
+  const useSplit = hasOptions('split', env);
+  const useVendor = hasOptions('vendor', env);
+
+  if (filename && !newObj.build?.filename) {
+    if (!newObj.build) {
+      newObj.build = { filename };
+    } else {
+      newObj.build.filename = filename;
+    }
+  }
+
+  if (chunkFilename && !newObj.build?.chunkFilename) {
+    if (!newObj.build) {
+      newObj.build = { chunkFilename };
+    } else {
+      newObj.build.chunkFilename = chunkFilename;
+    }
+  }
+
+  if (useSplit && !newObj.build?.split) {
+    if (!newObj.build) {
+      newObj.build = { split: useSplit };
+    } else {
+      newObj.build.split = useSplit;
+    }
+  }
+
+  if (useVendor && !newObj.build?.vendor) {
+    if (!newObj.build) {
+      newObj.build = { vendor: useVendor };
+    } else {
+      newObj.build.vendor = useVendor;
+    }
+  }
+
+  if (react && !newObj.modules?.react) {
+    if (!newObj.modules) {
+      newObj.modules = { react } as { react: string };
+    } else {
+      newObj.modules.react = react as string;
+    }
+  }
+
+  if (reactDOM && !newObj.modules?.reactDOM) {
+    if (!newObj.modules) {
+      newObj.modules = { reactDOM } as { reactDOM: string };
+    } else {
+      newObj.modules.reactDOM = reactDOM as string;
+    }
+  }
+
+  return newObj;
 }

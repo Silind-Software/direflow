@@ -15,7 +15,7 @@ const App = (props) => {
   ));
 
   const title = props.showTitle ? props.componentTitle : 'no-title';
-
+  const hidden = props.showHidden ? 'SHOW HIDDEN' : null;
 
   return (
     <Styled styles={styles}>
@@ -26,6 +26,7 @@ const App = (props) => {
           <slot name='slotted-item-1' />
           <slot name='slotted-item-2' />
         </div>
+        <div className='hidden'>{hidden}</div>
         <EventConsumer>
           {(dispatch) => (
             <button className='button' onClick={() => handleClick(dispatch)}>
@@ -41,6 +42,7 @@ const App = (props) => {
 App.defaultProps = {
   componentTitle: 'Test Setup',
   showTitle: true,
+  showHidden: false,
   sampleList: ['Item 1', 'Item 2', 'Item 3'],
 };
 
