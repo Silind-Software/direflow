@@ -1,6 +1,6 @@
-import { spawn, ChildProcess } from 'child_process';
-import { resolve } from 'path';
 import chalk from 'chalk';
+import { ChildProcess, spawn } from 'child_process';
+import { resolve } from 'path';
 import { interupted, succeeded } from './helpers/messages';
 
 type TCommand = 'start' | 'test' | 'build' | 'build:lib';
@@ -29,8 +29,16 @@ export default function cli(args: Array<TCommand | string>) {
   }
 }
 
+function spawner(command: string, args: ReadonlyArray<string>, options?: any) {
+  return spawn(command, args, options).on('exit', (code: number) => {
+    if (code !== 0) {
+      process.exit(code as number);
+    }
+  });
+}
+
 function start() {
-  spawn('react-app-rewired', ['start'], {
+  spawner('react-app-rewired', ['start'], {
     shell: true,
     stdio: 'inherit',
     env,
@@ -38,7 +46,7 @@ function start() {
 }
 
 function test(args: string[]) {
-  spawn('react-app-rewired', ['test', '--env=jest-environment-jsdom-fourteen', ...args], {
+  spawner('react-app-rewired', ['test', '--env=jest-environment-jsdom-fourteen', ...args], {
     shell: true,
     stdio: 'inherit',
     env,
@@ -46,7 +54,7 @@ function test(args: string[]) {
 }
 
 function build(args: string[]) {
-  spawn('react-app-rewired', ['build', ...args], {
+  spawner('react-app-rewired', ['build', ...args], {
     shell: true,
     stdio: 'inherit',
     env,
@@ -58,18 +66,18 @@ function buildLib(args: string[]) {
   let webpack: ChildProcess | undefined;
 
   if (args[0] === '--verbose') {
-    webpack = spawn('webpack', ['--config', resolve(__dirname, '../webpack.config.js')], {
+    webpack = spawner('webpack', ['--config', resolve(__dirname, '../webpack.config.js')], {
       shell: true,
       stdio: 'inherit',
       env,
     });
   } else {
-    webpack = spawn('webpack', ['--config', resolve(__dirname, '../webpack.config.js')]);
+    webpack = spawner('webpack', ['--config', resolve(__dirname, '../webpack.config.js')]);
   }
 
   webpack.stdout?.on('data', (data) => {
     if (data.toString().includes('ERROR')) {
-      console.log(chalk.red('An error occured during the build!'));
+      console.log(chalk.red('An error occurred during the build!'));
       console.log(chalk.red(data.toString()));
     }
   });
