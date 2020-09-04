@@ -1,0 +1,57 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "command": "yarn start:no-browser",
+      "name": "Run direflow-scripts start:no-browser",
+      "request": "launch",
+      "type": "node-terminal",
+      "presentation": {
+        "hidden": true,
+        "group": "",
+        "order": 2
+      }
+    },
+    {
+      "type": "pwa-chrome",
+      "request": "launch",
+      "name": "Launch Chrome against localhost",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/src",
+      "skipFiles": ["${workspaceFolder}/node_modules/"],
+      "presentation": {
+        "hidden": true,
+        "group": "",
+        "order": 1
+      }
+    },
+    {
+      "type": "pwa-msedge",
+      "request": "launch",
+      "name": "Launch Edge against localhost",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/src",
+      "skipFiles": ["${workspaceFolder}/node_modules/"],
+      "presentation": {
+        "hidden": true,
+        "group": "",
+        "order": 1
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Chrome Launch and Debug",
+      "configurations": ["Run direflow-scripts start:no-browser", "Launch Chrome against localhost"],
+      "stopAll": true
+    },
+    {
+      "name": "Edge Launch and Debug",
+      "configurations": ["Run direflow-scripts start:no-browser", "Launch Edge against localhost"],
+      "stopAll": true
+    }
+  ]
+}

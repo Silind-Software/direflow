@@ -28,6 +28,7 @@
   {{/if}}
   "scripts": {
     "start": "direflow-scripts start",
+    "start:no-browser": "cross-env BROWSER=none direflow-scripts start",
     "build": "direflow-scripts build",
     "build:lib": "direflow-scripts build:lib",
     "test": "direflow-scripts test"
@@ -40,6 +41,7 @@
     "direflow-scripts": "3.5.1"
   },
   "devDependencies": {
+    "cross-env": "^7.0.2",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.18.0",

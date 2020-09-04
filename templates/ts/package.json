@@ -28,6 +28,7 @@
   {{/if}}
   "scripts": {
     "start": "direflow-scripts start",
+    "start:no-browser": "cross-env BROWSER=none direflow-scripts start",
     "build": "direflow-scripts build",
     "build:lib": "direflow-scripts build:lib",
     "test": "direflow-scripts test"
@@ -52,6 +53,7 @@
     {{/if}}
     "@types/jest": "24.0.18",
     "@types/react-test-renderer": "16.9.1",
+    "cross-env": "^7.0.2",
     "jest-environment-jsdom-fourteen": "0.1.0",
     "react-app-rewired": "2.1.3",
     "react-test-renderer": "16.9.0",
