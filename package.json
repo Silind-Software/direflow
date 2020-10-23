@@ -1,6 +1,6 @@
 {
   "name": "direflow-cli",
-  "version": "3.5.1",
+  "version": "3.5.2",
   "description": "Official CLI for Direflow",
   "main": "dist/index.js",
   "scripts": {
@@ -48,6 +48,7 @@
     "inquirer": "7.0.0",
     "mkdirp": "0.5.1",
     "ncp": "2.0.0",
+    "react-scripts": "4.0.0",
     "rimraf": "3.0.0",
     "to-case": "^2.0.0"
   },
