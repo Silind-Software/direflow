@@ -1,4 +1,5 @@
 import React from 'react';
+import uniqueid from 'lodash.uniqueid';
 import { IDireflowPlugin } from '../types/DireflowConfig';
 import { PluginRegistrator } from '../types/PluginRegistrator';
 
@@ -12,7 +13,8 @@ const materialUiPlugin: PluginRegistrator = (
   if (plugins?.find((plugin) => plugin.name === 'material-ui')) {
     try {
       const { create } = require('jss');
-      const { jssPreset, StylesProvider } = require('@material-ui/core/styles');
+      const { jssPreset, StylesProvider, createGenerateClassName } = require('@material-ui/core/styles');
+      const seed = uniqueid(`${element.tagName.toLowerCase()}-`);
       const insertionPoint = document.createElement('span');
       insertionPoint.id = 'direflow_material-ui-styles';
 
@@ -27,7 +29,16 @@ const materialUiPlugin: PluginRegistrator = (
         jssCache.set(element, jss);
       }
 
-      return [<StylesProvider jss={jss} sheetsManager={new Map()}>{app}</StylesProvider>, insertionPoint];
+      return [
+        <StylesProvider
+          jss={jss}
+          sheetsManager={new Map()}
+          generateClassName={createGenerateClassName({ seed })}
+        >
+          {app}
+        </StylesProvider>,
+        insertionPoint,
+      ];
     } catch (err) {
       console.error('Could not load Material-UI. Did you remember to install @material-ui/core?');
     }
