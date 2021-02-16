@@ -16,7 +16,7 @@
 # [direflow.io](https://direflow.io/)
 
 #### Set up a React App and build it as a Web Component
-> This setup is is based on [*react-scripts*](https://www.npmjs.com/package/react-scripts) from [*create-react-app*](https://create-react-app.dev/docs/getting-started)  
+> This setup is based on [*react-scripts*](https://www.npmjs.com/package/react-scripts) from [*create-react-app*](https://create-react-app.dev/docs/getting-started)  
 > A walkthrough of the principles used in this setup, can be read [in this article](https://itnext.io/react-and-web-components-3e0fca98a593)
 
 ## Get started
