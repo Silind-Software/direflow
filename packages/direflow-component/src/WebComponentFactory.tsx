@@ -21,7 +21,10 @@ class WebComponentFactory {
     this.reflectPropertiesToAttributes();
   }
 
-  private componentAttributes: { [key: string]: unknown } = {};
+  private componentAttributes: { [key: string]: {
+    property: string;
+    value: unknown;
+  }; } = {};
 
   /**
    * All properties with primitive values are added to attributes.
@@ -32,7 +35,10 @@ class WebComponentFactory {
         return;
       }
 
-      this.componentAttributes[key] = value;
+      this.componentAttributes[key.toLowerCase()] = {
+        property: key,
+        value,
+      };
     });
   }
 
@@ -58,7 +64,7 @@ class WebComponentFactory {
        * Part of the Web Component Standard.
        */
       public static get observedAttributes() {
-        return Object.keys(factory.componentAttributes).map((k) => k.toLowerCase());
+        return Object.keys(factory.componentAttributes);
       }
 
       /**
@@ -85,7 +91,12 @@ class WebComponentFactory {
           return;
         }
 
-        this.properties[name] = getSerialized(newValue);
+        if (!factory.componentAttributes.hasOwnProperty(name)) {
+          return;
+        }
+
+        const propertyName = factory.componentAttributes[name].property;
+        this.properties[propertyName] = getSerialized(newValue);
         this.mountReactApp();
       }
 
