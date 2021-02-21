@@ -44,7 +44,7 @@ describe('Using properties and attributes', () => {
     cy.get('#props-test-1').should('exist');
   });
 
-  it('should update componentTitle', () => {
+  it('setting componentTitle property should update componentTitle', () => {
     cy.shadowGet('#props-test-1').then((element) => {
       const [component] = element;
       component.componentTitle = 'Update Title';
@@ -56,11 +56,23 @@ describe('Using properties and attributes', () => {
     });
   });
 
+  it('setting componenttitle attribute should update componentTitle', () => {
+    cy.shadowGet('#props-test-1').then((element) => {
+      const [component] = element;
+      component.setAttribute('componenttitle', 'Any');
+
+      cy.shadowGet('#props-test-1')
+        .shadowFind('.app')
+        .shadowFind('.header-title')
+        .shadowContains('Any');
+    });
+  });
+
   it('should update componentTitle with delay', () => {
     cy.shadowGet('#props-test-1')
       .shadowFind('.app')
       .shadowFind('.header-title')
-      .shadowContains('Update Title');
+      .shadowContains('Any');
 
     cy.wait(500);
 

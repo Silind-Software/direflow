@@ -1,6 +1,6 @@
 {
   "name": "direflow-scripts",
-  "version": "3.5.2",
+  "version": "3.5.3",
   "description": "Create Web Components using React",
   "main": "dist/index.js",
   "author": "Silind Software",
@@ -30,8 +30,8 @@
     "rimraf": "3.0.0",
     "ts-loader": "6.2.1",
     "webfontloader": "1.6.28",
-    "webpack-filter-warnings-plugin": "1.2.1",
-    "webpack": "4.42.0"
+    "webpack": "4.42.0",
+    "webpack-filter-warnings-plugin": "1.2.1"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",
