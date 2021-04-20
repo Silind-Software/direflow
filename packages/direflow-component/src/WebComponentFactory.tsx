@@ -230,7 +230,7 @@ class WebComponentFactory {
       public mountReactApp(options?: { initial: boolean }) {
         const application = (
           <EventProvider value={this.eventDispatcher}>
-            {React.createElement(factory.rootComponent, this.reactProps())}
+            {React.createElement(factory.rootComponent, this.reactProps(), React.createElement('slot'))}
           </EventProvider>
         );
 
