@@ -17,6 +17,7 @@ class WebComponentFactory {
     private shadow?: boolean,
     private plugins?: IDireflowPlugin[],
     private connectCallback?: (element: HTMLElement) => void,
+    private anonymousSlot?: boolean,
   ) {
     this.reflectPropertiesToAttributes();
   }
@@ -228,9 +229,10 @@ class WebComponentFactory {
        * Mount React App onto the Web Component
        */
       public mountReactApp(options?: { initial: boolean }) {
+        const appChildren = factory.anonymousSlot ? React.createElement('slot') : undefined;
         const application = (
           <EventProvider value={this.eventDispatcher}>
-            {React.createElement(factory.rootComponent, this.reactProps(), React.createElement('slot'))}
+            {React.createElement(factory.rootComponent, this.reactProps(), appChildren)}
           </EventProvider>
         );
 
