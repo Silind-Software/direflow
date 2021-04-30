@@ -101,11 +101,6 @@ function overrideModule(module: IModule) {
     use: ['@svgr/webpack'],
   });
 
-  module.rules[2].oneOf.unshift({
-    test: /\.tsx$/,
-    use: ['ts-loader'],
-  });
-
   return module;
 }
 
