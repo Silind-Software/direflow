@@ -119,7 +119,7 @@ function overrideOutput(output: IOptions, config?: IDireflowConfig) {
 }
 
 function overrideOptimization(optimization: IOptimization, env: string, config?: IDireflowConfig) {
-  optimization.minimizer[0].options.sourceMap = env === 'development';
+  optimization.minimizer[0].options.sourceMap = config?.build?.emitAll || config?.build?.emitSourceMap || env === 'development';
   const useVendor = config?.build?.vendor;
 
   const vendorSplitChunks = {
