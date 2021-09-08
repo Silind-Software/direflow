@@ -18,11 +18,10 @@ import {
 import getDireflowConfig from '../helpers/getDireflowConfig';
 import IDireflowConfig from '../types/DireflowConfig';
 
-export = function override(config: TConfig, env: string, options?: IOptions) {
-  const originalEntry = [...(config.entry as string[])];
-  const [pathIndex] =
-    env === 'development' ? originalEntry.splice(1, 1) : originalEntry.splice(0, 1);
 
+export = function override(config: TConfig, env: string, options?: IOptions) {
+  const originalEntry = [config.entry].flat() as string[];
+  const [pathIndex] = originalEntry.splice(0, 1);
   /**
    * TODO: Remove deprecated options
    */
@@ -50,7 +49,7 @@ export = function override(config: TConfig, env: string, options?: IOptions) {
 };
 
 function addEntries(entry: TEntry, pathIndex: string, env: string, config?: IDireflowConfig) {
-  const originalEntry = [...(entry as string[])];
+  const originalEntry = [entry].flat() as string[];
 
   const react = config?.modules?.react;
   const reactDOM = config?.modules?.reactDOM;
@@ -85,18 +84,19 @@ function addEntries(entry: TEntry, pathIndex: string, env: string, config?: IDir
 }
 
 function overrideModule(module: IModule) {
-  const cssRuleIndex = module.rules[2].oneOf.findIndex((rule) => '.css'.match(rule.test));
-  const scssRuleIndex = module.rules[2].oneOf.findIndex((rule) => '.scss'.match(rule.test));
+  const nestedRulesIndex = module.rules.findIndex((rule) => 'oneOf' in rule);
+  const cssRuleIndex = module.rules[nestedRulesIndex].oneOf.findIndex((rule) => '.css'.match(rule.test));
+  const scssRuleIndex = module.rules[nestedRulesIndex].oneOf.findIndex((rule) => '.scss'.match(rule.test));
 
   if (cssRuleIndex !== -1) {
-    module.rules[2].oneOf[cssRuleIndex].use = ['to-string-loader', 'css-loader'];
+    module.rules[nestedRulesIndex].oneOf[cssRuleIndex].use = ['to-string-loader', 'css-loader'];
   }
 
   if (scssRuleIndex !== -1) {
-    module.rules[2].oneOf[scssRuleIndex].use = ['to-string-loader', 'css-loader', 'sass-loader'];
+    module.rules[nestedRulesIndex].oneOf[scssRuleIndex].use = ['to-string-loader', 'css-loader', 'sass-loader'];
   }
 
-  module.rules[2].oneOf.unshift({
+  module.rules[nestedRulesIndex].oneOf.unshift({
     test: /\.svg$/,
     use: ['@svgr/webpack'],
   });
