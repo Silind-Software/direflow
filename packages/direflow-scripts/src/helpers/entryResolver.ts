@@ -3,8 +3,8 @@ import { resolve, join, sep } from 'path';
 import handlebars from 'handlebars';
 import { IOptions } from '../types/ConfigOverrides';
 
-const DEFAULT_REACT = 'https://unpkg.com/react@16/umd/react.production.min.js';
-const DEFAULT_REACT_DOM = 'https://unpkg.com/react-dom@16/umd/react-dom.production.min.js';
+const DEFAULT_REACT = 'https://unpkg.com/react@17/umd/react.production.min.js';
+const DEFAULT_REACT_DOM = 'https://unpkg.com/react-dom@17/umd/react-dom.production.min.js';
 
 function entryResolver(indexPath: string, componentPath: string, { react, reactDOM }: IOptions) {
   const paths = indexPath.split(sep);
