@@ -1,7 +1,7 @@
 const { createContext } = require('react');
 
 // eslint-disable-next-line no-undef
-jest.mock('../direflow-component', () => ({
+jest.doMock('../direflow-component', () => ({
   Styled: (props) => {
     return props.children;
   },
