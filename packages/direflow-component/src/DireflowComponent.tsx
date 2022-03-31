@@ -45,6 +45,7 @@ class DireflowComponent {
     const tagName = configuration.tagname || 'direflow-component';
     const shadow = configuration.useShadow !== undefined ? configuration.useShadow : true;
     const anonymousSlot = configuration.useAnonymousSlot !== undefined ? configuration.useAnonymousSlot : false;
+    const namedSlots = Array.isArray(configuration.useNamedSlots) ? configuration.useNamedSlots : false;
 
     (async () => {
       /**
@@ -57,6 +58,7 @@ class DireflowComponent {
         component,
         shadow,
         anonymousSlot,
+        namedSlots,
         plugins,
         callback,
       ).create();
