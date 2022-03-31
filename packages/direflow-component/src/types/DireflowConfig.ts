@@ -9,6 +9,7 @@ export interface IDireflowConfig {
   tagname: string;
   useShadow?: boolean;
   useAnonymousSlot?: boolean;
+  useNamedSlots?: string[];
 }
 
 export interface IDireflowPlugin {
