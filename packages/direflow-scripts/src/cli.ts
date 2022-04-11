@@ -1,36 +1,36 @@
-import chalk from 'chalk';
-import { ChildProcess, spawn } from 'child_process';
-import { resolve } from 'path';
-import { interupted, succeeded } from './helpers/messages';
+import chalk from "chalk";
+import { ChildProcess, spawn } from "child_process";
+import { resolve } from "path";
+import { interupted, succeeded } from "./helpers/messages";
 
-type TCommand = 'start' | 'test' | 'build' | 'build:lib';
+type TCommand = "start" | "test" | "build" | "build:lib";
 
 const env = { ...process.env };
-env.SKIP_PREFLIGHT_CHECK = 'true';
+env.SKIP_PREFLIGHT_CHECK = "true";
 
 export default function cli(args: Array<TCommand | string>) {
   const [command, ...restArgs] = args;
 
   switch (command as TCommand) {
-    case 'start':
+    case "start":
       start();
       break;
-    case 'test':
+    case "test":
       test(restArgs);
       break;
-    case 'build':
+    case "build":
       build(restArgs);
       break;
-    case 'build:lib':
+    case "build:lib":
       buildLib(restArgs);
       break;
     default:
-      console.log('No arguments provided.');
+      console.log("No arguments provided.");
   }
 }
 
 function spawner(command: string, args: ReadonlyArray<string>, options?: any) {
-  return spawn(command, args, options).on('exit', (code: number) => {
+  return spawn(command, args, options).on("exit", (code: number) => {
     if (code !== 0) {
       process.exit(code as number);
     }
@@ -38,51 +38,62 @@ function spawner(command: string, args: ReadonlyArray<string>, options?: any) {
 }
 
 function start() {
-  spawner('react-app-rewired', ['start'], {
+  spawner("react-app-rewired", ["start"], {
     shell: true,
-    stdio: 'inherit',
-    env,
+    stdio: "inherit",
+    env
   });
 }
 
 function test(args: string[]) {
-  spawner('react-app-rewired', ['test', '--env=jest-environment-jsdom-fourteen', ...args], {
-    shell: true,
-    stdio: 'inherit',
-    env,
-  });
+  spawner(
+    "react-app-rewired",
+    ["test", "--env=jest-environment-jsdom-fourteen", ...args],
+    {
+      shell: true,
+      stdio: "inherit",
+      env
+    }
+  );
 }
 
 function build(args: string[]) {
-  spawner('react-app-rewired', ['build', ...args], {
+  spawner("react-app-rewired", ["build", ...args], {
     shell: true,
-    stdio: 'inherit',
-    env,
+    stdio: "inherit",
+    env
   });
 }
 
 function buildLib(args: string[]) {
-  console.log('Building React component library...');
+  console.log("Building React component library...");
   let webpack: ChildProcess | undefined;
 
-  if (args[0] === '--verbose') {
-    webpack = spawner('webpack', ['--config', resolve(__dirname, '../webpack.config.js')], {
-      shell: true,
-      stdio: 'inherit',
-      env,
-    });
+  if (args[0] === "--verbose") {
+    webpack = spawner(
+      "webpack",
+      ["--config", resolve(__dirname, "../webpack.config.js")],
+      {
+        shell: true,
+        stdio: "inherit",
+        env
+      }
+    );
   } else {
-    webpack = spawner('webpack', ['--config', resolve(__dirname, '../webpack.config.js')]);
+    webpack = spawner("webpack", [
+      "--config",
+      resolve(__dirname, "../webpack.config.js")
+    ]);
   }
 
-  webpack.stdout?.on('data', (data) => {
-    if (data.toString().includes('ERROR')) {
-      console.log(chalk.red('An error occurred during the build!'));
+  webpack.stdout?.on("data", data => {
+    if (data.toString().includes("ERROR")) {
+      console.log(chalk.red("An error occurred during the build!"));
       console.log(chalk.red(data.toString()));
     }
   });
 
-  webpack.on('exit', (code: number) => {
+  webpack.on("exit", (code: number) => {
     if (code !== 0) {
       console.log(interupted());
       return;

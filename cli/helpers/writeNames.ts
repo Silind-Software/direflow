@@ -1,15 +1,15 @@
-import fs from 'fs';
-import handelbars from 'handlebars';
-import path from 'path';
-import { INames } from '../types/Names';
+import fs from "fs";
+import handelbars from "handlebars";
+import path from "path";
+import { INames } from "../types/Names";
 
-const packageJson = require('../../package.json');
+const packageJson = require("../../package.json");
 
 const { version } = packageJson;
 
 interface IWriteNameOptions {
   projectDirectoryPath: string;
-  linter: 'eslint' | 'tslint';
+  linter: "eslint" | "tslint";
   packageVersion?: string;
   description: string;
   npmModule: boolean;
@@ -17,12 +17,9 @@ interface IWriteNameOptions {
   type: string;
 }
 
-type TWriteNameExtendable = Required<Pick<IWriteNameOptions,
-| 'names'
-| 'type'
-| 'packageVersion'
-| 'npmModule'
->>;
+type TWriteNameExtendable = Required<
+  Pick<IWriteNameOptions, "names" | "type" | "packageVersion" | "npmModule">
+>;
 
 interface IHandelbarData extends TWriteNameExtendable {
   defaultDescription: string;
@@ -31,30 +28,40 @@ interface IHandelbarData extends TWriteNameExtendable {
 }
 
 export async function writeProjectNames({
-  type, names, description, linter, npmModule,
+  type,
+  names,
+  description,
+  linter,
+  npmModule,
   projectDirectoryPath,
-  packageVersion = version,
+  packageVersion = version
 }: IWriteNameOptions): Promise<void> {
   const projectDirectory = fs.readdirSync(projectDirectoryPath);
-  const defaultDescription = description || 'This project is created using Direflow';
+  const defaultDescription =
+    description || "This project is created using Direflow";
 
   const writeNames = projectDirectory.map(async (dirElement: string) => {
     const filePath = path.join(projectDirectoryPath, dirElement);
 
     if (fs.statSync(filePath).isDirectory()) {
       return writeProjectNames({
-        names, description, type, linter, npmModule, projectDirectoryPath: filePath,
+        names,
+        description,
+        type,
+        linter,
+        npmModule,
+        projectDirectoryPath: filePath
       });
     }
 
-    if (linter !== 'tslint') {
-      if (filePath.endsWith('tslint.json')) {
+    if (linter !== "tslint") {
+      if (filePath.endsWith("tslint.json")) {
         return fs.unlinkSync(filePath);
       }
     }
 
-    if (linter !== 'eslint') {
-      if (filePath.endsWith('.eslintrc')) {
+    if (linter !== "eslint") {
+      if (filePath.endsWith(".eslintrc")) {
         return fs.unlinkSync(filePath);
       }
     }
@@ -65,17 +72,22 @@ export async function writeProjectNames({
       type,
       packageVersion,
       npmModule,
-      eslint: linter === 'eslint',
-      tslint: linter === 'tslint',
+      eslint: linter === "eslint",
+      tslint: linter === "tslint"
     });
   });
 
-  await Promise.all(writeNames).catch(() => console.log('Failed to write files'));
+  await Promise.all(writeNames).catch(() =>
+    console.log("Failed to write files")
+  );
 }
 
-async function changeNameInfile(filePath: string, data: IHandelbarData): Promise<void> {
-  const changedFile = await new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf-8', (err, content) => {
+async function changeNameInfile(
+  filePath: string,
+  data: IHandelbarData
+): Promise<void> {
+  const changedFile: string = await new Promise((resolve, reject) => {
+    fs.readFile(filePath, "utf-8", (err, content) => {
       if (err) {
         reject();
       }
@@ -88,7 +100,7 @@ async function changeNameInfile(filePath: string, data: IHandelbarData): Promise
   });
 
   await new Promise((resolve, reject) => {
-    fs.writeFile(filePath, changedFile, 'utf-8', (err) => {
+    fs.writeFile(filePath, changedFile, "utf-8", err => {
       if (err) {
         reject();
       }

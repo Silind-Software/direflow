@@ -1,11 +1,11 @@
-import EventHooksPlugin from 'event-hooks-webpack-plugin';
-import FilterWarningsPlugin from 'webpack-filter-warnings-plugin';
-import { EnvironmentPlugin } from 'webpack';
-import rimraf from 'rimraf';
-import fs from 'fs';
-import { resolve } from 'path';
-import { PromiseTask } from 'event-hooks-webpack-plugin/lib/tasks';
-import entryResolver from '../helpers/entryResolver';
+import EventHooksPlugin from "event-hooks-webpack-plugin";
+import FilterWarningsPlugin from "webpack-filter-warnings-plugin";
+import { EnvironmentPlugin } from "webpack";
+import rimraf from "rimraf";
+import fs from "fs";
+import { resolve } from "path";
+import { PromiseTask } from "event-hooks-webpack-plugin/lib/tasks";
+import entryResolver from "../helpers/entryResolver";
 import {
   TConfig,
   IOptions,
@@ -13,15 +13,21 @@ import {
   IOptimization,
   IResolve,
   TEntry,
-  IPlugin,
-} from '../types/ConfigOverrides';
-import getDireflowConfig from '../helpers/getDireflowConfig';
-import IDireflowConfig from '../types/DireflowConfig';
-
+  IPlugin
+} from "../types/ConfigOverrides";
+import getDireflowConfig from "../helpers/getDireflowConfig";
+import IDireflowConfig from "../types/DireflowConfig";
 
 export = function override(config: TConfig, env: string, options?: IOptions) {
   const originalEntry = [config.entry].flat() as string[];
-  const [pathIndex] = originalEntry.splice(0, 1);
+  const pathIndex = originalEntry.find(
+    entry => entry && entry.includes("src/index")
+  );
+
+  if (!pathIndex) {
+    throw new Error("Path to index not resolved");
+  }
+
   /**
    * TODO: Remove deprecated options
    */
@@ -29,7 +35,7 @@ export = function override(config: TConfig, env: string, options?: IOptions) {
     // Set deprecated options on config
     env,
     getDireflowConfig(pathIndex),
-    options,
+    options
   );
 
   const entries = addEntries(config.entry, pathIndex, env, direflowConfig);
@@ -39,24 +45,36 @@ export = function override(config: TConfig, env: string, options?: IOptions) {
     entry: entries,
     module: overrideModule(config.module),
     output: overrideOutput(config.output, direflowConfig),
-    optimization: overrideOptimization(config.optimization, env, direflowConfig),
+    optimization: overrideOptimization(
+      config.optimization,
+      env,
+      direflowConfig
+    ),
     resolve: overrideResolve(config.resolve),
     plugins: overridePlugins(config.plugins, entries, env, direflowConfig),
-    externals: overrideExternals(config.externals, env, direflowConfig),
+    externals: overrideExternals(config.externals, env, direflowConfig)
   };
 
   return overridenConfig;
 };
 
-function addEntries(entry: TEntry, pathIndex: string, env: string, config?: IDireflowConfig) {
+function addEntries(
+  entry: TEntry,
+  pathIndex: string,
+  env: string,
+  config?: IDireflowConfig
+) {
   const originalEntry = [entry].flat() as string[];
 
   const react = config?.modules?.react;
   const reactDOM = config?.modules?.reactDOM;
   const useSplit = !!config?.build?.split;
-  const componentPath = config?.build?.componentPath || 'direflow-components';
+  const componentPath = config?.build?.componentPath || "direflow-components";
 
-  const resolvedEntries = entryResolver(pathIndex, componentPath, { react, reactDOM });
+  const resolvedEntries = entryResolver(pathIndex, componentPath, {
+    react,
+    reactDOM
+  });
 
   const newEntry: { [key: string]: string } = { main: pathIndex };
 
@@ -65,15 +83,15 @@ function addEntries(entry: TEntry, pathIndex: string, env: string, config?: IDir
   });
 
   resolvedEntries.forEach((entries: { [key: string]: string }) => {
-    Object.keys(entries).forEach((key) => {
+    Object.keys(entries).forEach(key => {
       newEntry[key] = entries[key];
     });
   });
 
   const flatList = Object.values(newEntry);
 
-  if (env === 'development') {
-    return [...flatList, resolve(__dirname, '../template-scripts/welcome.js')];
+  if (env === "development") {
+    return [...flatList, resolve(__dirname, "../template-scripts/welcome.js")];
   }
 
   if (useSplit) {
@@ -84,21 +102,32 @@ function addEntries(entry: TEntry, pathIndex: string, env: string, config?: IDir
 }
 
 function overrideModule(module: IModule) {
-  const nestedRulesIndex = module.rules.findIndex((rule) => 'oneOf' in rule);
-  const cssRuleIndex = module.rules[nestedRulesIndex].oneOf.findIndex((rule) => '.css'.match(rule.test));
-  const scssRuleIndex = module.rules[nestedRulesIndex].oneOf.findIndex((rule) => '.scss'.match(rule.test));
+  const nestedRulesIndex = module.rules.findIndex(rule => "oneOf" in rule);
+  const cssRuleIndex = module.rules[nestedRulesIndex].oneOf.findIndex(rule =>
+    ".css".match(rule.test)
+  );
+  const scssRuleIndex = module.rules[nestedRulesIndex].oneOf.findIndex(rule =>
+    ".scss".match(rule.test)
+  );
 
   if (cssRuleIndex !== -1) {
-    module.rules[nestedRulesIndex].oneOf[cssRuleIndex].use = ['to-string-loader', 'css-loader'];
+    module.rules[nestedRulesIndex].oneOf[cssRuleIndex].use = [
+      "to-string-loader",
+      "css-loader"
+    ];
   }
 
   if (scssRuleIndex !== -1) {
-    module.rules[nestedRulesIndex].oneOf[scssRuleIndex].use = ['to-string-loader', 'css-loader', 'sass-loader'];
+    module.rules[nestedRulesIndex].oneOf[scssRuleIndex].use = [
+      "to-string-loader",
+      "css-loader",
+      "sass-loader"
+    ];
   }
 
   module.rules[nestedRulesIndex].oneOf.unshift({
     test: /\.svg$/,
-    use: ['@svgr/webpack'],
+    use: ["@svgr/webpack"]
   });
 
   return module;
@@ -106,58 +135,67 @@ function overrideModule(module: IModule) {
 
 function overrideOutput(output: IOptions, config?: IDireflowConfig) {
   const useSplit = config?.build?.split;
-  const filename = config?.build?.filename || 'direflowBundle.js';
-  const chunkFilename = config?.build?.chunkFilename || 'vendor.js';
+  const filename = config?.build?.filename || "direflowBundle.js";
+  const chunkFilename = config?.build?.chunkFilename || "vendor.js";
 
-  const outputFilename = useSplit ? '[name].js' : filename;
+  const outputFilename = useSplit ? "[name].js" : filename;
 
   return {
     ...output,
     filename: outputFilename,
-    chunkFilename,
+    chunkFilename
   };
 }
 
-function overrideOptimization(optimization: IOptimization, env: string, config?: IDireflowConfig) {
-  optimization.minimizer[0].options.sourceMap = env === 'development';
+function overrideOptimization(
+  optimization: IOptimization,
+  env: string,
+  config?: IDireflowConfig
+) {
+  optimization.minimizer[0].options.sourceMap = env === "development";
   const useVendor = config?.build?.vendor;
 
   const vendorSplitChunks = {
     cacheGroups: {
       vendor: {
         test: /node_modules/,
-        chunks: 'initial',
-        name: 'vendor',
-        enforce: true,
-      },
-    },
+        chunks: "initial",
+        name: "vendor",
+        enforce: true
+      }
+    }
   };
 
   return {
     ...optimization,
     splitChunks: useVendor ? vendorSplitChunks : false,
-    runtimeChunk: false,
+    runtimeChunk: false
   };
 }
 
-function overridePlugins(plugins: IPlugin[], entry: TEntry, env: string, config?: IDireflowConfig) {
+function overridePlugins(
+  plugins: IPlugin[],
+  entry: TEntry,
+  env: string,
+  config?: IDireflowConfig
+) {
   if (plugins[0].options) {
-    plugins[0].options.inject = 'head';
+    plugins[0].options.inject = "head";
   }
 
   plugins.push(
     new EventHooksPlugin({
-      done: new PromiseTask(() => copyBundleScript(env, entry, config)),
-    }),
+      done: new PromiseTask(() => copyBundleScript(env, entry, config))
+    })
   );
 
   plugins.push(
     new FilterWarningsPlugin({
       exclude: [
         /Module not found.*/,
-        /Critical dependency: the request of a dependency is an expression/,
-      ],
-    }),
+        /Critical dependency: the request of a dependency is an expression/
+      ]
+    })
   );
 
   if (config?.polyfills) {
@@ -167,14 +205,14 @@ function overridePlugins(plugins: IPlugin[], entry: TEntry, env: string, config?
           Object.entries(config.polyfills).map(([key, value]) => {
             const envKey = `DIREFLOW_${key.toUpperCase()}`;
 
-            if (value === 'true' || value === 'false') {
-              return [envKey, value === 'true'];
+            if (value === "true" || value === "false") {
+              return [envKey, value === "true"];
             }
 
             return [envKey, value];
-          }),
-        ),
-      ),
+          })
+        )
+      )
     );
   }
 
@@ -183,10 +221,10 @@ function overridePlugins(plugins: IPlugin[], entry: TEntry, env: string, config?
 
 function overrideResolve(currentResolve: IResolve) {
   try {
-    const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
+    const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 
     currentResolve.plugins = currentResolve.plugins.filter(
-      (plugin) => !(plugin instanceof ModuleScopePlugin),
+      plugin => !(plugin instanceof ModuleScopePlugin)
     );
   } catch (error) {
     // supress error
@@ -198,9 +236,9 @@ function overrideResolve(currentResolve: IResolve) {
 function overrideExternals(
   externals: { [key: string]: any },
   env: string,
-  config?: IDireflowConfig,
+  config?: IDireflowConfig
 ) {
-  if (env === 'development') {
+  if (env === "development") {
     return externals;
   }
 
@@ -209,27 +247,31 @@ function overrideExternals(
   const reactDOM = config?.modules?.reactDOM;
 
   if (react) {
-    extraExternals.react = 'React';
+    extraExternals.react = "React";
   }
 
   if (reactDOM) {
-    extraExternals['react-dom'] = 'ReactDOM';
+    extraExternals["react-dom"] = "ReactDOM";
   }
 
   return extraExternals;
 }
 
-async function copyBundleScript(env: string, entry: TEntry, config?: IDireflowConfig) {
-  if (env !== 'production') {
+async function copyBundleScript(
+  env: string,
+  entry: TEntry,
+  config?: IDireflowConfig
+) {
+  if (env !== "production") {
     return;
   }
 
-  if (!fs.existsSync('build')) {
+  if (!fs.existsSync("build")) {
     return;
   }
 
-  const filename = config?.build?.filename || 'direflowBundle.js';
-  const chunkFilename = config?.build?.chunkFilename || 'vendor.js';
+  const filename = config?.build?.filename || "direflowBundle.js";
+  const chunkFilename = config?.build?.chunkFilename || "vendor.js";
   const emitAll = config?.build?.emitAll;
   const emitSourceMaps = config?.build?.emitSourceMap;
   const emitIndexHTML = config?.build?.emitIndexHTML;
@@ -238,7 +280,7 @@ async function copyBundleScript(env: string, entry: TEntry, config?: IDireflowCo
     return;
   }
 
-  fs.readdirSync('build').forEach((file: string) => {
+  fs.readdirSync("build").forEach((file: string) => {
     if (file === filename) {
       return;
     }
@@ -247,15 +289,18 @@ async function copyBundleScript(env: string, entry: TEntry, config?: IDireflowCo
       return;
     }
 
-    if (!Array.isArray(entry) && Object.keys(entry).some((path) => `${path}.js` === file)) {
+    if (
+      !Array.isArray(entry) &&
+      Object.keys(entry).some(path => `${path}.js` === file)
+    ) {
       return;
     }
 
-    if (emitSourceMaps && file.endsWith('.map')) {
+    if (emitSourceMaps && file.endsWith(".map")) {
       return;
     }
 
-    if (emitIndexHTML && file.endsWith('.html')) {
+    if (emitIndexHTML && file.endsWith(".html")) {
       return;
     }
 
@@ -270,7 +315,7 @@ async function copyBundleScript(env: string, entry: TEntry, config?: IDireflowCo
  * @param env
  */
 function hasOptions(flag: string, env: string) {
-  if (env !== 'production') {
+  if (env !== "production") {
     return false;
   }
 
@@ -278,7 +323,11 @@ function hasOptions(flag: string, env: string) {
     return false;
   }
 
-  if (!process.argv.some((arg: string) => arg === `--${flag}` || arg === `-${flag[0]}`)) {
+  if (
+    !process.argv.some(
+      (arg: string) => arg === `--${flag}` || arg === `-${flag[0]}`
+    )
+  ) {
     return false;
   }
 
@@ -291,16 +340,22 @@ function hasOptions(flag: string, env: string) {
  * @param config
  * @param options
  */
-function setDeprecatedOptions(env: string, config?: IDireflowConfig, options?: IOptions) {
+function setDeprecatedOptions(
+  env: string,
+  config?: IDireflowConfig,
+  options?: IOptions
+) {
   if (!options) {
     return config;
   }
 
-  const newObj = config ? (JSON.parse(JSON.stringify(config)) as IDireflowConfig) : {};
+  const newObj = config
+    ? (JSON.parse(JSON.stringify(config)) as IDireflowConfig)
+    : {};
   const { filename, chunkFilename, react, reactDOM } = options;
 
-  const useSplit = hasOptions('split', env);
-  const useVendor = hasOptions('vendor', env);
+  const useSplit = hasOptions("split", env);
+  const useVendor = hasOptions("vendor", env);
 
   if (filename && !newObj.build?.filename) {
     if (!newObj.build) {

@@ -73,6 +73,27 @@ In this way you know that the command `direflow` is using your local setup.
 Now, test your new functionality.
 > Note: After you have build the project using build:full, you may want to run install:all again before continuing to develop.
 
+### Cypress tests WSL
+
+If cypress is not working in WSL, then we can run them from windows against test-setup which is served from the WSL.
+
+In WSL:
+```
+. scripts/bash/testSetupUtil.sh
+install
+build
+```
+
+In Windows, clone project and install npm dependencies, then run cypress tests:
+```
+npm run cypress:open
+```
+
+After finished testing, cleanup test-setup in WSL:
+```
+cleanup
+```
+
 ### Commit the changes
 Before committing your new changes, remember to change the version using the command:
 ```console

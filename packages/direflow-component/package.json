@@ -1,6 +1,6 @@
 {
   "name": "direflow-component",
-  "version": "3.5.6",
+  "version": "3.5.8",
   "description": "Create Web Components using React",
   "main": "dist/index.js",
   "author": "Silind Software",
@@ -27,13 +27,13 @@
   "devDependencies": {
     "@types/lodash.clonedeep": "4.5.6",
     "@types/lodash.uniqueid": "^4.0.6",
-    "@types/react": "16.9.25",
-    "@types/react-dom": "16.9.5",
+    "@types/react": "^17.0.43",
+    "@types/react-dom": "^17.0.14",
     "@types/webfontloader": "1.6.29",
     "typescript": "3.9.3"
   },
   "peerDependencies": {
-    "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   }
 }
