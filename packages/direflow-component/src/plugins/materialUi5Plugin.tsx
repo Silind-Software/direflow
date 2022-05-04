@@ -11,6 +11,7 @@ const materialUi5Plugin: PluginRegistrator = (
 ) => {
   if (plugins?.find(plugin => plugin.name === "material-ui5")) {
     try {
+      console.log("Executing material-ui5 plugin");
       const createCache = require("@emotion/cache").default;
       const { CacheProvider } = require("@emotion/react");
       const { StyledEngineProvider } = require("@mui/material");

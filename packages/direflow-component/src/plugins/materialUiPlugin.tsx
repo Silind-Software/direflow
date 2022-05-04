@@ -12,6 +12,7 @@ const materialUiPlugin: PluginRegistrator = (
 ) => {
   if (plugins?.find(plugin => plugin.name === "material-ui")) {
     try {
+      console.log("Executing material-ui plugin");
       const { create } = require("jss");
       const {
         jssPreset,
