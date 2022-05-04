@@ -1,22 +1,26 @@
-import React from 'react';
-import uniqueid from 'lodash.uniqueid';
-import { IDireflowPlugin } from '../types/DireflowConfig';
-import { PluginRegistrator } from '../types/PluginRegistrator';
+import React from "react";
+import uniqueid from "lodash.uniqueid";
+import { IDireflowPlugin } from "../types/DireflowConfig";
+import { PluginRegistrator } from "../types/PluginRegistrator";
 
 const jssCache = new WeakMap<Element, any>();
 
 const materialUiPlugin: PluginRegistrator = (
   element: HTMLElement,
   plugins: IDireflowPlugin[] | undefined,
-  app?: JSX.Element,
+  app?: JSX.Element
 ) => {
-  if (plugins?.find((plugin) => plugin.name === 'material-ui')) {
+  if (plugins?.find(plugin => plugin.name === "material-ui")) {
     try {
-      const { create } = require('jss');
-      const { jssPreset, StylesProvider, createGenerateClassName } = require('@material-ui/core/styles');
+      const { create } = require("jss");
+      const {
+        jssPreset,
+        StylesProvider,
+        createGenerateClassName
+      } = require("@material-ui/core/styles");
       const seed = uniqueid(`${element.tagName.toLowerCase()}-`);
-      const insertionPoint = document.createElement('span');
-      insertionPoint.id = 'direflow_material-ui-styles';
+      const insertionPoint = document.createElement("span");
+      insertionPoint.id = "direflow_material-ui-styles";
 
       let jss: any;
       if (jssCache.has(element)) {
@@ -24,12 +28,13 @@ const materialUiPlugin: PluginRegistrator = (
       } else {
         jss = create({
           ...jssPreset(),
-          insertionPoint,
+          insertionPoint
         });
         jssCache.set(element, jss);
       }
 
       return [
+        // eslint-disable-next-line react/jsx-key
         <StylesProvider
           jss={jss}
           sheetsManager={new Map()}
@@ -37,10 +42,12 @@ const materialUiPlugin: PluginRegistrator = (
         >
           {app}
         </StylesProvider>,
-        insertionPoint,
+        insertionPoint
       ];
     } catch (err) {
-      console.error('Could not load Material-UI. Did you remember to install @material-ui/core?');
+      console.error(
+        "Could not load Material-UI. Did you remember to install @material-ui/core?"
+      );
     }
   }
 };

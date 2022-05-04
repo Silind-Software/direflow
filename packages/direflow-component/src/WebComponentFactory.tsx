@@ -1,14 +1,14 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable max-classes-per-file */
-import React from 'react';
-import ReactDOM from 'react-dom';
-import clonedeep from 'lodash.clonedeep';
-import createProxyRoot from './helpers/proxyRoot';
-import { IDireflowPlugin } from './types/DireflowConfig';
-import { EventProvider } from './components/EventContext';
-import { PluginRegistrator } from './types/PluginRegistrator';
-import registeredPlugins from './plugins/plugins';
-import getSerialized from './helpers/getSerialized';
+import React from "react";
+import ReactDOM from "react-dom";
+import clonedeep from "lodash.clonedeep";
+import createProxyRoot from "./helpers/proxyRoot";
+import { IDireflowPlugin } from "./types/DireflowConfig";
+import { EventProvider } from "./components/EventContext";
+import { PluginRegistrator } from "./types/PluginRegistrator";
+import registeredPlugins from "./plugins/plugins";
+import getSerialized from "./helpers/getSerialized";
 
 class WebComponentFactory {
   constructor(
@@ -17,28 +17,34 @@ class WebComponentFactory {
     private shadow?: boolean,
     private anonymousSlot?: boolean,
     private plugins?: IDireflowPlugin[],
-    private connectCallback?: (element: HTMLElement) => void,
+    private connectCallback?: (element: HTMLElement) => void
   ) {
     this.reflectPropertiesToAttributes();
   }
 
-  private componentAttributes: { [key: string]: {
-    property: string;
-    value: unknown;
-  }; } = {};
+  private componentAttributes: {
+    [key: string]: {
+      property: string;
+      value: unknown;
+    };
+  } = {};
 
   /**
    * All properties with primitive values are added to attributes.
    */
   private reflectPropertiesToAttributes() {
     Object.entries(this.componentProperties).forEach(([key, value]) => {
-      if (typeof value !== 'number' && typeof value !== 'string' && typeof value !== 'boolean') {
+      if (
+        typeof value !== "number" &&
+        typeof value !== "string" &&
+        typeof value !== "boolean"
+      ) {
         return;
       }
 
       this.componentAttributes[key.toLowerCase()] = {
         property: key,
-        value,
+        value
       };
     });
   }
@@ -83,7 +89,11 @@ class WebComponentFactory {
        * @param oldValue value before change
        * @param newValue value after change
        */
-      public attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+      public attributeChangedCallback(
+        name: string,
+        oldValue: string,
+        newValue: string
+      ) {
         if (!this.hasConnected) {
           return;
         }
@@ -107,7 +117,11 @@ class WebComponentFactory {
        * @param oldValue value before change
        * @param newValue value after change
        */
-      public propertyChangedCallback(name: string, oldValue: unknown, newValue: unknown) {
+      public propertyChangedCallback(
+        name: string,
+        oldValue: unknown,
+        newValue: unknown
+      ) {
         if (!this.hasConnected) {
           return;
         }
@@ -153,7 +167,7 @@ class WebComponentFactory {
                 : this.initialProperties[key];
 
               this.propertyChangedCallback(key, oldValue, newValue);
-            },
+            }
           };
         });
 
@@ -170,7 +184,9 @@ class WebComponentFactory {
           }
 
           if (this.getAttribute(key) !== null) {
-            this.properties[key] = getSerialized(this.getAttribute(key) as string);
+            this.properties[key] = getSerialized(
+              this.getAttribute(key) as string
+            );
             return;
           }
 
@@ -211,7 +227,7 @@ class WebComponentFactory {
 
             return wrapper;
           },
-          application,
+          application
         );
 
         return [applicationWithPlugins, shadowChildren];
@@ -229,14 +245,22 @@ class WebComponentFactory {
        * Mount React App onto the Web Component
        */
       public mountReactApp(options?: { initial: boolean }) {
-        const anonymousSlot = factory.anonymousSlot ? React.createElement('slot') : undefined;
+        const anonymousSlot = factory.anonymousSlot
+          ? React.createElement("slot")
+          : undefined;
         const application = (
           <EventProvider value={this.eventDispatcher}>
-            {React.createElement(factory.rootComponent, this.reactProps(), anonymousSlot)}
+            {React.createElement(
+              factory.rootComponent,
+              this.reactProps(),
+              anonymousSlot
+            )}
           </EventProvider>
         );
 
-        const [applicationWithPlugins, shadowChildren] = this.applyPlugins(application);
+        const [applicationWithPlugins, shadowChildren] = this.applyPlugins(
+          application
+        );
 
         if (!factory.shadow) {
           ReactDOM.render(applicationWithPlugins, this);
@@ -246,7 +270,9 @@ class WebComponentFactory {
         let currentChildren: Node[] | undefined;
 
         if (options?.initial) {
-          currentChildren = Array.from(this.children).map((child: Node) => child.cloneNode(true));
+          currentChildren = Array.from(this.children).map((child: Node) =>
+            child.cloneNode(true)
+          );
         }
 
         const root = createProxyRoot(this, shadowChildren);
