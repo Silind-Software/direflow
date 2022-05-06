@@ -3,9 +3,9 @@ import { resolve, join, sep } from "path";
 import handlebars from "handlebars";
 import { IOptions } from "../types/ConfigOverrides";
 
-const DEFAULT_REACT = "https://unpkg.com/react@18/umd/react.production.min.js";
+const DEFAULT_REACT = "https://unpkg.com/react@17/umd/react.production.min.js";
 const DEFAULT_REACT_DOM =
-  "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js";
+  "https://unpkg.com/react-dom@17/umd/react-dom.production.min.js";
 
 function entryResolver(
   indexPath: string,
