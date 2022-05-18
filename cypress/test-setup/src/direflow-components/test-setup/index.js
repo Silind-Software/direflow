@@ -71,4 +71,15 @@ DireflowComponent.createAll([
       },
     ],
   },
+  {
+    component: MUI,
+    configuration: {
+      tagname: 'mui-test',
+    },
+    plugins: [
+      {
+        name: 'mui',
+      },
+    ],
+  },
 ]);

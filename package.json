@@ -1,6 +1,6 @@
 {
   "name": "direflow-cli",
-  "version": "3.5.4",
+  "version": "3.5.4-link",
   "description": "Official CLI for Direflow",
   "main": "dist/index.js",
   "scripts": {
@@ -39,6 +39,7 @@
   "license": "MIT",
   "homepage": "https://direflow.io",
   "dependencies": {
+    "@mui/material": "^5.8.0",
     "boxen": "^4.1.0",
     "chalk": "2.4.2",
     "commander": "3.0.1",

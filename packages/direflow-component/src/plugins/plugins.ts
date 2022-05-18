@@ -4,6 +4,7 @@ import externalLoaderPlugin from './externalLoaderPlugin';
 import fontLoaderPlugin from './fontLoaderPlugin';
 import iconLoaderPlugin from './iconLoaderPlugin';
 import materialUiPlugin from './materialUiPlugin';
+import muiPlugin from './muiPlugin';
 
 const plugins = [
   registerPlugin(fontLoaderPlugin),
@@ -11,6 +12,7 @@ const plugins = [
   registerPlugin(externalLoaderPlugin),
   registerPlugin(styledComponentsPlugin),
   registerPlugin(materialUiPlugin),
+  registerPlugin(muiPlugin),
 ];
 
 export default plugins;
