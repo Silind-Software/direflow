@@ -1,7 +1,6 @@
 import { resolve } from 'path';
 import fs from 'fs';
 import ncp from 'ncp';
-import mkdirp from 'mkdirp';
 import { ITemplateOption } from '../types/TemplateOption';
 
 const copyTemplate = async (options: ITemplateOption): Promise<string> => {
@@ -10,7 +9,7 @@ const copyTemplate = async (options: ITemplateOption): Promise<string> => {
 
   const projectDirectory: string = await new Promise((projectResolve, reject) => {
     const projectDir = `${currentDirectory}/${options.projectName}`;
-    mkdirp(projectDir, (err) => {
+    fs.mkdir(projectDir, (err: any) => {
       if (err) {
         console.log(err);
         reject(new Error(`Could not create directory: ${projectDir}`));
@@ -27,7 +26,7 @@ const copyTemplate = async (options: ITemplateOption): Promise<string> => {
         reject(new Error('Could not copy template files'));
       }
 
-      ncpResolve();
+      ncpResolve(true);
     });
   });
 
@@ -41,7 +40,7 @@ const copyTemplate = async (options: ITemplateOption): Promise<string> => {
           reject(new Error('Could not rename component folder'));
         }
 
-        renameResolve();
+        renameResolve(true);
       },
     );
   });

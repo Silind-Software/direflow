@@ -1,5 +1,5 @@
 import React from 'react';
-import uniqueid from 'lodash.uniqueid';
+import uniqueid from 'lodash';
 import { IDireflowPlugin } from '../types/DireflowConfig';
 import { PluginRegistrator } from '../types/PluginRegistrator';
 

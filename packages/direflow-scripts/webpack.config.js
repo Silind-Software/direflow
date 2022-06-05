@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { resolve } = require('path');
 const { existsSync } = require('fs');
-const { EnvironmentPlugin, HashedModuleIdsPlugin } = require('webpack');
+const { EnvironmentPlugin } = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 
 const srcPath = process.cwd();
@@ -69,6 +69,7 @@ module.exports = {
     filename: 'component-exports.js',
     library: 'direflow-library',
     libraryTarget: 'commonjs2',
+    hashFunction: 'xxhash64',
   },
   optimization: {
     minimizer: [
@@ -95,6 +96,7 @@ module.exports = {
         },
       }),
     ],
+    moduleIds: 'hashed',
     runtimeChunk: false,
   },
   module: {
@@ -136,9 +138,10 @@ module.exports = {
       },
     ],
   },
-  plugins: [new EnvironmentPlugin({ NODE_ENV: 'production' }), new HashedModuleIdsPlugin()],
+  plugins: [new EnvironmentPlugin({ NODE_ENV: 'production' })],
   externals: {
     'react': 'commonjs react',
     'react-dom': 'commonjs react-dom',
   },
+
 };
