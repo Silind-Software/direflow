@@ -1,7 +1,7 @@
 {
-  "name": "direflow-cli",
+  "name": "@use-the-fork/direflow-cli",
   "version": "4.0.0",
-  "description": "Official CLI for Direflow",
+  "description": "fork of the Official CLI for Direflow",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -26,7 +26,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:Silind-Software/direflow.git"
+    "url": "git@github.com:use-the-fork/direflow.git"
   },
   "keywords": [
     "cli",

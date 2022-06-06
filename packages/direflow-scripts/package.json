@@ -1,5 +1,5 @@
 {
-  "name": "direflow-scripts",
+  "name": "@use-the-fork/direflow-scripts",
   "version": "4.0.0",
   "description": "Create Web Components using React",
   "main": "dist/index.js",
@@ -19,7 +19,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:Silind-Software/direflow.git"
+    "url": "git@github.com:use-the-fork/direflow.git"
   },
   "homepage": "https://direflow.io",
   "dependencies": {

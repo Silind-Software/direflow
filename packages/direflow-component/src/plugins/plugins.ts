@@ -10,7 +10,7 @@ const plugins = [
   registerPlugin(iconLoaderPlugin),
   registerPlugin(externalLoaderPlugin),
   registerPlugin(styledComponentsPlugin),
-  registerPlugin(materialUiPlugin),
+  registerPlugin(materialUiPlugin)
 ];
 
 export default plugins;
