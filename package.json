@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "jest --env=jest-environment-jsdom-fourteen",
+    "test": "jest",
     "update-version": "node scripts/node/updateVersion.js",
     "setup-local": "./scripts/bash/setupLocal.sh",
     "clean:all": "node ./scripts/node/cleanupAll.js",
@@ -75,7 +75,7 @@
     "eslint-plugin-react-hooks": "^4.5.0",
     "jest": "^28.1.0",
     "jsdom": "^19.0.0",
-    "mock-fs": "^5.1.2",
+    "memfs": "^3.4.7",
     "prettier": "^2.6.2",
     "start-server-and-test": "^1.14.0",
     "ts-jest": "^28.0.4",
