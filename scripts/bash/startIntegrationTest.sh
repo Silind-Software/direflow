@@ -11,7 +11,7 @@ build() {
 
   cp build/direflowBundle.js public/direflowBundle.js
 
-  npm run serve &
+  npm run serve -- -l 5000 &
   wait-on http://localhost:5000
 }
 
