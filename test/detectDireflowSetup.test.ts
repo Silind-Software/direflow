@@ -1,19 +1,20 @@
-import fileMock from 'mock-fs';
+import { fs, vol } from 'memfs';
 import isDireflowSetup from '../cli/helpers/detectDireflowSetup';
 
-const isSetupFilePath = 'path/to/mock/setup';
-const isNotSetupFilePath = 'path/to/mock/non-setup';
+jest.mock('fs', () => fs);
 
-fileMock({
-  [isSetupFilePath]: {
-    'direflow-webpack.js': '',
-  },
-  [isNotSetupFilePath]: {},
-});
+const isSetupFilePath = '/path/to/mock/setup';
+const isNotSetupFilePath = '/path/to/mock/non-setup';
+
+const mockFsJson = {
+  [`${isSetupFilePath}/direflow-webpack.js`]: '',
+  [`${isNotSetupFilePath}/foo`]: '',
+};
+vol.fromJSON(mockFsJson);
 
 describe('Detect Direflow Setup', () => {
   afterAll(() => {
-    fileMock.restore();
+    vol.reset();
   });
 
   it('should return true if Direflow Setup', () => {
