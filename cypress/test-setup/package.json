@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "direflow-scripts start",
-    "build": "direflow-scripts build",
-    "serve": "serve ./public"
+    "start": "PORT=5000 direflow-scripts start",
+    "build": "direflow-scripts build && cp ./public/* ./build",
+    "serve": "serve ./build -l 5000"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.7",

@@ -9,17 +9,13 @@ install() {
 build() {
   npm run build
 
-  cp build/direflowBundle.js public/direflowBundle.js
-
-  npm run serve -- -l 5000 &
+  # Replace with pm2 and kill by id, not by port
+  npm run serve &
   wait-on http://localhost:5000
 }
 
 # CleanUp
 cleanup() {
-  rm cypress/test-setup/public/direflowBundle.js
-  sleep 2
-
   echo "Cypress has finished testing"
   echo "Closing dev server ..."
 
