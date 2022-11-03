@@ -9,10 +9,7 @@
     "serve": "serve ./public"
   },
   "dependencies": {
-    "@emotion/react": "^11.9.0",
-    "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.8.2",
-    "@mui/styled-engine": "^5.8.0",
+    "@material-ui/core": "^4.9.7",
     "direflow-component": "../../packages/direflow-component",
     "direflow-scripts": "../../packages/direflow-scripts",
     "eslint-plugin-react-hooks": "^4.5.0",

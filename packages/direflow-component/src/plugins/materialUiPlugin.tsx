@@ -1,7 +1,9 @@
 import React from 'react';
-import _ from 'lodash';
+import uniqueid from 'lodash';
 import { IDireflowPlugin } from '../types/DireflowConfig';
 import { PluginRegistrator } from '../types/PluginRegistrator';
+
+const jssCache = new WeakMap<Element, any>();
 
 const materialUiPlugin: PluginRegistrator = (
   element: HTMLElement,
@@ -10,23 +12,32 @@ const materialUiPlugin: PluginRegistrator = (
 ) => {
   if (plugins?.find((plugin) => plugin.name === 'material-ui')) {
     try {
-
-      const { StyledEngineProvider, CssBaseline } = require('@mui/material');
-      const { createGenerateClassName } = require('@mui/material/styles');
-      const seed = _.uniqueId(`${element.tagName.toLowerCase()}-`);
+      const { create } = require('jss');
+      const { jssPreset, StylesProvider, createGenerateClassName } = require('@material-ui/core/styles');
+      const seed = uniqueid(`${element.tagName.toLowerCase()}-`);
       const insertionPoint = document.createElement('span');
       insertionPoint.id = 'direflow_material-ui-styles';
 
+      let jss: any;
+      if (jssCache.has(element)) {
+        jss = jssCache.get(element);
+      } else {
+        jss = create({
+          ...jssPreset(),
+          insertionPoint,
+        });
+        jssCache.set(element, jss);
+      }
 
       return [
-                <StyledEngineProvider injectFirst
-                                      sheetsManager={new Map()}
-                                      generateClassName={createGenerateClassName({ seed })}
-                >
-                        <CssBaseline/>
-                        {app}
-                </StyledEngineProvider>,
-                insertionPoint,
+        <StylesProvider
+          jss={jss}
+          sheetsManager={new Map()}
+          generateClassName={createGenerateClassName({ seed })}
+        >
+          {app}
+        </StylesProvider>,
+        insertionPoint,
       ];
     } catch (err) {
       console.error('Could not load Material-UI. Did you remember to install @material-ui/core?');

@@ -1,20 +1,11 @@
 import React from 'react';
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
-
-const CustomizedButton = styled(Button)`
-  color: #20b2aa;
-
-  :hover {
-    color: #2e8b57;
-  }
-`;
+import Button from '@material-ui/core/Button';
 
 const MaterialUI = () => {
   return (
-    <CustomizedButton id='material-ui-button' variant='contained'>
+    <Button id='material-ui-button' variant='contained' color='primary'>
       My Material UI Button
-    </CustomizedButton>
+    </Button>
   );
 };
 
