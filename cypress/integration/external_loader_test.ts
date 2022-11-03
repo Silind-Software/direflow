@@ -13,7 +13,7 @@ describe('Applying external resources', () => {
 
   it('should have async script tag in head', () => {
     cy.get(
-      'head script[src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"]',
+      'head script[src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"]',
     ).should('have.attr', 'async');
   });
 
@@ -24,7 +24,7 @@ describe('Applying external resources', () => {
         const [element] = elem;
         const [link] = element.children;
         expect(link.href).to.equal(
-          'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css',
+          'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
         );
       });
   });
