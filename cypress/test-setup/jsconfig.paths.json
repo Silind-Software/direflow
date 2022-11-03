@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "react": ["./node_modules/react"],
+      "react-dom": ["./node_modules/react-dom"],
+      "styled-components": ["./node_modules/styled-components"],
+      "@material-ui": ["./node_modules/@material-ui"]
+    }
+  }
+}

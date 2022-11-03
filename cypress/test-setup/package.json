@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "PORT=5000 direflow-scripts start",
-    "build": "direflow-scripts build && cp ./public/* ./build",
+    "build": "direflow-scripts build && cp ./public/index.css ./build && cp ./public/index_prod.html ./build/index.html",
     "serve": "serve ./build -l 5000"
   },
   "dependencies": {
@@ -26,6 +26,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.30.0",
     "jest-environment-jsdom-fourteen": "^1.0.1",
+    "react-app-alias": "^2.2.2",
     "react-app-rewired": "^2.2.1",
     "react-test-renderer": "17.0.2",
     "to-string-loader": "^1.2.0",
