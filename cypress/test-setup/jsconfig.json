@@ -1,0 +1,14 @@
+{
+  "extends": "./jsconfig.paths.json",
+  "compilerOptions": {
+    "strict": true,
+    "target": "es5",
+    "lib": ["es5", "dom"],
+    "types": ["cypress", "cypress-shadow-dom", "node"],
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "noEmit": false
+  },
+  "include": ["**/*.js"]
+}

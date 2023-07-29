@@ -1,4 +1,4 @@
-import commander, { Command } from 'commander';
+import { program, Command } from 'commander';
 import chalk from 'chalk';
 import headline from './headline';
 import { createDireflowSetup } from './create';
@@ -16,7 +16,7 @@ type TOptions =
 type TParsed = Command & { [key in TOptions]?: true } & { desc: string };
 
 export default function cli() {
-  commander
+  program
     .command('create [project-name]')
     .alias('c')
     .description('Create a new Direflow Setup')
@@ -28,7 +28,7 @@ export default function cli() {
     .option('--npm', 'Make the project an NPM module')
     .action(handleAction);
 
-  commander
+  program
     .description(chalk.magenta(headline))
     .version(showVersion())
     .helpOption('-h, --help', 'Show how to use direflow-cli')
@@ -37,14 +37,14 @@ export default function cli() {
   const [, , simpleArg] = process.argv;
 
   if (!simpleArg) {
-    return commander.help();
+    return program.help();
   }
 
   if (['-v', '--version'].includes(simpleArg)) {
     console.log(checkForUpdates());
   }
 
-  commander.parse(process.argv);
+  program.parse(process.argv);
 }
 
 async function handleAction(name: string | undefined, parsed: TParsed) {

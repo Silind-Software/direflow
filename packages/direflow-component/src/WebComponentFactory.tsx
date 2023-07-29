@@ -2,7 +2,7 @@
 /* eslint-disable max-classes-per-file */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import clonedeep from 'lodash.clonedeep';
+import _ from 'lodash';
 import createProxyRoot from './helpers/proxyRoot';
 import { IDireflowPlugin } from './types/DireflowConfig';
 import { EventProvider } from './components/EventContext';
@@ -50,7 +50,7 @@ class WebComponentFactory {
     const factory = this;
 
     return class WebComponent extends HTMLElement {
-      public initialProperties = clonedeep(factory.componentProperties);
+      public initialProperties = _.cloneDeep(factory.componentProperties);
       public properties: { [key: string]: unknown } = {};
       public hasConnected = false;
 
@@ -142,7 +142,7 @@ class WebComponentFactory {
             get: (): unknown => {
               const currentValue = this.properties.hasOwnProperty(key)
                 ? this.properties[key]
-                : this.initialProperties[key];
+                : _.get(this.initialProperties, key);
 
               return currentValue;
             },
@@ -150,7 +150,7 @@ class WebComponentFactory {
             set: (newValue: unknown) => {
               const oldValue = this.properties.hasOwnProperty(key)
                 ? this.properties[key]
-                : this.initialProperties[key];
+                : _.get(this.initialProperties, key);
 
               this.propertyChangedCallback(key, oldValue, newValue);
             },
@@ -174,7 +174,7 @@ class WebComponentFactory {
             return;
           }
 
-          this.properties[key] = this.initialProperties[key];
+          this.properties[key] = _.get(this.initialProperties, key);
         });
       }
 

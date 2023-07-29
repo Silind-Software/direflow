@@ -21,8 +21,8 @@ export const succeeded = () => `
   ${chalk.green(
     `
   "peerDependencies": {
-    "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
   }`,
   )}
 
