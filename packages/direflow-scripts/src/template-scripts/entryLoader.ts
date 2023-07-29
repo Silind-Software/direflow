@@ -46,7 +46,7 @@ setTimeout(async () => {
 
         if (window.React && window.ReactDOM) {
           clearInterval(interval);
-          resolve();
+          resolve(true);
         }
 
         intervalCounts += 1;
@@ -55,6 +55,6 @@ setTimeout(async () => {
 
     includeIndex();
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
   }
 });

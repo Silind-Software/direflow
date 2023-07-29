@@ -1,6 +1,6 @@
 {
-  "name": "direflow-scripts",
-  "version": "3.5.3",
+  "name": "@use-the-fork/direflow-scripts",
+  "version": "4.0.0",
   "description": "Create Web Components using React",
   "main": "dist/index.js",
   "author": "Silind Software",
@@ -19,29 +19,28 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:Silind-Software/direflow.git"
+    "url": "git@github.com:use-the-fork/direflow.git"
   },
   "homepage": "https://direflow.io",
   "dependencies": {
-    "@svgr/webpack": "4.3.2",
-    "esm": "3.2.25",
-    "event-hooks-webpack-plugin": "2.1.4",
-    "handlebars": "4.7.2",
-    "rimraf": "3.0.0",
-    "ts-loader": "6.2.1",
-    "webfontloader": "1.6.28",
-    "webpack": "4.42.0",
-    "webpack-filter-warnings-plugin": "1.2.1"
+    "@svgr/webpack": "^6.2.1",
+    "esm": "^3.2.25",
+    "event-hooks-webpack-plugin": "^2.2.0",
+    "handlebars": "^4.7.7",
+    "rimraf": "^3.0.2",
+    "ts-loader": "^9.3.0",
+    "webfontloader": "^1.6.28",
+    "webpack": "^5.73.0"
   },
   "devDependencies": {
-    "@babel/core": "7.9.0",
-    "@babel/preset-env": "7.9.0",
-    "@babel/preset-react": "7.9.1",
-    "@types/react": "16.9.25",
-    "@types/react-dom": "16.9.5",
-    "@types/webfontloader": "1.6.29",
-    "babel-loader": "8.1.0",
-    "terser-webpack-plugin": "2.3.5",
-    "typescript": "3.9.3"
+    "@babel/core": "^7.18.2",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-react": "^7.17.12",
+    "@types/react": "17.0.2",
+    "@types/react-dom": "17.0.2",
+    "@types/webfontloader": "^1.6.34",
+    "babel-loader": "^8.2.5",
+    "terser-webpack-plugin": "^5.3.3",
+    "typescript": "^4.7.3"
   }
 }

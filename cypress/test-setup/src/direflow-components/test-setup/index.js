@@ -39,9 +39,9 @@ DireflowComponent.createAll([
         options: {
           paths: [
             'https://code.jquery.com/jquery-3.3.1.slim.min.js',
-            'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css',
+            'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
             {
-              src: 'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js',
+              src: 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js',
               async: true,
             },
           ],

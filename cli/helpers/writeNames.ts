@@ -77,7 +77,7 @@ async function changeNameInfile(filePath: string, data: IHandelbarData): Promise
   const changedFile = await new Promise((resolve, reject) => {
     fs.readFile(filePath, 'utf-8', (err, content) => {
       if (err) {
-        reject();
+        reject(false);
       }
 
       const template = handelbars.compile(content);
@@ -88,13 +88,15 @@ async function changeNameInfile(filePath: string, data: IHandelbarData): Promise
   });
 
   await new Promise((resolve, reject) => {
-    fs.writeFile(filePath, changedFile, 'utf-8', (err) => {
-      if (err) {
-        reject();
-      }
+    if ( typeof changedFile == 'string' ) {
+      fs.writeFile(filePath, changedFile, 'utf-8', (err) => {
+        if (err) {
+          reject();
+        }
 
-      resolve();
-    });
+        resolve(true);
+      });
+    }
   });
 }
 
